@@ -3,9 +3,10 @@
 # Dependenciees
 JAVAC = javac
 JAVA = java
-OPENJFX = /usr/lib/jvm/openjfx
-JUNIT = /usr/share/java/junit.jar
-HAMCREST = /usr/share/java/hamcrest/hamcrest.jar
+ABSOLUTE_PROJECT_DIR=$(shell pwd)
+JUNIT = $(ABSOLUTE_PROJECT_DIR)/lib/junit-4.13.2.jar
+OPENJFX = $(ABSOLUTE_PROJECT_DIR)/lib/javafx-sdk-17.0.9/lib/
+HAMCREST = $(ABSOLUTE_PROJECT_DIR)/lib/hamcrest-core-1.3.jar
 
 # compile flags 
 JFLAGS = --module-path $(OPENJFX) --add-modules javafx.controls,javafx.fxml
