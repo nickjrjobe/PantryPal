@@ -30,7 +30,7 @@ public class PantryPal extends Application {
 		// Set the title of the app
 		primaryStage.setTitle("PantryPal");
 		// Create scene of mentioned size with the border pane
-		primaryStage.setScene(new Scene(recipelist, 500, 600));
+		primaryStage.setScene(new Scene(recipelist, 600, 800));
 		// Make window non-resizable
 		primaryStage.setResizable(false);
 		// Show the app
