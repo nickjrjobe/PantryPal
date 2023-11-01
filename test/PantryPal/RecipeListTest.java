@@ -20,13 +20,13 @@ public class RecipeListTest {
 		RecipeList rlist = new RecipeList(rb);
 
 		/* ensure reading is not done till explicitly requested */
-		assertEquals(0, rlist.getChildren().size());
+		assertEquals(0, rlist.getRecipes().size());
 
 		rlist.read();
 
 		/* ensure top element is r1, and below that is r2 */
-		assertEquals(2, rlist.getChildren().size());
-		assertEquals(rlist.getChildren().get(0),r1);
-		assertEquals(rlist.getChildren().get(1),r2);
+		assertEquals(2, rlist.getRecipes().size());
+		assertEquals(rlist.getRecipes().get(0),r1);
+		assertEquals(rlist.getRecipes().get(1),r2);
 	}
 }
