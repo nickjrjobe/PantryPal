@@ -22,6 +22,9 @@ import javafx.scene.text.*;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
+/**
+ * UI representation of Recipe on RecipeList page
+ */
 class RecipeEntry extends HBox {
 	private Recipe recipe;
 	private Label titleField;
@@ -33,8 +36,11 @@ class RecipeEntry extends HBox {
 		this.setStyle(
 		    "-fx-background-color: #DAE5EA; -fx-border-width: 0; -fx-font-weight: bold;");
 	}
-	private void update() {
-		titleField.setText(recipe.getTitle());
+	/**
+	 * Updates data in Recipe UI element based on data in owned recipe
+	 */
+private void update() {
+	titleField.setText(recipe.getTitle());
 	}
 	RecipeEntry(Recipe recipe) {
 		this.recipe = recipe;
@@ -47,6 +53,9 @@ class RecipeEntry extends HBox {
 		format();
 	}
 }
+/**
+ * internal representation of recipe
+ */
 class Recipe {
 	private String title;
 	private String description;

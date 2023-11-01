@@ -21,10 +21,17 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.text.*;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
+/*
+ * Object which specifies a specific way to read recipe list in
+ * from persistent storage
+ */
 interface ReadBehavior {
 	public List<Recipe> read();
 }
 
+/**
+ * Internal representation of recipes
+ */
 class RecipeList {
 	private ArrayList<Recipe> recipes;
 	private ReadBehavior readbehavior;
@@ -50,6 +57,9 @@ class RecipeList {
 		return recipes;
 	}
 }
+/**
+ * UI element which displays list of recipes
+ */
 class RecipeListUI extends VBox {
 	private RecipeList recipelist;
 	RecipeListUI(RecipeList recipelist) {
@@ -61,6 +71,10 @@ class RecipeListUI extends VBox {
 		this.setPrefSize(500, 560);
 		this.setStyle("-fx-background-color: #F0F8FF;");
 	}
+	/**
+	 * Synchronize recipe List UI element with application's internal
+	 * recipe list
+	 */
 	private void update() {
 		this.getChildren().clear();
 		for (Recipe recipe : this.recipelist.getRecipes()) {
@@ -72,6 +86,9 @@ class RecipeListUI extends VBox {
 		update();
 	}
 }
+/**
+ * UI Page containing recipe list, and accompanying header and footer
+ */
 class RecipeListPage extends ScrollablePage {
 	private RecipeListUI recipelist;
 	RecipeListPage() {
