@@ -22,22 +22,10 @@ import javafx.scene.text.*;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
-public class PantryPal extends Application {
-	@Override
-	public void start(Stage primaryStage) throws Exception {
-		RecipeListPage recipelist = new RecipeListPage();
-
-		// Set the title of the app
-		primaryStage.setTitle("PantryPal");
-		// Create scene of mentioned size with the border pane
-		primaryStage.setScene(new Scene(recipelist, 500, 600));
-		// Make window non-resizable
-		primaryStage.setResizable(false);
-		// Show the app
-		primaryStage.show();
-	}
-
-	public static void main(String[] args) {
-		launch(args);
+class Recipe extends HBox {
+	Recipe() {
+		this.setPrefSize(500, 20); // sets size of task
+		this.setStyle(
+		    "-fx-background-color: #DAE5EA; -fx-border-width: 0; -fx-font-weight: bold;");
 	}
 }
