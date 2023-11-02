@@ -78,7 +78,7 @@ class RecipeListUI extends VBox {
 	private void update() {
 		this.getChildren().clear();
 		for (Recipe recipe : this.recipelist.getRecipes()) {
-			this.getChildren().add(new RecipeEntry(recipe));
+			this.getChildren().add(new RecipeEntryUI(recipe));
 		}
 	}
 	public void read() {

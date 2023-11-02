@@ -25,7 +25,7 @@ import javafx.stage.Stage;
 /**
  * UI representation of Recipe on RecipeList page
  */
-class RecipeEntry extends HBox {
+class RecipeEntryUI extends HBox {
 	private Recipe recipe;
 	private Label titleField;
 	public Recipe getRecipe() {
@@ -39,10 +39,10 @@ class RecipeEntry extends HBox {
 	/**
 	 * Updates data in Recipe UI element based on data in owned recipe
 	 */
-private void update() {
-	titleField.setText(recipe.getTitle());
+	private void update() {
+		titleField.setText(recipe.getTitle());
 	}
-	RecipeEntry(Recipe recipe) {
+	RecipeEntryUI(Recipe recipe) {
 		this.recipe = recipe;
 		titleField = new Label();
 		titleField.setPrefSize(380, 20);
