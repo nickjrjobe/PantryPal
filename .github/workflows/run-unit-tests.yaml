@@ -1,0 +1,30 @@
+name: Initial Java CI
+
+on: [push]
+
+permissions:
+    contents: read
+    checks: write
+    id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '11'
+      # Get dependencies
+      - name: install dependencies
+        run: bash setup_lib.sh
+
+      # build everything 
+      - name: Make 
+        run: make
+      - name: Run unit test
+        run: make test 
