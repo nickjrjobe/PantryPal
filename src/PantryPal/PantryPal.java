@@ -21,6 +21,9 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.text.*;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
+/*
+ * Object which handles which Page is currently displayed
+ */
 class PageTracker {
 	private Stage primaryStage;
 	PageTracker(Stage primaryStage) {
@@ -28,6 +31,10 @@ class PageTracker {
 		primaryStage.setTitle("PantryPal");
 		this.primaryStage = primaryStage;
 	}
+	/**
+	 * "Swaps" to displaying a new page
+	 * @param page page to display
+	 */
 	void swapToPage(ScrollablePage page) {
 		primaryStage.setScene(page.getWrapperScene());
 		primaryStage.setResizable(false);
