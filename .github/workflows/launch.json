@@ -1,0 +1,33 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "EditContacts",
+            "request": "launch",
+            "mainClass": "EditContacts.Main",
+            "vmArgs": "--module-path \"C:/Users/boyiq/OneDrive/Desktop/CSE 110/javafx-sdk-21/lib\" --add-modules javafx.controls,javafx.fxml"
+        },
+        {
+            "type": "java",
+            "name": "TodoMain",
+            "request": "launch",
+            "mainClass": "TodoList.Main",
+            "vmArgs": "--module-path \"C:/Users/boyiq/OneDrive/Desktop/CSE 110/javafx-sdk-21/lib\" --add-modules javafx.controls,javafx.fxml"
+        },
+        {
+            "type": "java",
+            "name": "ImageMain",
+            "request": "launch",
+            "mainClass": "ImageUploader.Main",
+            "vmArgs": "--module-path \"C:/Users/boyiq/OneDrive/Desktop/CSE 110/javafx-sdk-21/lib\" --add-modules javafx.controls,javafx.fxml"
+        },
+        {
+            "type": "java",
+            "name": "ContactMain",
+            "request": "launch",
+            "mainClass": "ContactList.Main",
+            "vmArgs": "--module-path \"C:/Users/boyiq/OneDrive/Desktop/CSE 110/javafx-sdk-21/lib\" --add-modules javafx.controls,javafx.fxml"
+        }
+    ]
+}

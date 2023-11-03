@@ -56,9 +56,23 @@ class Footer extends HBox {
  * Generic header UI element which includes title
  */
 class Header extends HBox {
+	private static final String buttonStyle =
+			    "-fx-font-style: italic; -fx-background-color: #FFFFFF;  -fx-font-weight: bold; -fx-font: 11 arial;";
 	private void format() {
         	this.setPrefSize(500, 60); // Size of the header
         	this.setStyle("-fx-background-color: #F0F8FF;");
+	}
+	
+	/**
+	 * add a button to footer
+	 * @param buttontext Text which button should display
+	 * @param callback event handler to call when button is pressed
+	 */
+	public void addButton(String buttontext, EventHandler<ActionEvent> callback) {
+		Button button = new Button(buttontext);
+		button.setStyle(buttonStyle);
+		this.getChildren().add(button);
+		button.setOnAction(callback);
 	}
 
 	Header(String title) {
@@ -76,7 +90,7 @@ class Header extends HBox {
  * can scroll its center element, and has a header and footer.
  */
 abstract class ScrollablePage extends BorderPane {
-	private Header header;
+	protected Header header;
 	protected Footer footer;
 	protected Node center;
 

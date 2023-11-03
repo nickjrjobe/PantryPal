@@ -1,0 +1,5 @@
+# Ignore launch.json in .vscode directory
+.vscode/launch.json
+
+# Ignore the entire lib directory for javafx
+lib/
