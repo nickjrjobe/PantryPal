@@ -17,9 +17,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.text.*;
-import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 /**
@@ -33,7 +31,6 @@ class Footer extends HBox {
 		this.setSpacing(5); // sets spacing between tasks
 		this.setPrefSize(500, 560);
 		this.setStyle("-fx-background-color: #F0F8FF;");
-		this.setAlignment(Pos.CENTER); // aligning the buttons to center
 	}
 	/**
 	 * add a button to footer
@@ -63,32 +60,53 @@ class Footer extends HBox {
 class Header extends HBox {
 	private static final String buttonStyle =
 			    "-fx-font-style: italic; -fx-background-color: #FFFFFF;  -fx-font-weight: bold; -fx-font: 11 arial;";
-	private void format() {
-        	this.setPrefSize(500, 60); // Size of the header
-        	this.setStyle("-fx-background-color: #F0F8FF;");
-	}
-	
-	/**
-	 * add a button to footer
-	 * @param buttontext Text which button should display
-	 * @param callback event handler to call when button is pressed
-	 */
-	public void addButton(String buttontext, EventHandler<ActionEvent> callback) {
-		Button button = new Button(buttontext);
-		button.setStyle(buttonStyle);
-		this.getChildren().add(button);
-		button.setOnAction(callback);
-	}
+    private Text titleText;
+	private HBox buttonContainer;
+
+    private void format() {
+        this.setPrefSize(500, 60); // Size of the header
+        this.setStyle("-fx-background-color: #F0F8FF;");
+        this.setPadding(new Insets(10)); // Add padding around
+    }
+
+    public void addButton(String buttonText, EventHandler<ActionEvent> callback) {
+		if (buttonContainer == null) {
+            // Initialize the button container
+            buttonContainer = new HBox();
+            buttonContainer.setAlignment(Pos.CENTER_RIGHT);
+            this.getChildren().add(buttonContainer);
+            // Make sure it doesn't grow to push the title
+            HBox.setHgrow(buttonContainer, Priority.NEVER);
+        }
+        Button button = new Button(buttonText);
+        button.setStyle(buttonStyle);
+        button.setPadding(new Insets(5, 10, 5, 10));
+        button.setOnAction(callback);
+
+        // Add button to the right container
+        buttonContainer.getChildren().add(button);
+    }
 
 	Header(String title) {
 		format();
-
-		Text titleText = new Text(title); // Text of the Header
+		titleText = new Text(title);
 		titleText.setStyle("-fx-font-weight: bold; -fx-font-size: 20;");
-		this.getChildren().add(titleText);
+
+		// Set alignment to center for the HBox
 		this.setAlignment(Pos.CENTER);
+
+		// Create spacers
+		Region leftSpacer = new Region();
+		HBox.setHgrow(leftSpacer, Priority.ALWAYS);
+
+		Region rightSpacer = new Region();
+		HBox.setHgrow(rightSpacer, Priority.ALWAYS);
+
+		// Add the spacers and titleText to the HBox
+		this.getChildren().addAll(leftSpacer, titleText, rightSpacer);
 	}
 }
+
 
 /**
  * Abstract class which provides features to create a page which
@@ -109,6 +127,10 @@ abstract class ScrollablePage extends BorderPane {
 
 		// Make center scrollable
 		ScrollPane sp = new ScrollPane(center);
+		sp.setPrefWidth(400);
+		sp.setPrefHeight(400);
+		sp.setMinSize(ScrollPane.USE_PREF_SIZE, ScrollPane.USE_PREF_SIZE);
+		sp.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE); 
 		sp.setFitToWidth(true);
 		sp.setFitToHeight(true);
 

@@ -13,9 +13,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
+import javafx.scene.control.TextArea;
 import javafx.scene.layout.*;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.text.*;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
@@ -38,21 +37,21 @@ import javafx.stage.Stage;
  */
 public class RecipeDetailPage extends ScrollablePage {
 	RecipeDetailUITemplate recipeDetailUI;
-
 	RecipeDetailPage(RecipeDetailUITemplate recipeDetailUI){
-		super("Recipe Detail", recipeDetailUI);
+		super("Recipe Detail", recipeDetailUI); // This initializes and adds the header.
 		this.recipeDetailUI = recipeDetailUI;
-		header = new Header(recipeDetailUI.getRecipeTitle());
 		
-		header.addButton("Exit", e -> {exit(); }); // whose method is exit
+		header.addButton("Exit", e -> {exit(); }); // Add the exit button to the existing header.
+		//how to make the botton right aligned?
+		//header.setAlignment(Pos.TOP_RIGHT);
 		
-		//receive a list of Button
+		// receive a list of Button
 		List<Button> footerButtons = recipeDetailUI.getFooterButtons();
-        for (Button button: footerButtons) {
-            footer.addButton(button);
-        }
-
+		for (Button button : footerButtons) {
+			footer.addButton(button);
+		}
 	}
+
 	private void exit() {
 		System.out.println("Exiting Recipe Detail Page");	
 		//TODO: switch to RecipeListPage
@@ -81,23 +80,26 @@ abstract class RecipeDetailUITemplate extends VBox {
 	protected Recipe recipe;
 	protected List<Button> footerButtons = new ArrayList<Button>();
 	protected Label titleField;
-	protected TextField descriptionField; // Changed from Label to TextField
+	protected TextArea descriptionField; // Changed from Label to TextField
 
 	RecipeDetailUITemplate(RecipeList recipeList, Recipe recipe) {
 		this.recipeList = recipeList;
 		this.recipe = recipe;
 		titleField = new Label();
-		titleField.setPrefSize(500, 20);
+		titleField.setPrefSize(600, 20);
 		titleField.setStyle("-fx-background-color: #dae5ea; -fx-border-width: 0;");
 		titleField.setTextAlignment(TextAlignment.LEFT);
 		titleField.setText(recipe.getTitle());
 
-		// Initialize the descriptionField as a TextField
-		descriptionField = new TextField();
-		descriptionField.setPrefSize(500, 20);
+		// Initialize the descriptionField as a text area
+		descriptionField = new TextArea();
+		descriptionField.setPrefSize(600, 600);
 		descriptionField.setEditable(false); // Start as non-editable
 		descriptionField.setText(recipe.getDescription());
-
+		descriptionField.setWrapText(true);
+		
+		this.getChildren().add(titleField);
+    	this.getChildren().add(descriptionField);
 	}
 
 	// to set whether the description is editable
@@ -145,11 +147,16 @@ class RecipeDetailUI extends RecipeDetailUITemplate {
 	}
 
 	public void deleteRecipe() {
+		System.out.println("deleting recipe");	
 		super.recipeList.deleteRecipe(recipe);
+		System.out.println("current recipeList: " + super.recipeList.getRecipe(0).getTitle());
+		// TODO: switch to RecipeRecipeUI page with the same recipe detail displayed
+		
 
 	}
 
 	public void editRecipe() {
+		System.out.println("switching to EditableRecipeUI");	
 		// TODO: switch to EditableRecipeUI with the same recipe detail displayed
 	}
 }
@@ -176,7 +183,11 @@ class EditableRecipeUI extends RecipeDetailUITemplate {
 	}
 
 	public void deleteRecipe() {
+		System.out.println("deleting recipe");	
 		super.recipeList.deleteRecipe(recipe);
+		System.out.println("current recipeList: " + super.recipeList.getRecipe(0).getTitle());
+		// TODO: switch to RecipeRecipeUI page with the same recipe detail displayed
+
 	}
 
 	public void saveEdits() {
@@ -188,6 +199,7 @@ class EditableRecipeUI extends RecipeDetailUITemplate {
         Recipe newRecipe = new Recipe(recipe.getTitle(), newDescription);
         // update recipeList
         super.recipeList.addRecipe(newRecipe);
+		System.out.println("Returning to RecipeDetailPage");	
 		// TODO: switch to RecipeRecipeUI page with the same recipe detail displayed
 
 	}
@@ -211,7 +223,10 @@ class NewDetailedRecipeUI extends RecipeDetailUITemplate {
 	}
 
 	public void saveRecipe() {
+		System.out.println("saving recipe");
 		super.recipeList.addRecipe(recipe);
+		System.out.println("Newest recipe: " + super.recipeList.getRecipe((super.recipeList.size() - 1)).getTitle());
+
 	}
 
 }

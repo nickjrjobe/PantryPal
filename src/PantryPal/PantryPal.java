@@ -25,6 +25,8 @@ import javafx.stage.Stage;
 public class PantryPal extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
+		RecipeListPage recipeList = new RecipeListPage();
+
 
 		// Set the title of the app
 		primaryStage.setTitle("PantryPal");

@@ -33,11 +33,11 @@ interface ReadBehavior {
  * Internal representation of recipes
  */
 class RecipeList {
-	private ArrayList<Recipe> recipeList;
+	private ArrayList<Recipe> recipes;
 	private ReadBehavior readbehavior;
 	RecipeList(ReadBehavior readbehavior) {
 		this.readbehavior = readbehavior;
-		this.recipeList = new ArrayList<Recipe>();
+		this.recipes = new ArrayList<Recipe>();
 	}
 	public void read() {
 		if (readbehavior == null) {
@@ -49,16 +49,21 @@ class RecipeList {
 			addRecipe(recipe);
 		}
 	}
-
+	public int size() {
+		return recipes.size();
+	}
 	public void addRecipe(Recipe recipe) {
-		recipeList.add(recipe);
+		recipes.add(recipe);
 	}
 	public List<Recipe> getRecipes() {
-		return recipeList;
+		return recipes;
+	}
+	public Recipe getRecipe(int index) {
+		return recipes.get(index);
 	}
 	//delete a recipe from the list
 	public void deleteRecipe(Recipe recipe) {
-		recipeList.remove(recipe);
+		recipes.remove(recipe);
 	}
 }
 /**
