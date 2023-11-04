@@ -79,6 +79,7 @@ abstract class ScrollablePage extends BorderPane {
 	private Header header;
 	protected Footer footer;
 	protected Node center;
+	private Scene wrapperScene;
 
 	ScrollablePage(String title, Node center) {
 		// Initialise the header Object
@@ -99,5 +100,13 @@ abstract class ScrollablePage extends BorderPane {
 		this.setCenter(sp);
 		// Add footer to the bottom of the BorderPane
 		this.setBottom(footer);
+		// Create a wrapper Scene to ensure correct sizing of the page
+		this.wrapperScene = new Scene(this, 600, 800);
+	}
+	/**
+	 * returns a JavaFX Scene which contains this page
+	 */
+	public Scene getWrapperScene() {
+		return this.wrapperScene;
 	}
 }

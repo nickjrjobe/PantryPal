@@ -21,20 +21,34 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.text.*;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
+/*
+ * Object which handles which Page is currently displayed
+ */
+class PageTracker {
+	private Stage primaryStage;
+	PageTracker(Stage primaryStage) {
+		// Set the title of the app
+		primaryStage.setTitle("PantryPal");
+		this.primaryStage = primaryStage;
+	}
+	/**
+	 * "Swaps" to displaying a new page
+	 * @param page page to display
+	 */
+	void swapToPage(ScrollablePage page) {
+		primaryStage.setScene(page.getWrapperScene());
+		primaryStage.setResizable(false);
+		primaryStage.show();
+	}
+}
 
 public class PantryPal extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		RecipeListPage recipelist = new RecipeListPage();
-
-		// Set the title of the app
-		primaryStage.setTitle("PantryPal");
-		// Create scene of mentioned size with the border pane
-		primaryStage.setScene(new Scene(recipelist, 600, 800));
-		// Make window non-resizable
-		primaryStage.setResizable(false);
-		// Show the app
-		primaryStage.show();
+		RecipeListPage recipelist2 = new RecipeListPage();
+		PageTracker pt = new PageTracker(primaryStage);
+		pt.swapToPage(recipelist);
 	}
 
 	public static void main(String[] args) {
