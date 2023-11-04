@@ -25,12 +25,11 @@ import javafx.stage.Stage;
 public class PantryPal extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		RecipeListPage recipelist = new RecipeListPage();
 
 		// Set the title of the app
 		primaryStage.setTitle("PantryPal");
 		// Create scene of mentioned size with the border pane
-		primaryStage.setScene(new Scene(recipelist, 600, 800));
+		primaryStage.setScene(new Scene(recipeList, 600, 800));
 		// Make window non-resizable
 		primaryStage.setResizable(false);
 		// Show the app
