@@ -67,7 +67,7 @@ public abstract class RecipeDetailUiTemplate extends VBox{
         return recipe.getTitle();
     }
 	public void exit(){
-
+		pass;
 	}
 	public void edit(){
 
@@ -77,7 +77,7 @@ public abstract class RecipeDetailUiTemplate extends VBox{
 	}
 
 	public void saveRecipe(){
-
+		
 	}
 	public void deleteRecipe(){
 
@@ -126,42 +126,37 @@ public abstract class RecipeDetailPage extends ScrollablePage{
         }
 
 	}
-
-	//TODO: define a getRecipe method that delegates to the recipedetail object
-	//there should be a RecipeDetailUI (which is a interface),
-	//footers that contain 2 buttons,
-	//and a header that contains a recipeTitle and exit bottn
 	
 }
 // ----------------- delete below later-----------------
-/**
- * Internal representation of recipes
- */
-class RecipeList {
-	private ArrayList<Recipe> recipes;
-	private ReadBehavior readbehavior;
-	RecipeList(ReadBehavior readbehavior) {
-		this.readbehavior = readbehavior;
-		this.recipes = new ArrayList<Recipe>();
-	}
-	public void read() {
-		if (readbehavior == null) {
-			System.err.println("Read behavior not provided");
-			return;
-		}
-		List<Recipe> recipes = readbehavior.read();
-		for (Recipe recipe : recipes) {
-			addRecipe(recipe);
-		}
-	}
+// /**
+//  * Internal representation of recipes
+//  */
+// class RecipeList {
+// 	private ArrayList<Recipe> recipes;
+// 	private ReadBehavior readbehavior;
+// 	RecipeList(ReadBehavior readbehavior) {
+// 		this.readbehavior = readbehavior;
+// 		this.recipes = new ArrayList<Recipe>();
+// 	}
+// 	public void read() {
+// 		if (readbehavior == null) {
+// 			System.err.println("Read behavior not provided");
+// 			return;
+// 		}
+// 		List<Recipe> recipes = readbehavior.read();
+// 		for (Recipe recipe : recipes) {
+// 			addRecipe(recipe);
+// 		}
+// 	}
 
-	private void addRecipe(Recipe recipe) {
-		recipes.add(recipe);
-	}
-	public List<Recipe> getRecipes() {
-		return recipes;
-	}
-}
+// 	private void addRecipe(Recipe recipe) {
+// 		recipes.add(recipe);
+// 	}
+// 	public List<Recipe> getRecipes() {
+// 		return recipes;
+// 	}
+// }
 /**
  * UI element which displays list of recipes
  */
