@@ -46,6 +46,11 @@ class Footer extends HBox {
 		this.getChildren().add(button);
 		button.setOnAction(callback);
 	}
+
+	// Overloaded method that takes a pre-configured button
+	public void addButton(Button button) {
+		this.getChildren().add(button); // Assuming 'this' is a type of Pane
+	}
 	Footer() {
 		format();
 		this.setAlignment(Pos.CENTER); // aligning the buttons to center

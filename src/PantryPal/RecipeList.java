@@ -50,11 +50,15 @@ class RecipeList {
 		}
 	}
 
-	private void addRecipe(Recipe recipe) {
+	public void addRecipe(Recipe recipe) {
 		recipes.add(recipe);
 	}
 	public List<Recipe> getRecipes() {
 		return recipes;
+	}
+	//delete a recipe from the list
+	public void deleteRecipe(Recipe recipe) {
+		recipes.remove(recipe);
 	}
 }
 /**
