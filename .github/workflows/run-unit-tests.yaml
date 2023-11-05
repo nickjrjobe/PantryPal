@@ -3,9 +3,9 @@ name: Initial Java CI
 on: [push]
 
 permissions:
-    contents: read
-    checks: write
-    id-token: write
+  contents: read
+  checks: write
+  id-token: write
 
 jobs:
   build:
@@ -19,12 +19,15 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '11'
+
       # Get dependencies
-      - name: install dependencies
+      - name: Install dependencies
         run: bash setup_lib.sh
 
-      # build everything 
-      - name: Make 
+      # Build everything
+      - name: Make
         run: make
+
+      # Run unit test
       - name: Run unit test
-        run: make test 
+        run: make test
