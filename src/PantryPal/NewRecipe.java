@@ -21,16 +21,19 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import java.lang.Object;
 
+/* Interface connecting the chat gpt behavior to the new recipe class to maintain SRP*/
 interface RecipeCreator{
     public String makeRecipe(String meal, String ingredients); 
 }
 
+/* Interface connecting the whisper behavior to the new recipe class to maintain SRP*/
 interface VoiceToText{
     public void startRecording ();
     public void stopRecording ();
     public String getTranscript();
 }
 
+/* Uses a state machine approach to pass control between methods when creating new recipe */
 class NewRecipeCreator{
     String mealType;
     Boolean waitingForMeal = true;
@@ -62,10 +65,9 @@ class NewRecipeCreator{
         else{
             handleIngredients(response);
         }
-    
-        // initiate the state transition, do something with the response 
     }
 
+    /* Checks whether meal type is valid before changing state to accept ingredients or reasking for meal type */
     public void handleMeal(String response){
         response = response.toLowerCase();
         waitingForMeal = true;
@@ -86,18 +88,22 @@ class NewRecipeCreator{
         prompts.add("What ingredients do you have");
         waitingForMeal = false;
     }
+
+    /*Divides recipes into title and body given a multi line recipe*/
     public Recipe interpretRecipeResponse(String response){
         int delineator = response.indexOf("\n");
+        if (delineator == -1){
+            return null;
+        }
         String title = response.substring(0,delineator);
         String instructions = response.substring(delineator+1,response.length());
         return new Recipe(title, instructions);
     }
 
-    private void handleIngredients(String response){
+    /*Hands the ingredients to chat gpt and creates a recipe object using text response from chatgpt*/
+    public void handleIngredients(String response){
         String recipeResponse = recipeCreator.makeRecipe(mealType,response);
         Recipe recipe = interpretRecipeResponse(recipeResponse);
-        //create detailed recipe page
-        pageTracker.swapToPage(detailedNewRecipePage);
     }
 }
 
@@ -166,7 +172,3 @@ class NewRecipePage extends ScrollablePage{
         
     }
 }
-
-
-
-
