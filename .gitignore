@@ -3,3 +3,6 @@
 
 # Ignore the entire lib directory for javafx
 lib/
+
+# Ignore src.zip
+src.zip
