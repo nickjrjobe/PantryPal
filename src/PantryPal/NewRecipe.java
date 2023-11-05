@@ -31,28 +31,13 @@ interface VoiceToText{
     public String getTranscript();
 }
 
-class RecipeCreatorStub implements RecipeCreator {
-    public String makeRecipe(String meal, String ingredients){
-        return "Sandwich\n Add mayonaise";
-    }
-}
-class VoiceToTextStub implements VoiceToText{
-    public Boolean waitingForMeal = true;
-    public void startRecording(){}
-    public void stopRecording(){}
-    public String getTranscript(){String response = waitingForMeal ? "breakfast" : "mayonaise";
-        waitingForMeal = false;
-        return response;
-    }
-}
-
 class NewRecipeCreator{
     String mealType;
     Boolean waitingForMeal = true;
     VoiceToText voiceToText;
     RecipeCreator recipeCreator;
     public List<String> prompts;
-    //PageTracker pageTracker
+    
     
     NewRecipeCreator(VoiceToText voiceToText, RecipeCreator recipeCreator){
         this.voiceToText = voiceToText;
@@ -84,7 +69,6 @@ class NewRecipeCreator{
     public void handleMeal(String response){
         response = response.toLowerCase();
         waitingForMeal = true;
-        System.out.println("meal triggered");
         if (response.contains("breakfast")){
             mealType = "breakfast";
         }
@@ -93,7 +77,6 @@ class NewRecipeCreator{
         }
         else if (response.contains("dinner")){
             mealType = "dinner";
-            System.out.println("dinner triggered");
         }
         else{
             return;
@@ -101,7 +84,6 @@ class NewRecipeCreator{
         //Transition to waiting for ingredients state
         prompts.add(mealType);
         prompts.add("What ingredients do you have");
-        System.out.println("meal flag switch triggered");
         waitingForMeal = false;
     }
     public Recipe interpretRecipeResponse(String response){
@@ -115,7 +97,7 @@ class NewRecipeCreator{
         String recipeResponse = recipeCreator.makeRecipe(mealType,response);
         Recipe recipe = interpretRecipeResponse(recipeResponse);
         //create detailed recipe page
-        //pageTracker.swapToPage(detailedNewRecipePage);
+        pageTracker.swapToPage(detailedNewRecipePage);
     }
 }
 

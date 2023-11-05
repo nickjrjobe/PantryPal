@@ -6,6 +6,21 @@ import java.util.Arrays;
 import java.util.List;
 import org.junit.Test;
 
+class RecipeCreatorStub implements RecipeCreator {
+    public String makeRecipe(String meal, String ingredients){
+        return "Sandwich\n Add mayonaise";
+    }
+}
+class VoiceToTextStub implements VoiceToText{
+    public Boolean waitingForMeal = true;
+    public void startRecording(){}
+    public void stopRecording(){}
+    public String getTranscript(){String response = waitingForMeal ? "breakfast" : "mayonaise";
+        waitingForMeal = false;
+        return response;
+    }
+}
+
 
 public class NewRecipeTest {
 
