@@ -31,13 +31,18 @@ public class NewRecipeTest {
 
     @Test
 	public void testHandleMealType() {
+         /* Ensuring calling with improper meal type does not advance state */
 		newRecipeCreatorTest.handleMeal("snack");
 		assertEquals(newRecipeCreatorTest.waitingForMeal, true);
+         /* Ensuring calling with proper meal type advances state */
         newRecipeCreatorTest.handleMeal("dinner");
 		assertEquals(newRecipeCreatorTest.waitingForMeal, false);
 	}
     @Test
 	public void testInterpretRecipeResponse() {
+        /* Checking against expected format received from ChatGPT */
         assertEquals(newRecipeCreatorTest.interpretRecipeResponse("Cereal\nPut milk into cereal").getDescription(), new Recipe("Cereal","Put milk into cereal").getDescription());
+        /* when there is extra line at the end */
+        assertEquals(newRecipeCreatorTest.interpretRecipeResponse("Tea\nPut teabag into hot water\n").getDescription(), new Recipe("Tea","Put milk into cereal").getDescription());
 	}
 }
