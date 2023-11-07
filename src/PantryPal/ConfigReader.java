@@ -12,7 +12,8 @@ public class ConfigReader {
     private String openAiApiKey = "";
 
     /**
-     * Initializes a new instance of the ConfigReader class and reads the configuration.
+     * Initializes a new instance of the ConfigReader class and reads the
+     * configuration.
      */
     public ConfigReader() {
         readConfig();

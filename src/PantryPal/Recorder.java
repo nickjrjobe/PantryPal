@@ -26,16 +26,13 @@ class AudioRecorder {
         return isRecording;
     }
 
-    /**
-     * Start recording audio.
-     */
     public void start() {
         if (isRecording) {
-            System.out.println("Already recording.");
             return;
         }
 
         try {
+            // Get the TargetDataLine from the AudioSystem
             DataLine.Info dataLineInfo = new DataLine.Info(TargetDataLine.class, audioFormat);
             targetDataLine = (TargetDataLine) AudioSystem.getLine(dataLineInfo);
             targetDataLine.open(audioFormat);
@@ -43,6 +40,7 @@ class AudioRecorder {
 
             isRecording = true;
 
+            // Start a new thread to handle the recording process
             new Thread(() -> {
                 try {
                     AudioInputStream audioInputStream = new AudioInputStream(targetDataLine);
@@ -61,7 +59,6 @@ class AudioRecorder {
      */
     public void stop() {
         if (!isRecording) {
-            System.out.println("Not currently recording.");
             return;
         }
 
@@ -69,11 +66,9 @@ class AudioRecorder {
             targetDataLine.stop();
             targetDataLine.close();
             isRecording = false;
-            // You can convert the recorded WAV to MP3 using a different library if needed
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    
 }
