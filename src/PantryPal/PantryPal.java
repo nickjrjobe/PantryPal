@@ -33,7 +33,7 @@ class PageTracker {
 		this.primaryStage = primaryStage;
 	}
 	void setHome(ScrollablePage page) {
-		this.home = home;
+		this.home = page;
 	}
 	/**
 	 * "Swaps" to displaying a new page

@@ -87,6 +87,7 @@ class RecipeListUI extends VBox {
 		RecipeDetailPage recipepage = new RecipeDetailPage(recipedetails);
 		recipepage.footer.addButton("delete", e -> {
 			recipeList.deleteRecipe(recipe);
+			update();
 			pageTracker.goHome();
 		});
 		recipepage.footer.addButton("exit", e -> {
@@ -94,13 +95,14 @@ class RecipeListUI extends VBox {
 		});
 		recipepage.footer.addButton("edit", e -> {
 			/* make editable */
-			pageTracker.setDescriptionEditable(true);
+			recipedetails.setDescriptionEditable(true);
 			/* delete old buttons */
 			recipepage.footer.deleteButton("delete");
 			recipepage.footer.deleteButton("edit");
 			/* add save button */
 			recipepage.footer.addButton("save", eprime -> {
 				recipedetails.saveEdits();
+				update();
 				pageTracker.goHome();
 			});
 		});
