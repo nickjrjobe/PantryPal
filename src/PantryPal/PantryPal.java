@@ -50,12 +50,22 @@ class PageTracker {
 }
 
 public class PantryPal extends Application {
+	RecipeListPage recipelist;
+	PageTracker pageTracker;
+
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		PageTracker pt = new PageTracker(primaryStage);
 		RecipeListPage recipelist = new RecipeListPage(pt);
 		pt.setHome(recipelist);
 		pt.goHome();
+		recipelist.footer.addButton("New Recipe", e -> {createNewRecipePage();});
+	}
+
+	private void createNewRecipePage(){
+		NewRecipePage newRecipePage = new NewRecipePage();
+		newRecipePage.footer.addButton("Cancel", e -> {pageTracker.swapToPage(recipelist);});
+		pageTracker.swapToPage(newRecipePage);
 	}
 
 	public static void main(String[] args) {
