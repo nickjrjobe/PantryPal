@@ -26,10 +26,14 @@ import javafx.stage.Stage;
  */
 class PageTracker {
 	private Stage primaryStage;
+	private ScrollablePage home;
 	PageTracker(Stage primaryStage) {
 		// Set the title of the app
 		primaryStage.setTitle("PantryPal");
 		this.primaryStage = primaryStage;
+	}
+	void setHome(ScrollablePage page) {
+		this.home = page;
 	}
 	/**
 	 * "Swaps" to displaying a new page
@@ -40,6 +44,9 @@ class PageTracker {
 		primaryStage.setResizable(false);
 		primaryStage.show();
 	}
+	void goHome() {
+		swapToPage(home);
+	}
 }
 
 public class PantryPal extends Application {
@@ -48,15 +55,19 @@ public class PantryPal extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		this.recipelist = new RecipeListPage();
-		this.pageTracker = new PageTracker(primaryStage);
-		pageTracker.swapToPage(recipelist);
+		pageTracker = new PageTracker(primaryStage);
+		this.recipelist = new RecipeListPage(pageTracker);
+		pageTracker.setHome(recipelist);
+		pageTracker.goHome();
 		recipelist.footer.addButton("New Recipe", e -> {createNewRecipePage();});
 	}
 
 	private void createNewRecipePage(){
-		NewRecipePage newRecipePage = new NewRecipePage();
+		NewRecipeUI newRecipeUI = new NewRecipeUI();
+		NewRecipePage newRecipePage = new NewRecipePage(newRecipeUI);
 		newRecipePage.footer.addButton("Cancel", e -> {pageTracker.swapToPage(recipelist);});
+		newRecipePage.footer.addButton(
+		    "next", e -> { recipelist.saveNewRecipe(newRecipeUI); });
 		pageTracker.swapToPage(newRecipePage);
 	}
 
