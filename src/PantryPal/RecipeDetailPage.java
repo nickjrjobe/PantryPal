@@ -219,9 +219,7 @@ class NewDetailedRecipeUI extends RecipeDetailUITemplate {
 	}
 
 	public void saveRecipe() {
-		System.out.println("saving recipe");
 		super.recipeList.addRecipe(recipe);
-		System.out.println("Newest recipe: " + super.recipeList.getRecipe((super.recipeList.size() - 1)).getTitle());
 
 	}
 
