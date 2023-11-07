@@ -32,12 +32,25 @@ public class ChatGPTBot implements RecipeCreator {
     private static String API_KEY;
     private static String MODEL;
     public String ChatGPTBotOutput;  // Store the generated recipe
+    public String prompt;
 
     public ChatGPTBot() {
         API_ENDPOINT = "https://api.openai.com/v1/completions";
         ConfigReader configReader = new ConfigReader();
         API_KEY = configReader.getOpenAiApiKey();
         MODEL = "text-davinci-003";
+    }
+
+    /**
+     * Generates a prompt for ChatGPT based on the given meal and ingredients.
+     *
+     * @param meal The type of meal for the recipe.
+     * @param ingredients The list of ingredients for the recipe.
+     * @return A string containing the prompt
+     */
+    public String promptCreator(String meal, String ingredients) {
+        return "Give me a " + meal + " recipe using the following ingredients: " + ingredients + 
+        ". Please make the first line of the response the title of recipe. Thank you.";
     }
 
     /**
@@ -50,7 +63,7 @@ public class ChatGPTBot implements RecipeCreator {
     public String makeRecipe(String meal, String ingredients) {
         try {
             // Create a prompt for generating a recipe based on the meal and ingredients
-            String prompt = "Give me a " + meal + " recipe using the following ingredients: " + ingredients + ". Thank you.";
+            String prompt = promptCreator(meal, ingredients);
             System.out.println(prompt);
 
             // Maximum number of tokens for the response
