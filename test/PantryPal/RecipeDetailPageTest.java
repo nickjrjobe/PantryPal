@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class US2Main extends Application {
+public class RecipeDetailPageTest extends Application {
 
 
     @Override

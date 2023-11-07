@@ -42,8 +42,6 @@ public class RecipeDetailPage extends ScrollablePage {
 		this.recipeDetailUI = recipeDetailUI;
 		
 		header.addButton("Exit", e -> {exit(); }); // Add the exit button to the existing header.
-		//how to make the botton right aligned?
-		//header.setAlignment(Pos.TOP_RIGHT);
 		
 		// receive a list of Button
 		List<Button> footerButtons = recipeDetailUI.getFooterButtons();
