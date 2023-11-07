@@ -145,9 +145,7 @@ class RecipeDetailUI extends RecipeDetailUITemplate {
 	}
 
 	public void deleteRecipe() {
-		System.out.println("deleting recipe");	
 		super.recipeList.deleteRecipe(recipe);
-		System.out.println("current recipeList: " + super.recipeList.getRecipe(0).getTitle());
 		// TODO: switch to RecipeRecipeUI page with the same recipe detail displayed
 		
 
