@@ -96,12 +96,15 @@ class RecipeListUI extends VBox {
 		recipepage.footer.addButton("edit", e -> {
 			/* make editable */
 			recipedetails.setDescriptionEditable(true);
+
 			/* delete old buttons */
 			recipepage.footer.deleteButton("delete");
 			recipepage.footer.deleteButton("edit");
+
 			/* add save button */
 			recipepage.footer.addButton("save", eprime -> {
-				recipedetails.saveEdits();
+				recipe.setDescription(
+				    recipedetails.getRecipeDescriptionFieldText());
 				update();
 				pageTracker.goHome();
 			});

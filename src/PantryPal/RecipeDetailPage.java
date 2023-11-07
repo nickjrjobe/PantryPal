@@ -97,7 +97,7 @@ abstract class RecipeDetailUITemplate extends VBox {
 		descriptionField.setWrapText(true);
 		
 		this.getChildren().add(titleField);
-    	this.getChildren().add(descriptionField);
+		this.getChildren().add(descriptionField);
 	}
 
 	// to set whether the description is editable
@@ -135,27 +135,6 @@ class RecipeDetailUI extends RecipeDetailUITemplate {
 	public RecipeDetailUI(RecipeList recipeList, Recipe recipe) {
 		super(recipeList, recipe);
 		super.setDescriptionEditable(false);
-		// Initialize buttons and their actions
-		/*
-		deleteButton = new Button("Delete Recipe");
-		deleteButton.setOnAction(e -> deleteRecipe());
-		this.addButton(deleteButton);
-		editButton = new Button("Edit");
-		editButton.setOnAction(e -> editRecipe());
-		this.addButton(editButton);
-		*/
-	}
-
-	public void deleteRecipe() {
-		super.recipeList.deleteRecipe(recipe);
-		// TODO: switch to RecipeRecipeUI page with the same recipe detail displayed
-
-
-	}
-
-	public void editRecipe() {
-		System.out.println("switching to EditableRecipeUI");
-		// TODO: switch to EditableRecipeUI with the same recipe detail displayed
 	}
 	public void saveEdits() {
 		// Delete the current recipe
@@ -170,51 +149,6 @@ class RecipeDetailUI extends RecipeDetailUITemplate {
 	}
 }
 
-/**
- * UI element which displays recipe detail
- * 2 footer buttons: deleteButton & saveEditButton
- */
-
-		class EditableRecipeUI extends RecipeDetailUITemplate {
-			protected Button deleteButton;
-			protected Button saveEditButton;
-
-			public EditableRecipeUI(RecipeList recipeList, Recipe recipe) {
-				super(recipeList, recipe);
-				super.setDescriptionEditable(true);
-				// Initialize buttons and their actions
-				saveEditButton = new Button("Save Edits");
-				saveEditButton.setOnAction(e -> saveEdits());
-				this.addButton(saveEditButton);
-				deleteButton = new Button("Delete Recipe");
-				deleteButton.setOnAction(e -> deleteRecipe());
-				this.addButton(deleteButton);
-			}
-
-			public void deleteRecipe() {
-				System.out.println("deleting recipe");
-				super.recipeList.deleteRecipe(recipe);
-				System.out.println("current recipeList: "
-				    + super.recipeList.getRecipe(0).getTitle());
-				// TODO: switch to RecipeRecipeUI page with the same recipe detail
-				// displayed
-			}
-
-			public void saveEdits() {
-				// Delete the current recipe
-				deleteRecipe();
-
-				// Create a new recipe with the same title and new description
-				String newDescription = descriptionField.getText();
-				Recipe newRecipe = new Recipe(recipe.getTitle(), newDescription);
-				// update recipeList
-				super.recipeList.addRecipe(newRecipe);
-				System.out.println("Returning to RecipeDetailPage");
-				// TODO: switch to RecipeRecipeUI page with the same recipe detail
-				// displayed
-			}
-
-}
 /**
  * UI element which displays recipe detail
  * 1 footer button: saveRecipeButton
