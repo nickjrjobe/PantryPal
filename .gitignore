@@ -6,3 +6,4 @@ lib/
 
 # Ignore src.zip
 src.zip
+.vscode/tasks.json
