@@ -115,10 +115,6 @@ public class WhisperBot implements VoiceToText {
      */
     public String getTranscript() {
         try {
-            // Set up the file path and create a file object
-            System.out.println("\nWhisper Transcription:");
-
-            // Create file object from file path
             File file = new File(filePath);
 
             // Set up HTTP connection
@@ -194,21 +190,11 @@ class MockWhisperer implements VoiceToText {
     private String mockTranscript;
     public boolean isRecording;
 
-    /**
-     * Starts the recording process.
-     * Prints a message to the console to simulate the start of a recording.
-     */
     public void startRecording() {
-        System.out.println("Recording started... Beep Boop Beep Boop");
         isRecording = true;
     }
 
-    /**
-     * Stops the recording process.
-     * Prints a message to the console to simulate the end of a recording.
-     */
     public void stopRecording() {
-        System.out.println("Recording stopped... YAAAAAAAAY");
         isRecording = false;
     }
 

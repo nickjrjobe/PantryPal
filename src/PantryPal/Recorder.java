@@ -28,7 +28,6 @@ class AudioRecorder {
 
     public void start() {
         if (isRecording) {
-            System.out.println("Already recording."); // Notify if already recording
             return;
         }
 
@@ -60,7 +59,6 @@ class AudioRecorder {
      */
     public void stop() {
         if (!isRecording) {
-            System.out.println("Not currently recording.");
             return;
         }
 

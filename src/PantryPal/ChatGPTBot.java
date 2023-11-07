@@ -52,7 +52,6 @@ public class ChatGPTBot implements RecipeCreator {
             // Create a prompt for generating a recipe based on the meal and ingredients
             String prompt = "Give me a " + meal + " recipe using the following ingredients: " + ingredients
                     + ". Thank you.";
-            System.out.println(prompt);
 
             // Maximum number of tokens for the response
             int maxTokens = 100;
