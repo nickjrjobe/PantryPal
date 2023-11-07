@@ -49,21 +49,30 @@ class RecipeList {
 			addRecipe(recipe);
 		}
 	}
-
-	private void addRecipe(Recipe recipe) {
+	public int size() {
+		return recipes.size();
+	}
+	public void addRecipe(Recipe recipe) {
 		recipes.add(recipe);
 	}
 	public List<Recipe> getRecipes() {
 		return recipes;
+	}
+	public Recipe getRecipe(int index) {
+		return recipes.get(index);
+	}
+	//delete a recipe from the list
+	public void deleteRecipe(Recipe recipe) {
+		recipes.remove(recipe);
 	}
 }
 /**
  * UI element which displays list of recipes
  */
 class RecipeListUI extends VBox {
-	private RecipeList recipelist;
+	private RecipeList recipeList;
 	RecipeListUI(RecipeList recipelist) {
-		this.recipelist = recipelist;
+		this.recipeList = recipelist;
 		format();
 	}
 	private void format() {
@@ -77,12 +86,12 @@ class RecipeListUI extends VBox {
 	 */
 	private void update() {
 		this.getChildren().clear();
-		for (Recipe recipe : this.recipelist.getRecipes()) {
+		for (Recipe recipe : this.recipeList.getRecipes()) {
 			this.getChildren().add(new RecipeEntryUI(recipe));
 		}
 	}
 	public void read() {
-		recipelist.read();
+		recipeList.read();
 		update();
 	}
 }
@@ -90,11 +99,11 @@ class RecipeListUI extends VBox {
  * UI Page containing recipe list, and accompanying header and footer
  */
 class RecipeListPage extends ScrollablePage {
-	private RecipeListUI recipelist;
+	private RecipeListUI recipeList;
 	RecipeListPage() {
 		super("Recipe List",
 		    new RecipeListUI(new RecipeList(new FileReadBehavior("recipes.txt"))));
-		this.recipelist = (RecipeListUI) this.center;
-		footer.addButton("Read", e -> { recipelist.read(); });
+		this.recipeList = (RecipeListUI) this.center;
+		footer.addButton("Read", e -> { recipeList.read(); });
 	}
 }
