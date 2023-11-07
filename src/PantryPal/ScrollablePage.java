@@ -61,7 +61,6 @@ class Header extends HBox {
 	private static final String buttonStyle =
 			    "-fx-font-style: italic; -fx-background-color: #FFFFFF;  -fx-font-weight: bold; -fx-font: 11 arial;";
     private Text titleText;
-	private HBox buttonContainer;
 
     private void format() {
         this.setPrefSize(500, 60); // Size of the header
@@ -69,23 +68,6 @@ class Header extends HBox {
         this.setPadding(new Insets(10)); // Add padding around
     }
 
-    public void addButton(String buttonText, EventHandler<ActionEvent> callback) {
-		if (buttonContainer == null) {
-            // Initialize the button container
-            buttonContainer = new HBox();
-            buttonContainer.setAlignment(Pos.CENTER_RIGHT);
-            this.getChildren().add(buttonContainer);
-            // Make sure it doesn't grow to push the title
-            HBox.setHgrow(buttonContainer, Priority.NEVER);
-        }
-        Button button = new Button(buttonText);
-        button.setStyle(buttonStyle);
-        button.setPadding(new Insets(5, 10, 5, 10));
-        button.setOnAction(callback);
-
-        // Add button to the right container
-        buttonContainer.getChildren().add(button);
-    }
 
 	Header(String title) {
 		format();

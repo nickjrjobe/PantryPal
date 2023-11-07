@@ -29,6 +29,9 @@ import javafx.stage.Stage;
 class RecipeEntryUI extends HBox {
 	private Recipe recipe;
 	private Label titleField;
+	private static final String buttonStyle =
+	    "-fx-font-style: italic; -fx-background-color: #FFFFFF;  -fx-font-weight: bold; -fx-font: 11 arial;";
+
 	public Recipe getRecipe() {
 		return recipe;
 	}
@@ -42,6 +45,17 @@ class RecipeEntryUI extends HBox {
 	 */
 	private void update() {
 		titleField.setText(recipe.getTitle());
+	}
+	/**
+	 * add a button to footer
+	 * @param buttontext Text which button should display
+	 * @param callback event handler to call when button is pressed
+	 */
+	public void addButton(String buttontext, EventHandler<ActionEvent> callback) {
+		Button button = new Button(buttontext);
+		button.setStyle(buttonStyle);
+		this.getChildren().add(button);
+		button.setOnAction(callback);
 	}
 	RecipeEntryUI(Recipe recipe) {
 		this.recipe = recipe;
