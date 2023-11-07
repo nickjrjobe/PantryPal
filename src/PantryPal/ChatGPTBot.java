@@ -27,17 +27,14 @@ interface RecipeCreator {
  * using the OpenAI API.
  */
 public class ChatGPTBot implements RecipeCreator {
-    // Constants for API access
-    private static String API_ENDPOINT;
-    private static String API_KEY;
-    private static String MODEL;
-    public String ChatGPTBotOutput;  // Store the generated recipe
+    private static final String API_ENDPOINT = "https://api.openai.com/v1/completions";
+    private static final String MODEL = "text-davinci-003";
+    private String apiKey;
+    public String chatGptBotOutput;
 
     public ChatGPTBot() {
-        API_ENDPOINT = "https://api.openai.com/v1/completions";
         ConfigReader configReader = new ConfigReader();
-        API_KEY = configReader.getOpenAiApiKey();
-        MODEL = "text-davinci-003";
+        apiKey = configReader.getOpenAiApiKey();
     }
 
     /**
@@ -71,7 +68,7 @@ public class ChatGPTBot implements RecipeCreator {
             .newBuilder()
             .uri(new URI(API_ENDPOINT))
             .header("Content-Type", "application/json")
-            .header("Authorization", String.format("Bearer %s", API_KEY))
+            .header("Authorization", String.format("Bearer %s", apiKey))
             .POST(HttpRequest.BodyPublishers.ofString(requestBody.toString()))
             .build();
 
@@ -85,14 +82,14 @@ public class ChatGPTBot implements RecipeCreator {
             JSONObject responseJson = new JSONObject(responseBody.body());
             JSONArray choices = responseJson.getJSONArray("choices");
             String generatedText = choices.getJSONObject(0).getString("text");
-            ChatGPTBotOutput = generatedText;
+            chatGptBotOutput = generatedText;
 
         } catch(Exception e) {
             // How can u possibly screw this up HmmHMHmmMMMmMHMmmmMmMMmmmm 🤔
             return null;  // Return null in case of an error
         }
 
-        return ChatGPTBotOutput;
+        return chatGptBotOutput;
     }
 }
 

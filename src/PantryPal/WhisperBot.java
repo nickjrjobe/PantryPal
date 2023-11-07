@@ -41,22 +41,16 @@ interface VoiceToText {
  * Implementation of the VoiceToText interface using the OpenAI Whisper ASR API.
  */
 public class WhisperBot implements VoiceToText {
-    // Constants for API and authentication
-    private static String API_ENDPOINT;
-    private static String TOKEN;
-    private static String MODEL;
-    // File path for recording output
-    private static String FILE_PATH;
-    public String output;
-
-    // Audio recorder instance
+    private static final String API_ENDPOINT = "https://api.openai.com/v1/audio/transcriptions";
+    private static final String MODEL = "whisper-1";
+    private static final String filePath = "output.wav";
+    private String token;
+    private String output;
     private AudioRecorder recorder;
 
     public WhisperBot() {
-        API_ENDPOINT = "https://api.openai.com/v1/audio/transcriptions";
         ConfigReader configReader = new ConfigReader();
-        TOKEN = configReader.getOpenAiApiKey();
-        MODEL = "whisper-1";
+        token = configReader.getOpenAiApiKey();
         recorder = new AudioRecorder();
     }
 
@@ -148,11 +142,10 @@ public class WhisperBot implements VoiceToText {
     public String getTranscript() {
         try {
             // Set up the file path and create a file object
-            FILE_PATH = "output.wav";
             System.out.println("\nWhisper Transcription:");
 
             // Create file object from file path
-            File file = new File(FILE_PATH);
+            File file = new File(filePath);
 
             // Set up HTTP connection
             URL url = new URI(API_ENDPOINT).toURL();
@@ -167,7 +160,7 @@ public class WhisperBot implements VoiceToText {
                 "Content-Type",
                 "multipart/form-data; boundary=" + boundary
             );
-            connection.setRequestProperty("Authorization", "Bearer " + TOKEN);
+            connection.setRequestProperty("Authorization", "Bearer " + token);
 
             
             // Set up output stream to write request body
