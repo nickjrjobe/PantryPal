@@ -41,7 +41,7 @@ public class RecipeDetailPage extends ScrollablePage {
 		super("Recipe Detail", recipeDetailUI); // This initializes and adds the header.
 		this.recipeDetailUI = recipeDetailUI;
 		
-		header.addButton("Exit", e -> {exit(); }); // Add the exit button to the existing header.
+		footer.addButton("Exit", e -> {exit(); }); // Add the exit button to footer
 		
 		// receive a list of Button
 		List<Button> footerButtons = recipeDetailUI.getFooterButtons();
