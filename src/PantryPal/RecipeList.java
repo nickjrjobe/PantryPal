@@ -83,7 +83,7 @@ class RecipeListUI extends VBox {
 		this.setStyle("-fx-background-color: #F0F8FF;");
 	}
 	public void readDetails(Recipe recipe) {
-		RecipeDetailUI recipedetails = new RecipeDetailUI(recipeList, recipe);
+		RecipeDetailUI recipedetails = new RecipeDetailUI(recipe);
 		RecipeDetailPage recipepage = new RecipeDetailPage(recipedetails);
 		recipepage.footer.addButton("delete", e -> {
 			recipeList.deleteRecipe(recipe);
@@ -127,6 +127,21 @@ class RecipeListUI extends VBox {
 		recipeList.read();
 		update();
 	}
+	public void saveNewRecipe(NewRecipeUI newRecipeUI) {
+		Recipe recipe = newRecipeUI.getRecipe();
+		if (recipe == null) {
+			return;
+		}
+		NewDetailedRecipeUI newdetailedrecipeui = new NewDetailedRecipeUI(recipe);
+		RecipeDetailPage newdetailedrecipepage =
+		    new RecipeDetailPage(newdetailedrecipeui);
+		newdetailedrecipepage.footer.addButton("save", e -> {
+			recipeList.addRecipe(recipe);
+			update();
+			pageTracker.goHome();
+		});
+		pageTracker.swapToPage(newdetailedrecipepage);
+	}
 }
 /**
  * UI Page containing recipe list, and accompanying header and footer
@@ -138,5 +153,8 @@ class RecipeListPage extends ScrollablePage {
 		    new RecipeListUI(new RecipeList(new FileReadBehavior("recipes.txt")), pt));
 		this.recipeList = (RecipeListUI) this.center;
 		footer.addButton("Read", e -> { recipeList.read(); });
+	}
+	public void saveNewRecipe(NewRecipeUI newRecipeUI) {
+		recipeList.saveNewRecipe(newRecipeUI);
 	}
 }

@@ -55,16 +55,19 @@ public class PantryPal extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		PageTracker pt = new PageTracker(primaryStage);
-		RecipeListPage recipelist = new RecipeListPage(pt);
-		pt.setHome(recipelist);
-		pt.goHome();
+		pageTracker = new PageTracker(primaryStage);
+		this.recipelist = new RecipeListPage(pageTracker);
+		pageTracker.setHome(recipelist);
+		pageTracker.goHome();
 		recipelist.footer.addButton("New Recipe", e -> {createNewRecipePage();});
 	}
 
 	private void createNewRecipePage(){
-		NewRecipePage newRecipePage = new NewRecipePage();
+		NewRecipeUI newRecipeUI = new NewRecipeUI();
+		NewRecipePage newRecipePage = new NewRecipePage(newRecipeUI);
 		newRecipePage.footer.addButton("Cancel", e -> {pageTracker.swapToPage(recipelist);});
+		newRecipePage.footer.addButton(
+		    "next", e -> { recipelist.saveNewRecipe(newRecipeUI); });
 		pageTracker.swapToPage(newRecipePage);
 	}
 

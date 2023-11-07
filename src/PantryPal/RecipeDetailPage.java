@@ -41,18 +41,6 @@ public class RecipeDetailPage extends ScrollablePage {
 		super("Recipe Detail", recipeDetailUI); // This initializes and adds the header.
 		this.recipeDetailUI = recipeDetailUI;
 		
-		footer.addButton("Exit", e -> {exit(); }); // Add the exit button to footer
-		
-		// receive a list of Button
-		List<Button> footerButtons = recipeDetailUI.getFooterButtons();
-		for (Button button : footerButtons) {
-			footer.addButton(button);
-		}
-	}
-
-	private void exit() {
-		System.out.println("Exiting Recipe Detail Page");	
-		//TODO: switch to RecipeListPage
 	}
 
 }
@@ -74,14 +62,11 @@ public class RecipeDetailPage extends ScrollablePage {
  */
 
 abstract class RecipeDetailUITemplate extends VBox {
-	protected RecipeList recipeList;
 	protected Recipe recipe;
-	protected List<Button> footerButtons = new ArrayList<Button>();
 	protected Label titleField;
 	protected TextArea descriptionField; // Changed from Label to TextField
 
-	RecipeDetailUITemplate(RecipeList recipeList, Recipe recipe) {
-		this.recipeList = recipeList;
+	RecipeDetailUITemplate(Recipe recipe) {
 		this.recipe = recipe;
 		titleField = new Label();
 		titleField.setPrefSize(600, 20);
@@ -105,17 +90,11 @@ abstract class RecipeDetailUITemplate extends VBox {
 		descriptionField.setEditable(editable);
 	}
 
-	public List<Button> getFooterButtons() {
-		return footerButtons;
-	}
-
-	// add footer buttons to the list
-	public void addButton(Button button) {
-		footerButtons.add(button);
-	}
-
 	public String getRecipeDescription() {
 		return recipe.getDescription();
+	}
+	public String getRecipeDescriptionFieldText() {
+		return descriptionField.getText();
 	}
 
 	public String getRecipeTitle() {
@@ -129,23 +108,9 @@ abstract class RecipeDetailUITemplate extends VBox {
  */
 
 class RecipeDetailUI extends RecipeDetailUITemplate {
-	protected Button deleteButton;
-	protected Button editButton;
-
-	public RecipeDetailUI(RecipeList recipeList, Recipe recipe) {
-		super(recipeList, recipe);
+	public RecipeDetailUI(Recipe recipe) {
+		super(recipe);
 		super.setDescriptionEditable(false);
-	}
-	public void saveEdits() {
-		// Delete the current recipe
-		deleteRecipe();
-
-		// Create a new recipe with the same title and new description
-		String newDescription = descriptionField.getText();
-		Recipe newRecipe = new Recipe(recipe.getTitle(), newDescription);
-		// update recipeList
-		super.recipeList.addRecipe(newRecipe);
-		System.out.println("Returning to RecipeDetailPage");
 	}
 }
 
@@ -155,20 +120,8 @@ class RecipeDetailUI extends RecipeDetailUITemplate {
  */
 
 class NewDetailedRecipeUI extends RecipeDetailUITemplate {
-	protected Button saveEditButton;
-
-	public NewDetailedRecipeUI(RecipeList recipeList, Recipe recipe) {
-		super(recipeList, recipe);
+	public NewDetailedRecipeUI(Recipe recipe) {
+		super(recipe);
 		super.setDescriptionEditable(false);
-		// Initialize buttons and their actions
-		saveEditButton = new Button("Save Recipe");
-		saveEditButton.setOnAction(e -> saveRecipe());
-		this.addButton(saveEditButton);
 	}
-
-	public void saveRecipe() {
-		super.recipeList.addRecipe(recipe);
-
-	}
-
 }

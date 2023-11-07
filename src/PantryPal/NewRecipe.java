@@ -40,13 +40,17 @@ class NewRecipeCreator{
     VoiceToText voiceToText;
     RecipeCreator recipeCreator;
     public List<String> prompts;
-    
-    
+    private Recipe recipe;
+
     NewRecipeCreator(VoiceToText voiceToText, RecipeCreator recipeCreator){
-        this.voiceToText = voiceToText;
-        this.recipeCreator = recipeCreator;
-        this.prompts = new ArrayList<String>();
-        prompts.add("Would you like Breakfast, Lunch, or Dinner?");
+	    recipe = null;
+	    this.voiceToText = voiceToText;
+	    this.recipeCreator = recipeCreator;
+	    this.prompts = new ArrayList<String>();
+	    prompts.add("Would you like Breakfast, Lunch, or Dinner?");
+    }
+    public Recipe getRecipe() {
+	    return recipe;
     }
 
     public void start(){
@@ -114,7 +118,9 @@ class NewRecipeUI extends VBox{
 		this.setSpacing(20); // sets spacing between tasks
 		this.setPrefSize(500, 560);
 		this.setStyle("-fx-background-color: #F0F8FF;");
-        
+    }
+	Recipe getRecipe() {
+		return new Recipe("Fake recipe", "great ingredients lah");
 	}
     void addPrompt(String text){
         Label label = new Label(text);
@@ -138,6 +144,7 @@ class NewRecipeUI extends VBox{
         getNewPrompts();
     }
     void getNewPrompts(){
+	Recipe recipe = newRecipeCreator.getRecipe();
         this.getChildren().clear();
         for(int i = 0; i < newRecipeCreator.prompts.size(); i++){
             addPrompt(newRecipeCreator.prompts.get(i));
@@ -163,12 +170,9 @@ class NewRecipePage extends ScrollablePage{
         });
     }
 
-    
-    NewRecipePage() {
-		super("New Recipe",
-		    new NewRecipeUI());
-        newRecipeUI = (NewRecipeUI) center;
-        addStartButton();
-        
+    NewRecipePage(NewRecipeUI newRecipeUI) {
+	    super("New Recipe", newRecipeUI);
+	    this.newRecipeUI = newRecipeUI;
+	    addStartButton();
     }
 }
