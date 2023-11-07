@@ -21,18 +21,6 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import java.lang.Object;
 
-/* Interface connecting the chat gpt behavior to the new recipe class to maintain SRP*/
-interface RecipeCreator{
-    public String makeRecipe(String meal, String ingredients); 
-}
-
-/* Interface connecting the whisper behavior to the new recipe class to maintain SRP*/
-interface VoiceToText{
-    public void startRecording ();
-    public void stopRecording ();
-    public String getTranscript();
-}
-
 /* Uses a state machine approach to pass control between methods when creating new recipe */
 class NewRecipeCreator{
     String mealType;

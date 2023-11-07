@@ -1,9 +1,5 @@
-# Ignore launch.json in .vscode directory
-.vscode/launch.json
-
-# Ignore the entire lib directory for javafx
+output.wav
 lib/
-
-# Ignore src.zip
+bin/
+.vscode/
 src.zip
-.vscode/tasks.json
