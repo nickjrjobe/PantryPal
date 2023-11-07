@@ -52,6 +52,17 @@ class Footer extends HBox {
 		format();
 		this.setAlignment(Pos.CENTER); // aligning the buttons to center
 	}
+	public void deleteButton(String buttontext){
+		int i = 0;
+		for(Node buttonNode : this.getChildren()){
+			Button button = (Button) buttonNode;
+			if(button.getText() == buttontext){
+				this.getChildren().remove(i);
+				return;
+			}
+			i++;
+		}
+	}
 }
 
 /**
