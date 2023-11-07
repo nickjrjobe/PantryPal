@@ -32,8 +32,8 @@ public class WhisperTest {
         outputStream.close();
 
         String expectedOutput = "--boundary\r\n" +
-                                "Content-Disposition: form-data; name=\"paramName\"\r\n\r\n" +
-                                "paramValue\r\n";
+                "Content-Disposition: form-data; name=\"paramName\"\r\n\r\n" +
+                "paramValue\r\n";
 
         String actualOutput = new String(outputStream.toByteArray());
 
@@ -43,14 +43,14 @@ public class WhisperTest {
     @Test
     public void testWriteFileToOutputStream() throws IOException {
         String boundary = "boundary";
-        File testFile = new File("test/PantryPal/testfile.txt"); // Change this to the path of a test file on your system
+        File testFile = new File("test/PantryPal/testfile.txt");
 
         WhisperBot.writeFileToOutputStream(outputStream, testFile, boundary);
         outputStream.close();
 
         String expectedOutputStart = "--boundary\r\n" +
-                                     "Content-Disposition: form-data; name=\"file\"; filename=\"testfile.txt\"\r\n" +
-                                     "Content-Type: audio/mpeg\r\n\r\n";
+                "Content-Disposition: form-data; name=\"file\"; filename=\"testfile.txt\"\r\n" +
+                "Content-Type: audio/mpeg\r\n\r\n";
 
         // Verify the file content
         FileInputStream fileInputStream = new FileInputStream(testFile);
@@ -63,7 +63,8 @@ public class WhisperTest {
         // Compare the expected start of the output with the actual output
         assertArrayEquals(expectedOutputStart.getBytes(), actualOutput);
 
-        // Compare the file content with the actual output starting from the end of the expected output
+        // Compare the file content with the actual output starting from the end of the
+        // expected output
         for (int i = 0; i < fileContent.length; i++) {
             assertEquals(fileContent[i], actualOutput[expectedOutputStart.length() + i]);
         }
@@ -117,4 +118,3 @@ public class WhisperTest {
         }
     }
 }
-

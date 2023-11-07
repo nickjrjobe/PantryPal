@@ -14,26 +14,12 @@ import java.net.URL;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-
 /**
  * Interface for voice-to-text functionality.
  */
 interface VoiceToText {
-    /**
-     * Start recording audio.
-     */
     public void startRecording();
-    
-    /**
-     * Stop recording audio.
-     */
     public void stopRecording();
-    
-    /**
-     * Retrieve the transcript of the recorded audio.
-     * 
-     * @return Transcript of the recorded audio, or null if an error occurs.
-     */
     public String getTranscript();
 }
 
@@ -59,31 +45,23 @@ public class WhisperBot implements VoiceToText {
             OutputStream outputStream,
             String parameterName,
             String parameterValue,
-            String boundary
-    ) throws IOException {
+            String boundary) throws IOException {
         outputStream.write(("--" + boundary + "\r\n").getBytes());
         outputStream.write(
-    (
-        "Content-Disposition: form-data; name=\"" + parameterName + "\"\r\n\r\n"
-    ).getBytes()
-    );
+                ("Content-Disposition: form-data; name=\"" + parameterName + "\"\r\n\r\n").getBytes());
         outputStream.write((parameterValue + "\r\n").getBytes());
     }
 
     // Helper method to write a file to the output stream
     public static void writeFileToOutputStream(
-        OutputStream outputStream,
-        File file,
-        String boundary
-    ) throws IOException {
+            OutputStream outputStream,
+            File file,
+            String boundary) throws IOException {
         outputStream.write(("--" + boundary + "\r\n").getBytes());
         outputStream.write(
-        (
-            "Content-Disposition: form-data; name=\"file\"; filename=\"" +
-            file.getName() +
-            "\"\r\n"
-            ).getBytes()
-        );
+                ("Content-Disposition: form-data; name=\"file\"; filename=\"" +
+                        file.getName() +
+                        "\"\r\n").getBytes());
         outputStream.write(("Content-Type: audio/mpeg\r\n\r\n").getBytes());
 
         FileInputStream fileInputStream = new FileInputStream(file);
@@ -98,10 +76,9 @@ public class WhisperBot implements VoiceToText {
 
     // Helper method to handle a successful API response
     public void handleSuccessResponse(HttpURLConnection connection)
-    throws IOException, JSONException {
+            throws IOException, JSONException {
         BufferedReader in = new BufferedReader(
-            new InputStreamReader(connection.getInputStream())
-        );
+                new InputStreamReader(connection.getInputStream()));
         String inputLine;
         StringBuilder response = new StringBuilder();
         while ((inputLine = in.readLine()) != null) {
@@ -109,9 +86,7 @@ public class WhisperBot implements VoiceToText {
         }
         in.close();
 
-
         JSONObject responseJson = new JSONObject(response.toString());
-
 
         String generatedText = responseJson.getString("text");
 
@@ -120,10 +95,9 @@ public class WhisperBot implements VoiceToText {
 
     // Helper method to handle an error response from the API
     public static void handleErrorResponse(HttpURLConnection connection)
-    throws IOException, JSONException {
+            throws IOException, JSONException {
         BufferedReader errorReader = new BufferedReader(
-            new InputStreamReader(connection.getErrorStream())
-        );
+                new InputStreamReader(connection.getErrorStream()));
         String errorLine;
         StringBuilder errorResponse = new StringBuilder();
         while ((errorLine = errorReader.readLine()) != null) {
@@ -153,40 +127,31 @@ public class WhisperBot implements VoiceToText {
             connection.setRequestMethod("POST");
             connection.setDoOutput(true);
 
-
             // Set up request headers
             String boundary = "Boundary-" + System.currentTimeMillis();
             connection.setRequestProperty(
-                "Content-Type",
-                "multipart/form-data; boundary=" + boundary
-            );
+                    "Content-Type",
+                    "multipart/form-data; boundary=" + boundary);
             connection.setRequestProperty("Authorization", "Bearer " + token);
 
-            
             // Set up output stream to write request body
             OutputStream outputStream = connection.getOutputStream();
-
 
             // Write model parameter to request body
             writeParameterToOutputStream(outputStream, "model", MODEL, boundary);
 
-
             // Write file parameter to request body
             writeFileToOutputStream(outputStream, file, boundary);
 
-
             // Write closing boundary to request body
             outputStream.write(("\r\n--" + boundary + "--\r\n").getBytes());
-
 
             // Flush and close output stream
             outputStream.flush();
             outputStream.close();
 
-
             // Get response code
             int responseCode = connection.getResponseCode();
-
 
             // Check response code and handle response accordingly
             if (responseCode == HttpURLConnection.HTTP_OK) {
@@ -194,7 +159,6 @@ public class WhisperBot implements VoiceToText {
             } else {
                 handleErrorResponse(connection);
             }
-
 
             // Disconnect connection
             connection.disconnect();
@@ -204,7 +168,7 @@ public class WhisperBot implements VoiceToText {
         }
 
         return output;
-        
+
     }
 
     /**
@@ -229,7 +193,7 @@ class MockWhisperer implements VoiceToText {
     // Instance variable for storing the mock transcript
     private String mockTranscript;
     public boolean isRecording;
-    
+
     /**
      * Starts the recording process.
      * Prints a message to the console to simulate the start of a recording.
@@ -238,7 +202,7 @@ class MockWhisperer implements VoiceToText {
         System.out.println("Recording started... Beep Boop Beep Boop");
         isRecording = true;
     }
-    
+
     /**
      * Stops the recording process.
      * Prints a message to the console to simulate the end of a recording.
@@ -247,7 +211,7 @@ class MockWhisperer implements VoiceToText {
         System.out.println("Recording stopped... YAAAAAAAAY");
         isRecording = false;
     }
-    
+
     /**
      * Returns a mock transcript for testing purposes.
      *
@@ -256,7 +220,7 @@ class MockWhisperer implements VoiceToText {
     public String getTranscript() {
         return mockTranscript;
     }
-    
+
     /**
      * Sets the mockTranscript instance variable.
      *
@@ -266,4 +230,3 @@ class MockWhisperer implements VoiceToText {
         this.mockTranscript = mockTranscript;
     }
 }
-
