@@ -22,6 +22,7 @@ import javafx.scene.text.*;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
+
 /**
  * UI representation of Recipe on RecipeList page
  */
@@ -65,10 +66,15 @@ class Recipe {
 	public String getDescription() {
 		return description;
 	}
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
 	Recipe(String title, String description) {
 		this.title = title;
 		this.description = description;
 	}
+
 	Recipe() {
 		this("default title", "default description");
 	}
