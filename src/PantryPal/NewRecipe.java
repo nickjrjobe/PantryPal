@@ -120,7 +120,7 @@ class NewRecipeUI extends VBox{
 		this.setStyle("-fx-background-color: #F0F8FF;");
     }
 	Recipe getRecipe() {
-		return new Recipe("Fake recipe", "great ingredients lah");
+		return newRecipeCreator.getRecipe();
 	}
     void addPrompt(String text){
         Label label = new Label(text);
