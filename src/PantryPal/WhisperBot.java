@@ -235,6 +235,7 @@ public class WhisperBot implements VoiceToText {
 class MockWhisperer implements VoiceToText {
     // Instance variable for storing the mock transcript
     private String mockTranscript;
+    public boolean isRecording;
     
     /**
      * Starts the recording process.
@@ -242,6 +243,7 @@ class MockWhisperer implements VoiceToText {
      */
     public void startRecording() {
         System.out.println("Recording started... Beep Boop Beep Boop");
+        isRecording = true;
     }
     
     /**
@@ -250,6 +252,7 @@ class MockWhisperer implements VoiceToText {
      */
     public void stopRecording() {
         System.out.println("Recording stopped... YAAAAAAAAY");
+        isRecording = false;
     }
     
     /**
