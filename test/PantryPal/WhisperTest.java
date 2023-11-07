@@ -82,7 +82,7 @@ public class WhisperTest {
         childWhisperer.handleSuccessResponse(mockConnection);
 
         // Check if the 'output' field is set correctly
-        assertEquals("Hello", childWhisperer.output);
+        assertEquals("Hello", childWhisperer.getOutput());
     }
 
     // A simple mock for HttpURLConnection to provide a predefined response stream

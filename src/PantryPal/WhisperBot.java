@@ -19,7 +19,9 @@ import org.json.JSONObject;
  */
 interface VoiceToText {
     public void startRecording();
+
     public void stopRecording();
+
     public String getTranscript();
 }
 
@@ -162,9 +164,11 @@ public class WhisperBot implements VoiceToText {
         } catch (IOException | URISyntaxException e) {
             return null;
         }
-
         return output;
+    }
 
+    public String getOutput() {
+        return output;
     }
 
     /**
