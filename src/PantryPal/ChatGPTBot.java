@@ -33,6 +33,11 @@ public class ChatGPTBot implements RecipeCreator {
     private static final String MODEL = "text-davinci-003";
     private String apiKey;
     public String chatGptBotOutput;
+    private static final String PROMPT = "Give me a %s recipe using any subset of the"
+            + "  following ingredients. It does not need to use all of them: %s. Please"
+            + " make the first line of your response the title of recipe, and the"
+            + " following lines the recipe itself Thank you.";
+    private static final int MAX_TOKENS = 500;
 
     public ChatGPTBot() {
         ConfigReader configReader = new ConfigReader();
@@ -49,18 +54,13 @@ public class ChatGPTBot implements RecipeCreator {
      */
     public String makeRecipe(String meal, String ingredients) {
         try {
-            // Create a prompt for generating a recipe based on the meal and ingredients
-            String prompt = "Give me a " + meal + " recipe using the following ingredients: " + ingredients
-                    + ". Thank you.";
-
-            // Maximum number of tokens for the response
-            int maxTokens = 100;
+            String prompt = String.format(PROMPT, meal, ingredients);
 
             // Setup Request
             JSONObject requestBody = new JSONObject();
             requestBody.put("model", MODEL);
             requestBody.put("prompt", prompt);
-            requestBody.put("max_tokens", maxTokens);
+            requestBody.put("max_tokens", MAX_TOKENS);
             requestBody.put("temperature", 1.0);
 
             HttpClient client = HttpClient.newHttpClient();
