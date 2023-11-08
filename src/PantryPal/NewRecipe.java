@@ -81,14 +81,18 @@ class NewRecipeCreator{
         waitingForMeal = false;
     }
 
-    /*Divides recipes into title and body given a multi line recipe*/
+    /*
+     * Divides recipes into title and body given a multi
+     * line recipe
+     * Drops extra new lines at end!
+     * */
     public Recipe interpretRecipeResponse(String response){
 	    String[] responseLines = response.split("\n");
 	    String instructions = "";
 	    int titleLineIndex = 0;
-	    if (responseLines.length == 0) {
-		    return new Recipe("", "");
-	}
+	    /* if their is no content, return null */
+	    if (responseLines.length == 0) 
+		    return null;
 
 	/* title is first nonempty line */
 	for (; titleLineIndex < responseLines.length; titleLineIndex++) {
@@ -96,11 +100,15 @@ class NewRecipeCreator{
 			break;
 		}
 	}
+	/* if their is no description, return null */
+	if (titleLineIndex == responseLines.length - 1) {
+		return null;
+	}
+	/* any further lines are description */
 	for (int i = titleLineIndex + 1; i < responseLines.length; i++) {
 		instructions += responseLines[i] + "\n";
 	}
-
-	return new Recipe(responseLines[titleLineIndex], instructions);
+	return new Recipe(responseLines[titleLineIndex].trim(), instructions.trim());
     }
 
     /*Hands the ingredients to chat gpt and creates a recipe object using text response from chatgpt*/
