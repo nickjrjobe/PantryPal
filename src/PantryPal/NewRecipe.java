@@ -83,19 +83,30 @@ class NewRecipeCreator{
 
     /*Divides recipes into title and body given a multi line recipe*/
     public Recipe interpretRecipeResponse(String response){
-        int delineator = response.indexOf("\n");
-        if (delineator == -1){
-            return null;
-        }
-        String title = response.substring(0,delineator);
-        String instructions = response.substring(delineator+1,response.length());
-        return new Recipe(title, instructions);
+	    String[] responseLines = response.split("\n");
+	    String instructions = "";
+	    int titleLineIndex = 0;
+	    if (responseLines.length == 0) {
+		    return new Recipe("", "");
+	}
+
+	/* title is first nonempty line */
+	for (; titleLineIndex < responseLines.length; titleLineIndex++) {
+		if (responseLines[titleLineIndex] != "") {
+			break;
+		}
+	}
+	for (int i = titleLineIndex + 1; i < responseLines.length; i++) {
+		instructions += responseLines[i] + "\n";
+	}
+
+	return new Recipe(responseLines[titleLineIndex], instructions);
     }
 
     /*Hands the ingredients to chat gpt and creates a recipe object using text response from chatgpt*/
     public void handleIngredients(String response){
         String recipeResponse = recipeCreator.makeRecipe(mealType,response);
-        Recipe recipe = interpretRecipeResponse(recipeResponse);
+	recipe = interpretRecipeResponse(recipeResponse);
     }
 }
 
@@ -121,7 +132,7 @@ class NewRecipeUI extends VBox{
     
 
     NewRecipeUI() {
-		this.newRecipeCreator = new NewRecipeCreator(null, null);
+		this.newRecipeCreator = new NewRecipeCreator(new WhisperBot(), new ChatGPTBot());
         getNewPrompts();
 	}
     void start(){
@@ -129,7 +140,7 @@ class NewRecipeUI extends VBox{
     }
     void stop(){
         newRecipeCreator.stop();
-        getNewPrompts();
+	getNewPrompts();
     }
     void getNewPrompts(){
 	Recipe recipe = newRecipeCreator.getRecipe();
