@@ -44,7 +44,7 @@ class FileReadBehavior implements ReadBehavior {
          */
         recipes.add(new Recipe(line1, line2));
       }
-    } catch (IOException E) {
+    } catch (IOException e) {
       return null;
     }
     try {
