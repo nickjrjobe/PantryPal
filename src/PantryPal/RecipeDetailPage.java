@@ -28,6 +28,24 @@ public class RecipeDetailPage extends ScrollablePage {
   RecipeDetailPage(RecipeDetailUITemplate recipeDetailUI) {
     super("Recipe Detail", recipeDetailUI); // This initializes and adds the header.
     this.recipeDetailUI = recipeDetailUI;
+    this.footer.addButton("delete", e -> { recipeDetailUI.delete(); });
+    this.footer.addButton("edit", e -> { edit(); });
+  }
+  public void edit() {
+    /* set correct buttons for current state */
+    this.footer.deleteButton("edit");
+    this.footer.addButton("save", e -> {save();});
+
+    recipeDetailUI.setDescriptionEditable(true);
+  }
+  public void save() {
+    /* set correct buttons for current state */
+    this.footer.deleteButton("save");
+    this.footer.addButton("edit", e -> {edit();});
+
+    recipeDetailUI.setDescriptionEditable(false);
+
+    recipeDetailUI.save();
   }
 }
 
@@ -46,25 +64,42 @@ public class RecipeDetailPage extends ScrollablePage {
 abstract class RecipeDetailUITemplate extends VBox {
   protected Recipe recipe;
   protected Label titleField;
-  protected TextArea descriptionField; // Changed from Label to TextField
-
-  RecipeDetailUITemplate(Recipe recipe) {
-    this.recipe = recipe;
-    titleField = new Label();
+  protected TextArea descriptionField; 
+  public void format() {
+    /* format title field */
     titleField.setPrefSize(600, 20);
     titleField.setStyle("-fx-background-color: #dae5ea; -fx-border-width: 0;");
     titleField.setTextAlignment(TextAlignment.LEFT);
     titleField.setText(recipe.getTitle());
 
-    // Initialize the descriptionField as a text area
-    descriptionField = new TextArea();
+    /* format description field */
     descriptionField.setPrefSize(600, 600);
     descriptionField.setEditable(false); // Start as non-editable
     descriptionField.setText(recipe.getDescription());
     descriptionField.setWrapText(true);
+  }
 
+  RecipeDetailUITemplate(Recipe recipe) {
+    this.recipe = recipe;
+
+    // Initialize title and description fields
+    titleField = new Label();
+    titleField.setText(recipe.getTitle());
+    descriptionField = new TextArea();
+    descriptionField.setWrapText(true);
+
+    this.format();
     this.getChildren().add(titleField);
     this.getChildren().add(descriptionField);
+  }
+  public void save() {
+    RecipeController rc = new RecipeController();
+    rc.update(new Recipe(titleField.getText(), descriptionField.getText()));
+  }
+  public void delete() {
+    RecipeController rc = new RecipeController();
+    rc.delete(titleField.getText());
+    getChildren().clear();
   }
 
   // to set whether the description is editable
@@ -72,17 +107,6 @@ abstract class RecipeDetailUITemplate extends VBox {
     descriptionField.setEditable(editable);
   }
 
-  public String getRecipeDescription() {
-    return recipe.getDescription();
-  }
-
-  public String getRecipeDescriptionFieldText() {
-    return descriptionField.getText();
-  }
-
-  public String getRecipeTitle() {
-    return recipe.getTitle();
-  }
 }
 
 /** UI element which displays recipe detail 2 footer buttons: deleteButton & editButton */

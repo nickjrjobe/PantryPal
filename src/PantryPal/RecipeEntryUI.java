@@ -12,24 +12,14 @@ import javafx.scene.text.TextAlignment;
 
 /** UI representation of Recipe on RecipeList page */
 public class RecipeEntryUI extends HBox {
-  private Recipe recipe;
   private Label titleField;
   private static final String buttonStyle =
       "-fx-font-style: italic; -fx-background-color: #FFFFFF;  -fx-font-weight: bold; -fx-font: 11"
           + " arial;";
 
-  public Recipe getRecipe() {
-    return recipe;
-  }
-
   private void format() {
     this.setPrefSize(500, 20); // sets size of task
     this.setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0; -fx-font-weight: bold;");
-  }
-
-  /** Updates data in Recipe UI element based on data in owned recipe */
-  private void update() {
-    titleField.setText(recipe.getTitle());
   }
 
   /**
@@ -45,14 +35,11 @@ public class RecipeEntryUI extends HBox {
     button.setOnAction(callback);
   }
 
-  RecipeEntryUI(Recipe recipe) {
-    this.recipe = recipe;
+  RecipeEntryUI(String title) {
     titleField = new Label();
-    titleField.setPrefSize(380, 20);
-    titleField.setStyle("-fx-background-color: #dae5ea; -fx-border-width: 0;");
     titleField.setTextAlignment(TextAlignment.LEFT);
+    titleField.setText(title);
     this.getChildren().add(titleField);
-    update();
     format();
   }
 }

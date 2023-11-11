@@ -49,6 +49,14 @@ class RecipeListUI extends VBox {
       return null;
     }
   }
+  public void addDetailedRecipeButton(RecipeEntryUI entry,String title) {
+    entry.addButton("details", e -> {
+      RecipeController rc = new RecipeController();
+      RecipeDetailPage drp = new RecipeDetailPage(new RecipeDetailUI(rc.read(title)));
+      drp.footer.addButton("home", eprime -> { pageTracker.goHome(); });
+      pageTracker.swapToPage(drp);
+    });
+  }
 
   /** Synchronize recipe List UI element with application's internal recipe list */
   public void update() {
@@ -59,7 +67,9 @@ class RecipeListUI extends VBox {
     }
     Iterator<String> titles = performRequest().keys();
     while (titles.hasNext()) {
-      RecipeEntryUI entry = new RecipeEntryUI(new Recipe(titles.next(), ""));
+      String title = titles.next();
+      RecipeEntryUI entry = new RecipeEntryUI(title);
+      addDetailedRecipeButton(entry, title);
       /* TODO add recipe entry UI */
       this.getChildren().add(entry);
     }
