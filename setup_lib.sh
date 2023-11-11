@@ -5,6 +5,7 @@ OPENJFX="https://download2.gluonhq.com/openjfx/17.0.9/openjfx-17.0.9_linux-x64_b
 OPENJFX_ZIP="openjfx-17.0.9_linux-x64_bin-sdk.zip"
 CHECKSTYLE="https://github.com/checkstyle/checkstyle/releases/download/checkstyle-10.12.4/checkstyle-10.12.4-all.jar"
 JSON="https://search.maven.org/remotecontent?filepath=org/json/json/20231013/json-20231013.jar"
+GOOGLE_FORMAT="https://github.com/google/google-java-format/releases/download/v1.18.1/google-java-format-1.18.1-all-deps.jar"
 mkdir lib
 cd lib
 curl -O $JUNIT
@@ -12,4 +13,5 @@ curl -O $HAMCREST
 curl -O $OPENJFX
 curl -O $JSON -L
 wget $CHECKSTYLE
+#wget $GOOGLE_FORMAT 
 unzip $OPENJFX_ZIP
