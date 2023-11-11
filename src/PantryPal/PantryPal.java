@@ -42,6 +42,9 @@ class PageTracker {
   }
 }
 
+/**
+ * Runner class which starts the UI
+ */
 public class PantryPal extends Application {
   RecipeListPage recipelist;
   PageTracker pageTracker;

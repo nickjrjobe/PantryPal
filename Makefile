@@ -8,6 +8,8 @@ JUNIT = $(ABSOLUTE_PROJECT_DIR)/lib/junit-4.13.2.jar
 OPENJFX = $(ABSOLUTE_PROJECT_DIR)/lib/javafx-sdk-17.0.9/lib/
 HAMCREST = $(ABSOLUTE_PROJECT_DIR)/lib/hamcrest-core-1.3.jar
 JSON = $(ABSOLUTE_PROJECT_DIR)/lib/json-20231013.jar
+CHECKSTYLE = $(ABSOLUTE_PROJECT_DIR)/lib/checkstyle-10.12.4-all.jar
+GOOGLE_FORMAT = $(ABSOLUTE_PROJECT_DIR)/lib/google-java-format-1.18.1-all-deps.jar
 
 # Compile flags
 JFLAGS = --module-path $(OPENJFX) --add-modules javafx.controls,javafx.fxml
@@ -59,6 +61,12 @@ run: all
 	$(JAVA) $(JFLAGS) -cp $(OUT_DIR):$(JCP) $(MAIN_CLASS)
 test: all
 	$(JAVA) $(JFLAGS) -cp $(JTESTCP):$(OUT_DIR) org.junit.runner.JUnitCore $(RUNNABLE_TESTS)
+# TODO not currently linting testcode
+lint:
+	java -jar $(CHECKSTYLE) -c google_checks.xml $(SRCS)
+
+format:
+	java -jar $(GOOGLE_FORMAT) --replace $(SRCS) $(TESTSRCS)
 
 clean:
 	rm -rf $(OUT_DIR)

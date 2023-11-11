@@ -106,7 +106,6 @@ public class WhisperBot implements VoiceToText {
    */
   public String getTranscript() {
     try {
-      File file = new File(filePath);
 
       // Set up HTTP connection
       URL url = new URI(API_ENDPOINT).toURL();
@@ -124,7 +123,8 @@ public class WhisperBot implements VoiceToText {
 
       // Write model parameter to request body
       writeParameterToOutputStream(outputStream, "model", MODEL, boundary);
-
+      // Open file
+      File file = new File(filePath);
       // Write file parameter to request body
       writeFileToOutputStream(outputStream, file, boundary);
 

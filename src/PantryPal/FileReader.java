@@ -16,7 +16,7 @@ class FileReadBehavior implements ReadBehavior {
   /**
    * Instantiates FileReadBehavior
    *
-   * @param filename: file from which to read to, must have even number of lines
+   * @param filename file from which to read to, must have even number of lines
    */
   public FileReadBehavior(String filename) {
     this.filename = filename;
@@ -50,7 +50,8 @@ class FileReadBehavior implements ReadBehavior {
     try {
       reader.close();
       f.close();
-    } catch (IOException E) {
+    } catch (IOException e) {
+      System.err.println("file not properly closed");
     }
     return recipes;
   }

@@ -86,10 +86,10 @@ public class ChatGPTBot implements RecipeCreator {
 }
 
 /**
- * The mockChatGPTBot class implements the RecipeCreator interface and provides a mock
+ * The MockChatGPTBot class implements the RecipeCreator interface and provides a mock
  * implementation for testing purposes.
  */
-class mockChatGPTBot implements RecipeCreator {
+class MockChatGPTBot implements RecipeCreator {
   // Instance variables
   private String mockOutput = "";
 

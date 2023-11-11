@@ -8,7 +8,10 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import javafx.scene.text.*;
 
-/* Uses a state machine approach to pass control between methods when creating new recipe */
+/**
+ * Uses a state machine approach to pass control between methods 
+ * when creating new recipe 
+ * */
 class NewRecipeCreator {
   String mealType;
   Boolean waitingForMeal = true;
@@ -46,7 +49,10 @@ class NewRecipeCreator {
     }
   }
 
-  /* Checks whether meal type is valid before changing state to accept ingredients or reasking for meal type */
+  /**
+   *  Checks whether meal type is valid before changing state to accept
+   *  ingredients or reasking for meal type
+   */
   public void handleMeal(String response) {
     response = response.toLowerCase();
     waitingForMeal = true;
@@ -75,7 +81,9 @@ class NewRecipeCreator {
     String instructions = "";
     int titleLineIndex = 0;
     /* if their is no content, return null */
-    if (responseLines.length == 0) return null;
+    if (responseLines.length == 0) {
+      return null;
+    }
 
     /* title is first nonempty line */
     for (; titleLineIndex < responseLines.length; titleLineIndex++) {
