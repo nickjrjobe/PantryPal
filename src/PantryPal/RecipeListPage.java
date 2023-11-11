@@ -3,21 +3,28 @@
 package PantryPal;
 
 import java.io.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import javafx.event.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.*;
+import org.json.JSONObject;
 
 /** UI element which displays list of recipes */
 class RecipeListUI extends VBox {
-  private RecipeList recipeList;
   private PageTracker pageTracker;
 
-  RecipeListUI(RecipeList recipelist, PageTracker pt) {
-    this.recipeList = recipelist;
+  RecipeListUI(PageTracker pt) {
     this.pageTracker = pt;
     format();
+    update();
   }
 
   private void format() {
@@ -25,96 +32,48 @@ class RecipeListUI extends VBox {
     this.setPrefSize(500, 560);
     this.setStyle("-fx-background-color: #F0F8FF;");
   }
-
-  public void readDetails(Recipe recipe) {
-    RecipeDetailUI recipedetails = new RecipeDetailUI(recipe);
-    RecipeDetailPage recipepage = new RecipeDetailPage(recipedetails);
-    recipepage.footer.addButton(
-        "delete",
-        e -> {
-          recipeList.deleteRecipe(recipe);
-          update();
-          pageTracker.goHome();
-        });
-    recipepage.footer.addButton(
-        "exit",
-        e -> {
-          pageTracker.goHome();
-        });
-    recipepage.footer.addButton(
-        "edit",
-        e -> {
-          /* make editable */
-          recipedetails.setDescriptionEditable(true);
-
-          /* delete old buttons */
-          recipepage.footer.deleteButton("delete");
-          recipepage.footer.deleteButton("edit");
-
-          /* add save button */
-          recipepage.footer.addButton(
-              "save",
-              eprime -> {
-                recipe.setDescription(recipedetails.getRecipeDescriptionFieldText());
-                update();
-                pageTracker.goHome();
-              });
-        });
-    pageTracker.swapToPage(recipepage);
+  private JSONObject performRequest() {
+    try {
+      String urlString = "http://localhost:8100/recipes";
+      URL url = new URI(urlString).toURL();
+      HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+      conn.setRequestMethod("GET");
+      conn.setDoOutput(true);
+      BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+      String response = in.readLine();
+      System.out.println("response " + response);
+      in.close();
+      return new JSONObject(response);
+    } catch (Exception ex) {
+      System.err.println("HTTP request failed");
+      return null;
+    }
   }
 
   /** Synchronize recipe List UI element with application's internal recipe list */
-  private void update() {
+  public void update() {
     this.getChildren().clear();
-    for (Recipe recipe : this.recipeList.getRecipes()) {
-      RecipeEntryUI entry = new RecipeEntryUI(recipe);
-      entry.addButton(
-          "Details",
-          e -> {
-            readDetails(recipe);
-          });
-      this.getChildren().add(entry);
-    }
-  }
-
-  public void read() {
-    recipeList.read();
-    update();
-  }
-
-  public void saveNewRecipe(NewRecipeUI newRecipeUI) {
-    Recipe recipe = newRecipeUI.getRecipe();
-    if (recipe == null) {
+    JSONObject titleObject = performRequest();
+    if (titleObject == null) {
       return;
     }
-    NewDetailedRecipeUI newdetailedrecipeui = new NewDetailedRecipeUI(recipe);
-    RecipeDetailPage newdetailedrecipepage = new RecipeDetailPage(newdetailedrecipeui);
-    newdetailedrecipepage.footer.addButton(
-        "save",
-        e -> {
-          recipeList.addRecipe(recipe);
-          update();
-          pageTracker.goHome();
-        });
-    pageTracker.swapToPage(newdetailedrecipepage);
+    Iterator<String> titles = performRequest().keys();
+    while (titles.hasNext()) {
+      RecipeEntryUI entry = new RecipeEntryUI(new Recipe(titles.next(), ""));
+      /* TODO add recipe entry UI */
+      this.getChildren().add(entry);
+    }
   }
 }
 
 /** UI Page containing recipe list, and accompanying header and footer */
 public class RecipeListPage extends ScrollablePage {
-  private RecipeListUI recipeList;
+        private RecipeListUI recipeList;
 
-  RecipeListPage(PageTracker pt) {
-    super("Recipe List", new RecipeListUI(new RecipeList(new FileReadBehavior("recipes.txt")), pt));
-    this.recipeList = (RecipeListUI) this.center;
-    footer.addButton(
-        "Read",
-        e -> {
-          recipeList.read();
-        });
-  }
-
-  public void saveNewRecipe(NewRecipeUI newRecipeUI) {
-    recipeList.saveNewRecipe(newRecipeUI);
-  }
+        RecipeListPage(PageTracker pt) {
+          super("Recipe List",
+              new RecipeListUI(pt));
+          this.recipeList = (RecipeListUI) this.center;
+          this.footer.addButton("update", e -> { recipeList.update(); });
+        }
 }

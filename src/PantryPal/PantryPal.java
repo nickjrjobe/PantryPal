@@ -58,10 +58,10 @@ public class PantryPal extends Application {
     recipelist.footer.addButton(
         "New Recipe",
         e -> {
-          createNewRecipePage();
         });
   }
 
+  /*
   private void createNewRecipePage() {
     NewRecipeUI newRecipeUI = new NewRecipeUI();
     NewRecipePage newRecipePage = new NewRecipePage(newRecipeUI);
@@ -77,6 +77,7 @@ public class PantryPal extends Application {
         });
     pageTracker.swapToPage(newRecipePage);
   }
+*/
 
   public static void main(String[] args) {
     launch(args);
