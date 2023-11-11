@@ -11,5 +11,5 @@ curl -O $JUNIT
 curl -O $HAMCREST
 curl -O $OPENJFX
 curl -O $JSON -L
-#wget $CHECKSTYLE
+wget $CHECKSTYLE
 unzip $OPENJFX_ZIP
