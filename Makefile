@@ -56,7 +56,7 @@ $(CLASSES): $(SRCS)
 
 # Run the Java application
 run: all
-	$(JAVA) $(JFLAGS) -cp $(OUT_DIR) $(MAIN_CLASS)
+	$(JAVA) $(JFLAGS) -cp $(OUT_DIR):$(JCP) $(MAIN_CLASS)
 test: all
 	$(JAVA) $(JFLAGS) -cp $(JTESTCP):$(OUT_DIR) org.junit.runner.JUnitCore $(RUNNABLE_TESTS)
 
