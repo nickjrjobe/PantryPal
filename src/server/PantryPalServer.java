@@ -13,13 +13,14 @@ public class PantryPalServer {
   public static void main(String[] args) throws IOException {
     ThreadPoolExecutor threadPoolExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(10);
     // create a map to store data
-    Map<String, String> data = new HashMap<>();
+    Map<String, Recipe> data = new HashMap<>();
+    data.put("recipe",new Recipe("brocolli", "boil"));
 
     // create a server
     HttpServer server = HttpServer.create(new InetSocketAddress(SERVER_HOSTNAME, SERVER_PORT), 0);
-    HttpHandler handler = new RequestHandler(data);
-    HttpContext context = server.createContext("/", handler);
-    HttpContext context2 = server.createContext("/name", new MyHandler());
+    HttpContext recipeListContext = server.createContext("/recipes", new RecipeListAPI(data));
+    HttpContext DetailedRecipeContext =
+        server.createContext("/recipe", new DetailedRecipeAPI(data));
     server.setExecutor(threadPoolExecutor);
     server.start();
   }
