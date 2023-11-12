@@ -72,13 +72,13 @@ class RecipeController extends AbstractModel {
     super.performRequest("POST", null, r.toJSON().toString());
   }
   public Recipe read(String title) {
-    return new Recipe(new JSONObject(performRequest("GET", title, null)));
+    return new Recipe(new JSONObject(performRequest("GET", Recipe.sanitizeTitle(title), null)));
   }
   public void update(Recipe r) {
     super.performRequest("PUT", null, r.toJSON().toString());
   }
   public void delete(String title) {
-    super.performRequest("DELETE", title, null);
+    super.performRequest("DELETE", Recipe.sanitizeTitle(title), null);
   }
 }
 
@@ -86,7 +86,12 @@ class RecipeController extends AbstractModel {
 public class Recipe {
   private final String title;
   private final String description;
-
+  public static String sanitizeTitle(String title) {
+    return title.replace(" ", "-");
+  }
+  public static String desanitizeTitle(String title) {
+    return title.replace("-", " ");
+  }
   public String getTitle() {
     return title;
   }

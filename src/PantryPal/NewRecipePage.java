@@ -21,15 +21,16 @@ class TranscriptResults {
       for (int i = 0; i < jsonArray.length(); i++) {
         this.prompts.add(jsonArray.getString(i));
       }
-      JSONObject recipeJson = json.getJSONObject("recipe");
+      if (json.has("recipe")) {
+        JSONObject recipeJson = json.getJSONObject("recipe");
 
-      if (recipeJson != null) {
         this.recipe = new Recipe(recipeJson);
       } else {
         this.recipe = null;
       }
     } catch (Exception e) {
-      throw new IllegalArgumentException("Input json was not valid");
+      throw new IllegalArgumentException(
+          "Input json was not valid (Error: " + e.getMessage() + ")");
     }
   }
   TranscriptResults() {
@@ -69,52 +70,57 @@ class NewRecipeController {
     this.newRecipeModel = newRecipeModel;
     this.pt = pt;
     this.voiceToText = voicetotext;
+    newRecipePage.footer.addButton("start", e -> { this.start(); });
+    newRecipePage.footer.addButton("home", e -> { this.exit(); });
   }
   ScrollablePage getPage() {
     return this.newRecipePage;
   }
-    void start() {
+  void start() {
       /* set correct button layout for this state */
       newRecipePage.footer.addButton("stop", e -> { this.stop(); });
       newRecipePage.footer.deleteButton("start");
 
       voiceToText.startRecording();
-    }
-    void stop() {
-      /* set correct button layout for this state */
-      newRecipePage.footer.deleteButton("stop");
+  }
+  void stop() {
+    /* set correct button layout for this state */
+    newRecipePage.footer.deleteButton("stop");
 
-      voiceToText.stopRecording();
+    voiceToText.stopRecording();
 
-      String transcript = voiceToText.getTranscript();
-      TranscriptResults results;
-      try {
-        results = newRecipeModel.sendTranscript(transcript);
-      } catch (Exception e) {
-        System.err.println("error: " + e.getMessage());
-        results = new TranscriptResults();
-      }
-      newRecipeUI.setPrompts(results.prompts);
+    String transcript = voiceToText.getTranscript();
+    TranscriptResults results;
+    try {
+      results = newRecipeModel.sendTranscript(transcript);
+    } catch (Exception e) {
+      System.err.println("error: " + e.getMessage());
+      results = new TranscriptResults();
+    }
+    newRecipeUI.setPrompts(results.prompts);
 
-      /* finish setting up buttons based on state */
-      if (results.recipe != null) {
-        Recipe recipe = results.recipe;
-        newRecipePage.footer.addButton("view details", e -> { this.done(recipe); });
-      } else {
-        newRecipePage.footer.addButton("start", e -> { this.start(); });
-      }
-    }
-    void done(Recipe recipe) {
-      newRecipeModel.reset();
-    }
-    void exit() {
-      newRecipeModel.reset();
-      pt.goHome();
-    }
-    void setup() {
+    /* finish setting up buttons based on state */
+    if (results.recipe != null) {
+      Recipe recipe = results.recipe;
+      newRecipePage.footer.addButton("view details", e -> { this.done(recipe); });
+    } else {
       newRecipePage.footer.addButton("start", e -> { this.start(); });
     }
   }
+  void done(Recipe recipe) {
+    newRecipeModel.reset();
+    NewRecipeDetailPage drp = new NewRecipeDetailPage(new RecipeDetailUI(recipe));
+    drp.footer.addButton("home", e -> { pt.goHome(); });
+    pt.swapToPage(drp);
+  }
+  void exit() {
+    newRecipeModel.reset();
+    pt.goHome();
+  }
+  void setup() {
+    newRecipePage.footer.addButton("start", e -> { this.start(); });
+  }
+}
 class NewRecipeUI extends VBox {
   private void format() {
     this.setSpacing(20); // sets spacing between tasks

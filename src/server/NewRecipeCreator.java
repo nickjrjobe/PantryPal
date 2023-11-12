@@ -103,6 +103,7 @@ public class NewRecipeCreator {
 
   /*Hands the ingredients to chat gpt and creates a recipe object using text response from chatgpt*/
   public void handleIngredients(String response) {
+    prompts.add(response);
     String recipeResponse = recipeCreator.makeRecipe(mealType, response);
     recipe = interpretRecipeResponse(recipeResponse);
   }

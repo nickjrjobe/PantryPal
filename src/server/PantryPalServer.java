@@ -21,6 +21,8 @@ public class PantryPalServer {
     HttpContext recipeListContext = server.createContext("/recipes", new RecipeListAPI(data));
     HttpContext DetailedRecipeContext =
         server.createContext("/recipe", new DetailedRecipeAPI(data));
+    NewRecipeCreator creator = new NewRecipeCreator(new ChatGPTBot());
+    HttpContext NewRecipeContext = server.createContext("/newrecipe", new NewRecipeAPI(creator));
     server.setExecutor(threadPoolExecutor);
     server.start();
   }
