@@ -58,6 +58,16 @@ class NewRecipeModel extends AbstractModel {
     }
   }
 
+  TranscriptResults getInitialTranscript() throws IOException {
+
+    String transcript = super.performRequest("GET", null, null);
+    try {
+      return new TranscriptResults(new JSONObject(transcript));
+    } catch (Exception e) {
+      throw new IOException("New recipe response from server malformed, error " + e.getMessage());
+    }
+  }
+
   void reset() {
     super.performRequest("DELETE", "", null);
   }
@@ -107,6 +117,17 @@ class NewRecipeController {
     newRecipePage.footer.deleteButton("start");
 
     voiceToText.startRecording();
+  }
+
+  void init() {
+    TranscriptResults results;
+    try {
+      results = newRecipeModel.getInitialTranscript();
+    } catch (Exception e) {
+      System.err.println("error: " + e.getMessage());
+      results = new TranscriptResults();
+    }
+    newRecipeUI.setPrompts(results.prompts);
   }
 
   void stop() {
