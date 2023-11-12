@@ -8,7 +8,7 @@ permissions:
   id-token: write
 
 jobs:
-  build:
+  junit:
     runs-on: ubuntu-latest
 
     steps:
@@ -31,3 +31,23 @@ jobs:
       # Run unit test
       - name: Run unit test
         run: make test
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '11'
+
+      # Get dependencies
+      - name: Install dependencies
+        run: bash setup_lib.sh
+
+      # Lint 
+      - name: Lint 
+        run: make lint
+
