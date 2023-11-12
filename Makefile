@@ -53,20 +53,23 @@ RUNNABLE_TESTS = $(filter %Test,$(RUNNABLE_TEST_CLASSES))
 
 all: $(CLASSES) $(TESTCLASSES) $(SERVERCLASSES)
 
-$(SERVERCLASSES): $(SERVERSRCS)
+$(SERVERCLASSES): build_server_classes
+build_server_classes: $(SERVERSRCS)
 	@mkdir -p $(@D)
 	$(JAVAC) $(JFLAGS) -cp $(OUT_DIR):$(JCP) -d $(OUT_DIR) $^
 
-$(TESTCLASSES): $(SRCS) $(TESTSRCS)
+$(TESTCLASSES): build_test_classes
+build_test_classes: $(SRCS) $(TESTSRCS)
 	@mkdir -p $(@D)
 	$(JAVAC) $(JFLAGS) -cp $(JTESTCP) -d $(OUT_DIR) $^
 
-$(CLASSES): $(SRCS)
+$(CLASSES): build_classes
+build_classes: $(SRCS)
 	@mkdir -p $(@D)
 	$(JAVAC) $(JFLAGS) -cp $(JCP) -d $(OUT_DIR) $^
 
 # Run the Java application
-run: all
+run: $(CLASSES) 
 	$(JAVA) $(JFLAGS) -cp $(OUT_DIR):$(JCP) $(MAIN_CLASS)
 test: all
 	$(JAVA) $(JFLAGS) -cp $(JTESTCP):$(OUT_DIR) org.junit.runner.JUnitCore $(RUNNABLE_TESTS)
@@ -76,6 +79,7 @@ lint:
 
 format:
 	$(JAVA) -jar $(GOOGLE_FORMAT) --replace $(SRCS) $(TESTSRCS)
+makeserver: $(SERVERCLASSES)
 #TODO we can avoid including OPENJFX
 server: $(SERVERCLASSES)
 	$(JAVA) $(JFLAGS) -cp $(OUT_DIR):$(JCP) $(SERVER_CLASS)
