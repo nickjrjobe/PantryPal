@@ -24,7 +24,7 @@ abstract class HttpAPI implements HttpHandler {
         throw new Exception("Not Valid Request Method");
       }
     } catch (Exception e) {
-      System.out.println("An erroneous request");
+      System.out.println("An erroneous request error: " + e.getMessage());
       response = e.toString();
       e.printStackTrace();
     }
@@ -60,7 +60,7 @@ class DetailedRecipeAPI extends HttpAPI {
     String query = uri.getRawQuery();
     String response = "404 Not Found";
     if (query != null) {
-      Recipe recipe = data.get(query); // get recipe
+      Recipe recipe = data.get(Recipe.desanitizeTitle(query)); // get recipe
       if (recipe != null) {
         response = recipe.toJSON().toString();
       }
@@ -113,7 +113,7 @@ class DetailedRecipeAPI extends HttpAPI {
       String response = "404 Not Found";
       if (query != null) {
         String value = query.substring(query.indexOf("=") + 1);
-        Recipe recipe = data.remove(value); // Retrieve data from hashmap
+        Recipe recipe = data.remove(Recipe.desanitizeTitle(value)); // Retrieve data from hashmap
         if (recipe != null) {
         response = "200 OK";
         }

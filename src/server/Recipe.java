@@ -15,6 +15,12 @@ import org.json.JSONObject;
 public class Recipe {
   private String title;
   private String description;
+  public static String sanitizeTitle(String title) {
+    return title.replace(" ", "-");
+  }
+  public static String desanitizeTitle(String title) {
+    return title.replace("-", " ");
+  }
 
   public String getTitle() {
     return title;

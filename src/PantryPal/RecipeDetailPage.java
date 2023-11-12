@@ -23,9 +23,9 @@ import javafx.scene.text.TextAlignment;
  * NewDetailedRecipeUI. - exit method is placeholder for tab switch to RecipeListPage.
  */
 public class RecipeDetailPage extends ScrollablePage {
-  RecipeDetailUITemplate recipeDetailUI;
+  RecipeDetailUI recipeDetailUI;
 
-  RecipeDetailPage(RecipeDetailUITemplate recipeDetailUI) {
+  RecipeDetailPage(RecipeDetailUI recipeDetailUI) {
     super("Recipe Detail", recipeDetailUI); // This initializes and adds the header.
     this.recipeDetailUI = recipeDetailUI;
     this.footer.addButton("delete", e -> { recipeDetailUI.delete(); });
@@ -48,6 +48,15 @@ public class RecipeDetailPage extends ScrollablePage {
     recipeDetailUI.save();
   }
 }
+class NewRecipeDetailPage extends ScrollablePage {
+  RecipeDetailUI recipeDetailUI;
+
+  NewRecipeDetailPage(RecipeDetailUI recipeDetailUI) {
+    super("Recipe Detail", recipeDetailUI); // This initializes and adds the header.
+    this.recipeDetailUI = recipeDetailUI;
+    this.footer.addButton("save", e -> { recipeDetailUI.save(); });
+  }
+}
 
 /**
  * RecipeDetailUITemplate serves as the abstract base for UI components that represent the details
@@ -61,7 +70,7 @@ public class RecipeDetailPage extends ScrollablePage {
  * EditableRecipeUI: Includes functionality to delete a recipe and save changes. -
  * NewDetailedRecipeUI: Includes functionality to save a new recipe.
  */
-abstract class RecipeDetailUITemplate extends VBox {
+class RecipeDetailUI extends VBox {
   protected Recipe recipe;
   protected Label titleField;
   protected TextArea descriptionField; 
@@ -77,9 +86,10 @@ abstract class RecipeDetailUITemplate extends VBox {
     descriptionField.setEditable(false); // Start as non-editable
     descriptionField.setText(recipe.getDescription());
     descriptionField.setWrapText(true);
+    setDescriptionEditable(false);
   }
 
-  RecipeDetailUITemplate(Recipe recipe) {
+  RecipeDetailUI(Recipe recipe) {
     this.recipe = recipe;
 
     // Initialize title and description fields
@@ -105,22 +115,5 @@ abstract class RecipeDetailUITemplate extends VBox {
   // to set whether the description is editable
   public void setDescriptionEditable(boolean editable) {
     descriptionField.setEditable(editable);
-  }
-
-}
-
-/** UI element which displays recipe detail 2 footer buttons: deleteButton & editButton */
-class RecipeDetailUI extends RecipeDetailUITemplate {
-  public RecipeDetailUI(Recipe recipe) {
-    super(recipe);
-    super.setDescriptionEditable(false);
-  }
-}
-
-/** UI element which displays recipe detail 1 footer button: saveRecipeButton */
-class NewDetailedRecipeUI extends RecipeDetailUITemplate {
-  public NewDetailedRecipeUI(Recipe recipe) {
-    super(recipe);
-    super.setDescriptionEditable(false);
   }
 }
