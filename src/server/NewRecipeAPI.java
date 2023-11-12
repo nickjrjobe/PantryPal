@@ -6,6 +6,7 @@ import java.net.*;
 import java.util.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
+
 class NewRecipeAPI extends HttpAPI {
   private NewRecipeCreator creator;
 
@@ -13,7 +14,7 @@ class NewRecipeAPI extends HttpAPI {
     this.creator = creator;
   }
 
-  public JSONObject makeResponse() {
+  public JSONObject makeResponseFromPrompts() {
     JSONObject json = new JSONObject();
     json.put("transcript", new JSONArray(creator.getPrompts()));
 
@@ -27,33 +28,25 @@ class NewRecipeAPI extends HttpAPI {
 
   /** Write responses */
   String handlePost(HttpExchange httpExchange) throws IOException {
-    InputStream inStream = httpExchange.getRequestBody();
-    Scanner scanner = new Scanner(inStream);
-    String postData = scanner.nextLine();
-    JSONObject json;
-    Recipe recipe;
-    System.out.println("request: " + postData);
-    /* interpret request as json */
-    try {
-      json = new JSONObject(postData);
-    } catch (Exception e) {
-      throw new IOException("Response was not JSON");
-    }
+    /* interpret request as JSON */
+    JSONObject json = getJSONRequest(httpExchange);
+
+    /* get client's prompt response from request's JSON */
     String requestResponse;
-    /* get response from json */
     try {
       requestResponse = json.getString("response");
     } catch (Exception e) {
       throw new IOException("Response was invalid");
     }
-    /* interpret response (ALLOW errors!) */
+    /* interpret prompt response(ALLOW errors!) */
     try {
       creator.readResponse(requestResponse);
     } catch (Exception e) {
       System.err.println("response invalid with error " + e.getMessage());
     }
-    String response = makeResponse().toString();
-    scanner.close();
+
+    /* responsd with prompts */
+    String response = makeResponseFromPrompts().toString();
 
     return response;
   }
@@ -67,7 +60,7 @@ class NewRecipeAPI extends HttpAPI {
 
   /** get current prompts */
   String handleGet(HttpExchange httpExchange) throws IOException {
-    String response = makeResponse().toString();
+    String response = makeResponseFromPrompts().toString();
     return response;
   }
 }

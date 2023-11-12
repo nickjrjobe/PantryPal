@@ -4,7 +4,6 @@ import com.sun.net.httpserver.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 abstract class HttpAPI implements HttpHandler {
@@ -34,6 +33,19 @@ abstract class HttpAPI implements HttpHandler {
     OutputStream outStream = httpExchange.getResponseBody();
     outStream.write(response.getBytes());
     outStream.close();
+  }
+
+  JSONObject getJSONRequest(HttpExchange httpExchange) throws IOException {
+    InputStream inStream = httpExchange.getRequestBody();
+    Scanner scanner = new Scanner(inStream);
+    String postData = scanner.nextLine();
+    System.out.println("request: " + postData);
+    scanner.close();
+    try {
+      return new JSONObject(postData);
+    } catch (Exception e) {
+      throw new IOException("Response was not JSON");
+    }
   }
 
   String handleGet(HttpExchange httpExchange) throws IOException {

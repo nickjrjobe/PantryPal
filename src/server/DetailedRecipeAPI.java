@@ -4,8 +4,8 @@ import com.sun.net.httpserver.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
-import org.json.JSONArray;
 import org.json.JSONObject;
+
 class DetailedRecipeAPI extends HttpAPI {
   private SaveableRecipeData data;
 
@@ -29,19 +29,10 @@ class DetailedRecipeAPI extends HttpAPI {
 
   /** Create a new recipe */
   String handlePost(HttpExchange httpExchange) throws IOException {
-    InputStream inStream = httpExchange.getRequestBody();
-    Scanner scanner = new Scanner(inStream);
-    String postData = scanner.nextLine();
-    JSONObject json;
+    /* interpret request as json */
+    JSONObject json = getJSONRequest(httpExchange);
     Recipe recipe;
-    System.out.println("request: " + postData);
     try {
-      json = new JSONObject(postData);
-    } catch (Exception e) {
-      throw new IOException("Response was not JSON");
-    }
-    try {
-      System.out.println("object :" + json.toString());
       recipe = new Recipe(json);
     } catch (Exception e) {
       throw new IOException(e.getMessage());
@@ -50,7 +41,6 @@ class DetailedRecipeAPI extends HttpAPI {
     data.put(recipe.getTitle(), recipe);
 
     String response = "200 Ok";
-    scanner.close();
 
     return response;
   }
