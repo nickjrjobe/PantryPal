@@ -9,24 +9,27 @@ import javafx.scene.text.*;
 import org.json.JSONObject;
 
 /** CRUD model for server's detailed recipe data */
-public class RecipeDetailModel extends AbstractModel {
-  RecipeDetailModel() {
-    super("recipe");
+public class RecipeDetailModel {
+  HttpModel httpModel;
+
+  RecipeDetailModel(HttpModel httpModel) {
+    httpModel.setPath("recipe");
   }
 
   public void create(Recipe r) {
-    super.performRequest("POST", null, r.toJSON().toString());
+    httpModel.performRequest("POST", null, r.toJSON().toString());
   }
 
   public Recipe read(String title) {
-    return new Recipe(new JSONObject(performRequest("GET", Recipe.sanitizeTitle(title), null)));
+    return new Recipe(
+        new JSONObject(httpModel.performRequest("GET", Recipe.sanitizeTitle(title), null)));
   }
 
   public void update(Recipe r) {
-    super.performRequest("PUT", null, r.toJSON().toString());
+    httpModel.performRequest("PUT", null, r.toJSON().toString());
   }
 
   public void delete(String title) {
-    super.performRequest("DELETE", Recipe.sanitizeTitle(title), null);
+    httpModel.performRequest("DELETE", Recipe.sanitizeTitle(title), null);
   }
 }

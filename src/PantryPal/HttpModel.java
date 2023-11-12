@@ -13,16 +13,26 @@ import javafx.event.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.*;
 
-abstract class AbstractModel {
+interface HttpModel {
+  public void setPath(String path);
+
+  public String performRequest(String method, String query, String request);
+}
+
+class HttpRequestModel implements HttpModel {
   private static final String port = "8100";
   private static final String ip = "localhost";
   private String urlString;
 
-  AbstractModel(String path) {
+  HttpRequestModel() {
+    setPath(""); // default path, should avoid using
+  }
+
+  public void setPath(String path) {
     this.urlString = "http://" + ip + ":" + port + "/" + path;
   }
 
-  protected String performRequest(String method, String query, String request) {
+  public String performRequest(String method, String query, String request) {
     // Implement your HTTP request logic here and return the response
     if (request != null) {
       System.out.println("Request :" + request);

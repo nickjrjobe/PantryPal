@@ -41,38 +41,6 @@ class TranscriptResults {
   }
 }
 
-class NewRecipeModel extends AbstractModel {
-  NewRecipeModel() {
-    super("newrecipe");
-  }
-
-  TranscriptResults sendTranscript(String response) throws IOException {
-    JSONObject responseJson = new JSONObject();
-    responseJson.put("response", response);
-
-    String transcript = super.performRequest("POST", null, responseJson.toString());
-    try {
-      return new TranscriptResults(new JSONObject(transcript));
-    } catch (Exception e) {
-      throw new IOException("New recipe response from server malformed, error " + e.getMessage());
-    }
-  }
-
-  TranscriptResults getInitialTranscript() throws IOException {
-
-    String transcript = super.performRequest("GET", null, null);
-    try {
-      return new TranscriptResults(new JSONObject(transcript));
-    } catch (Exception e) {
-      throw new IOException("New recipe response from server malformed, error " + e.getMessage());
-    }
-  }
-
-  void reset() {
-    super.performRequest("DELETE", "", null);
-  }
-}
-
 class NewRecipeController {
   NewRecipeUI newRecipeUI;
   NewRecipePage newRecipePage;
