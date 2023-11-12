@@ -16,23 +16,8 @@ import javafx.event.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.*;
 import org.json.JSONObject;
-
-/** UI element which displays list of recipes */
-class RecipeListUI extends VBox {
-  private PageTracker pageTracker;
-
-  RecipeListUI(PageTracker pt) {
-    this.pageTracker = pt;
-    format();
-    update();
-  }
-
-  private void format() {
-    this.setSpacing(5); // sets spacing between tasks
-    this.setPrefSize(500, 560);
-    this.setStyle("-fx-background-color: #F0F8FF;");
-  }
-  private JSONObject performRequest() {
+class RecipeListModel {
+  public List<String> performRequest() {
     try {
       String urlString = "http://localhost:8100/recipes";
       URL url = new URI(urlString).toURL();
@@ -43,47 +28,44 @@ class RecipeListUI extends VBox {
       String response = in.readLine();
       System.out.println("response " + response);
       in.close();
-      return new JSONObject(response);
-    } catch (Exception ex) {
-      System.err.println("HTTP request failed");
+      return processResponse(response);
+    } catch (Exception e) {
+      System.err.println("HTTP request failed with error "+ e.getMessage());
       return null;
     }
   }
-  public void addDetailedRecipeButton(RecipeEntryUI entry,String title) {
-    entry.addButton("details", e -> {
-      RecipeController rc = new RecipeController();
-      RecipeDetailPage drp = new RecipeDetailPage(new RecipeDetailUI(rc.read(title)));
-      drp.footer.addButton("home", eprime -> { pageTracker.goHome(); });
-      pageTracker.swapToPage(drp);
-    });
+  /** Synchronize recipe List UI element with application's internal recipe list */
+  public List<String> processResponse(String response) throws IllegalArgumentException {
+    try {
+      JSONObject json = new JSONObject(response);
+      List<String> title = new ArrayList<String>();
+      Iterator<String> ititles = json.keys();
+      while (ititles.hasNext()) {
+        title.add(ititles.next());
+      }
+      return title;
+    } catch (Exception ex) {
+      throw new IllegalArgumentException("response: \"" + response + "\" was invalid");
+    }
+  }
+}
+/** UI element which displays list of recipes */
+class RecipeListUI extends VBox {
+  RecipeListUI(List<RecipeEntryUI> entries) {
+    this.getChildren().addAll(entries);
+    format();
   }
 
-  /** Synchronize recipe List UI element with application's internal recipe list */
-  public void update() {
-    this.getChildren().clear();
-    JSONObject titleObject = performRequest();
-    if (titleObject == null) {
-      return;
-    }
-    Iterator<String> titles = performRequest().keys();
-    while (titles.hasNext()) {
-      String title = titles.next();
-      RecipeEntryUI entry = new RecipeEntryUI(title);
-      addDetailedRecipeButton(entry, title);
-      /* TODO add recipe entry UI */
-      this.getChildren().add(entry);
-    }
+  private void format() {
+    this.setSpacing(5); // sets spacing between tasks
+    this.setPrefSize(500, 560);
+    this.setStyle("-fx-background-color: #F0F8FF;");
   }
 }
 
 /** UI Page containing recipe list, and accompanying header and footer */
 public class RecipeListPage extends ScrollablePage {
-        private RecipeListUI recipeList;
-
-        RecipeListPage(PageTracker pt) {
-          super("Recipe List",
-              new RecipeListUI(pt));
-          this.recipeList = (RecipeListUI) this.center;
-          this.footer.addButton("update", e -> { recipeList.update(); });
-        }
+  RecipeListPage(List<RecipeEntryUI> entries) {
+    super("Recipe List", new RecipeListUI(entries));
+  }
 }

@@ -14,7 +14,7 @@ public class PantryPalServer {
     ThreadPoolExecutor threadPoolExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(10);
     // create a map to store data
     Map<String, Recipe> data = new HashMap<>();
-    data.put("recipe",new Recipe("brocolli", "boil"));
+    data.put("brocolli", new Recipe("brocolli", "brocolli ingredients"));
 
     // create a server
     HttpServer server = HttpServer.create(new InetSocketAddress(SERVER_HOSTNAME, SERVER_PORT), 0);
