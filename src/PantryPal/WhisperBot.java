@@ -12,6 +12,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import org.json.JSONException;
 import org.json.JSONObject;
+import util.ConfigReader;
 
 /** Interface for voice-to-text functionality. */
 interface VoiceToText {
