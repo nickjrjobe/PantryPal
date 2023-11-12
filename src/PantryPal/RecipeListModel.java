@@ -3,11 +3,6 @@
 package PantryPal;
 
 import java.io.*;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URI;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -16,25 +11,19 @@ import javafx.scene.layout.*;
 import javafx.scene.text.*;
 import org.json.JSONObject;
 
-/**
- * Communication model for making API requests to get Recipe List.
- */
-public class RecipeListModel {
-  public List<String> performRequest() {
+/** Communication model for making API requests to get Recipe List. */
+public class RecipeListModel extends AbstractModel {
+  RecipeListModel() {
+    super("/recipes");
+  }
+
+  public List<String> getRecipeList() {
+    String response = super.performRequest("GET", null, null);
     try {
-      String urlString = "http://localhost:8100/recipes";
-      URL url = new URI(urlString).toURL();
-      HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-      conn.setRequestMethod("GET");
-      conn.setDoOutput(true);
-      BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-      String response = in.readLine();
-      System.out.println("response " + response);
-      in.close();
       return processResponse(response);
     } catch (Exception e) {
       System.err.println("HTTP request failed with error " + e.getMessage());
-      return null;
+      return new ArrayList<String>();
     }
   }
 

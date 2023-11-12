@@ -3,18 +3,10 @@
 package PantryPal;
 
 import java.io.*;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URI;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import javafx.event.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.*;
-import org.json.JSONObject;
 
 /** UI element which displays list of recipes */
 class RecipeListUI extends VBox {

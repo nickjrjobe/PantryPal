@@ -8,9 +8,7 @@ import javafx.scene.layout.*;
 import javafx.scene.text.*;
 import org.json.JSONObject;
 
-/**
- * CRUD model for server's detailed recipe data
- */
+/** CRUD model for server's detailed recipe data */
 public class RecipeDetailModel extends AbstractModel {
   RecipeDetailModel() {
     super("recipe");
