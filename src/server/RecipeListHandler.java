@@ -150,16 +150,24 @@ class NewRecipeAPI extends HttpAPI {
     JSONObject json;
     Recipe recipe;
     System.out.println("request: " + postData);
+    /* interpret request as json */
     try {
       json = new JSONObject(postData);
     } catch (Exception e) {
       throw new IOException("Response was not JSON");
     }
+    String requestResponse;
+    /* get response from json */
     try {
-      System.out.println("object :" + json.toString());
-      creator.readResponse(json.getString("response"));
+      requestResponse = json.getString("response");
     } catch (Exception e) {
       throw new IOException("Response was invalid");
+    }
+    /* interpret response (ALLOW errors!) */
+    try {
+      creator.readResponse(requestResponse);
+    } catch (Exception e) {
+      System.err.println("response invalid with error " + e.getMessage());
     }
     String response = makeResponse().toString();
     scanner.close();
@@ -171,6 +179,12 @@ class NewRecipeAPI extends HttpAPI {
   String handleDelete(HttpExchange httpExchange) throws IOException {
     String response = "200 OK";
     creator.reset();
+    return response;
+  }
+
+  /** get current prompts */
+  String handleGet(HttpExchange httpExchange) throws IOException {
+    String response = makeResponse().toString();
     return response;
   }
 }
