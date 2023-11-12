@@ -28,6 +28,7 @@ OUT_DIR = out
 # Package name
 PROGRAM = PantryPal
 SERVER_PROGRAM = server
+UTIL_PROGRAM = utils
 # Executable name
 REALPROGRAM = PantryPal
 
@@ -37,12 +38,15 @@ SERVER_CLASS = $(SERVER_PROGRAM).PantryPalServer
 
 # Find all .java files in the source directory
 SRCS = $(wildcard $(SRC_DIR)/$(PROGRAM)/*.java)
+UTILSRCS = $(wildcard $(SRC_DIR)/$(UTIL_PROGRAM)/*.java)
 TESTSRCS = $(wildcard $(TEST_DIR)/$(PROGRAM)/*.java)
 SERVERSRCS = $(wildcard $(SRC_DIR)/$(SERVER_PROGRAM)/*.java)
 TESTSERVERSRCS = $(wildcard $(TEST_DIR)/$(SERVER_PROGRAM)/*.java)
 
 # Generate .class file names from .java file names
 CLASSES = $(patsubst $(SRC_DIR)/$(PROGRAM)/%.java, $(OUT_DIR)/$(PROGRAM)/%.class, $(SRCS))
+
+UTILCLASSES = $(patsubst $(SRC_DIR)/$(UTIL_PROGRAM)/%.java, $(OUT_DIR)/$(PROGRAM)/%.class, $(UTILSRCS))
 TESTCLASSES = $(patsubst $(TEST_DIR)/$(PROGRAM)/%.java, $(OUT_DIR)/$(PROGRAM)/%.class, $(TESTSRCS))
 SERVERCLASSES = $(patsubst $(SRC_DIR)/$(SERVER_PROGRAM)/%.java, $(OUT_DIR)/$(SERVER_PROGRAM)/%.class, $(SERVERSRCS))
 SERVERTESTCLASSES = $(patsubst $(TEST_DIR)/$(SERVER_PROGRAM)/%.java, $(OUT_DIR)/$(SERVER_PROGRAM)/%.class, $(TESTSERVERSRCS))
@@ -58,24 +62,29 @@ RUNNABLE_SERVER_TESTS = $(filter %Test,$(RUNNABLE_SERVER_TEST_CLASSES))
 
 all: $(CLASSES) $(TESTCLASSES) $(SERVERCLASSES) $(SERVERTESTCLASSES)
 
-$(SERVERCLASSES): build_server_classes
+$(UTILCLASSES): build_util_classes
+build_util_classes: $(UTILSRCS)
+	@mkdir -p $(@D)
+	$(JAVAC) $(JFLAGS) -cp $(OUT_DIR):$(JCP):. -d $(OUT_DIR) $^
+
+$(SERVERCLASSES): build_util_classes build_server_classes
 build_server_classes: $(SERVERSRCS)
 	@mkdir -p $(@D)
-	$(JAVAC) $(JFLAGS) -cp $(OUT_DIR):$(JCP) -d $(OUT_DIR) $^
+	$(JAVAC) $(JFLAGS) -cp $(OUT_DIR):$(JCP):. -d $(OUT_DIR) $^
 
-$(TESTCLASSES): build_test_classes
+$(TESTCLASSES): build_util_classes build_test_classes
 build_test_classes: $(SRCS) $(TESTSRCS)
 	@mkdir -p $(@D)
-	$(JAVAC) $(JFLAGS) -cp $(JTESTCP) -d $(OUT_DIR) $^
-$(SERVERTESTCLASSES): build_servertest_classes
+	$(JAVAC) $(JFLAGS) -cp $(OUT_DIR):$(JTESTCP) -d $(OUT_DIR) $^
+$(SERVERTESTCLASSES): build_util_classes build_servertest_classes
 build_servertest_classes: $(SERVERSRCS) $(TESTSERVERSRCS)
 	@mkdir -p $(@D)
-	$(JAVAC) $(JFLAGS) -cp $(JTESTCP) -d $(OUT_DIR) $^
+	$(JAVAC) $(JFLAGS) -cp $(OUT_DIR):$(JTESTCP) -d $(OUT_DIR) $^
 
-$(CLASSES): build_classes
+$(CLASSES): build_util_classes build_classes
 build_classes: $(SRCS)
 	@mkdir -p $(@D)
-	$(JAVAC) $(JFLAGS) -cp $(JCP) -d $(OUT_DIR) $^
+	$(JAVAC) $(JFLAGS) -cp $(OUT_DIR):$(JCP):. -d $(OUT_DIR) $^
 
 # Run the Java application
 run: $(CLASSES) 

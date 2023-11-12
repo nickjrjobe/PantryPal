@@ -7,6 +7,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.layout.*;
 import javafx.scene.text.*;
 import javafx.scene.text.TextAlignment;
+import utils.Recipe;
 
 /**
  * RecipeDetailPage provides a user interface to display the details of a recipe. It integrates with
@@ -128,12 +129,12 @@ class RecipeDetailUI extends VBox {
   }
 
   public void save() {
-    RecipeDetailModel rc = new RecipeDetailModel();
+    RecipeDetailModel rc = new RecipeDetailModel(new HttpRequestModel());
     rc.update(new Recipe(titleField.getText(), descriptionField.getText()));
   }
 
   public void delete() {
-    RecipeDetailModel rc = new RecipeDetailModel();
+    RecipeDetailModel rc = new RecipeDetailModel(new HttpRequestModel());
     rc.delete(titleField.getText());
     getChildren().clear();
   }

@@ -12,13 +12,16 @@ import javafx.scene.text.*;
 import org.json.JSONObject;
 
 /** Communication model for making API requests to get Recipe List. */
-public class RecipeListModel extends AbstractModel {
-  RecipeListModel() {
-    super("/recipes");
+public class RecipeListModel {
+  HttpModel httpModel;
+
+  RecipeListModel(HttpModel httpModel) {
+    this.httpModel = httpModel;
+    httpModel.setPath("/recipes");
   }
 
   public List<String> getRecipeList() {
-    String response = super.performRequest("GET", null, null);
+    String response = httpModel.performRequest("GET", null, null);
     try {
       return processResponse(response);
     } catch (Exception e) {
@@ -27,7 +30,7 @@ public class RecipeListModel extends AbstractModel {
     }
   }
 
-  /** Synchronize recipe List UI element with application's internal recipe list */
+  /** convert JSON response into List of strings */
   public List<String> processResponse(String response) throws IllegalArgumentException {
     try {
       JSONObject json = new JSONObject(response);

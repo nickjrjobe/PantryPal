@@ -37,7 +37,7 @@ class AppController implements HomeTracker {
   }
 
   public List<RecipeEntryUI> getRecipeListEntries() {
-    RecipeListModel model = new RecipeListModel();
+    RecipeListModel model = new RecipeListModel(new HttpRequestModel());
     ArrayList<RecipeEntryUI> entries = new ArrayList<>();
     for (String title : model.getRecipeList()) {
       entries.add(makeRecipeEntryUI(title));
@@ -56,7 +56,7 @@ class AppController implements HomeTracker {
   }
 
   public RecipeDetailPage makeRecipeDetailsPage(String title) {
-    RecipeDetailModel rc = new RecipeDetailModel();
+    RecipeDetailModel rc = new RecipeDetailModel(new HttpRequestModel());
     RecipeDetailPage drp = new RecipeDetailPage(new RecipeDetailUI(rc.read(title)));
     drp.footer.addButton(
         "home",
@@ -69,7 +69,7 @@ class AppController implements HomeTracker {
   public NewRecipeController makeNewRecipeController() {
     NewRecipeUI newRecipeUI = new NewRecipeUI();
     NewRecipePage newRecipePage = new NewRecipePage(newRecipeUI);
-    NewRecipeModel newRecipeModel = new NewRecipeModel();
+    NewRecipeModel newRecipeModel = new NewRecipeModel(new HttpRequestModel());
     VoiceToText voiceToText = new WhisperBot();
     return new NewRecipeController(newRecipeUI, newRecipePage, newRecipeModel, pt, voiceToText);
   }
