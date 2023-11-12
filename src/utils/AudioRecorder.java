@@ -1,4 +1,4 @@
-package PantryPal;
+package utils;
 
 import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioFormat;
@@ -8,7 +8,7 @@ import javax.sound.sampled.DataLine;
 import javax.sound.sampled.TargetDataLine;
 
 /** Class responsible for recording audio using the Java Sound API. */
-class AudioRecorder {
+public class AudioRecorder {
   private AudioFormat audioFormat;
   private TargetDataLine targetDataLine;
   private boolean isRecording;
