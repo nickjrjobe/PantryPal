@@ -39,19 +39,24 @@ SERVER_CLASS = $(SERVER_PROGRAM).PantryPalServer
 SRCS = $(wildcard $(SRC_DIR)/$(PROGRAM)/*.java)
 TESTSRCS = $(wildcard $(TEST_DIR)/$(PROGRAM)/*.java)
 SERVERSRCS = $(wildcard $(SRC_DIR)/$(SERVER_PROGRAM)/*.java)
+TESTSERVERSRCS = $(wildcard $(TEST_DIR)/$(SERVER_PROGRAM)/*.java)
 
 # Generate .class file names from .java file names
 CLASSES = $(patsubst $(SRC_DIR)/$(PROGRAM)/%.java, $(OUT_DIR)/$(PROGRAM)/%.class, $(SRCS))
 TESTCLASSES = $(patsubst $(TEST_DIR)/$(PROGRAM)/%.java, $(OUT_DIR)/$(PROGRAM)/%.class, $(TESTSRCS))
-SERVERCLASSES = $(patsubst $(SRC_DIR)/$(SERVER_PROGRAM)/%.java, $(OUT_DIR)/$(SERVER_PROGRAM)/%.class, $(TESTSRCS))
+SERVERCLASSES = $(patsubst $(SRC_DIR)/$(SERVER_PROGRAM)/%.java, $(OUT_DIR)/$(SERVER_PROGRAM)/%.class, $(SERVERSRCS))
+SERVERTESTCLASSES = $(patsubst $(TEST_DIR)/$(SERVER_PROGRAM)/%.java, $(OUT_DIR)/$(SERVER_PROGRAM)/%.class, $(TESTSERVERSRCS))
 
 # Convert Testclass names to executable path names (/ to .)
 RUNNABLE_TEST_CLASSES = $(patsubst $(TEST_DIR)/$(PROGRAM)/%.java, $(PROGRAM).%, $(TESTSRCS))
+RUNNABLE_SERVER_TEST_CLASSES = $(patsubst $(TEST_DIR)/$(SERVER_PROGRAM)/%.java, $(SERVER_PROGRAM).%, $(TESTSERVERSRCS))
+$(info runnable server tests $(RUNNABLE_SERVER_TEST_CLASSES))
 
 # Filter test class executable names by ones which are actually tests
 RUNNABLE_TESTS = $(filter %Test,$(RUNNABLE_TEST_CLASSES))
+RUNNABLE_SERVER_TESTS = $(filter %Test,$(RUNNABLE_SERVER_TEST_CLASSES))
 
-all: $(CLASSES) $(TESTCLASSES) $(SERVERCLASSES)
+all: $(CLASSES) $(TESTCLASSES) $(SERVERCLASSES) $(SERVERTESTCLASSES)
 
 $(SERVERCLASSES): build_server_classes
 build_server_classes: $(SERVERSRCS)
@@ -60,6 +65,10 @@ build_server_classes: $(SERVERSRCS)
 
 $(TESTCLASSES): build_test_classes
 build_test_classes: $(SRCS) $(TESTSRCS)
+	@mkdir -p $(@D)
+	$(JAVAC) $(JFLAGS) -cp $(JTESTCP) -d $(OUT_DIR) $^
+$(SERVERTESTCLASSES): build_servertest_classes
+build_servertest_classes: $(SERVERSRCS) $(TESTSERVERSRCS)
 	@mkdir -p $(@D)
 	$(JAVAC) $(JFLAGS) -cp $(JTESTCP) -d $(OUT_DIR) $^
 
@@ -73,6 +82,9 @@ run: $(CLASSES)
 	$(JAVA) $(JFLAGS) -cp $(OUT_DIR):$(JCP) $(MAIN_CLASS)
 test: all
 	$(JAVA) $(JFLAGS) -cp $(JTESTCP):$(OUT_DIR) org.junit.runner.JUnitCore $(RUNNABLE_TESTS)
+
+servertest: all
+	$(JAVA) $(JFLAGS) -cp $(JTESTCP):$(OUT_DIR) org.junit.runner.JUnitCore $(RUNNABLE_SERVER_TESTS)
 # TODO not currently linting testcode
 lint:
 	$(JAVA) -jar $(CHECKSTYLE) -c google_checks.xml $(SRCS)
