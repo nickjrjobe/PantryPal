@@ -1,4 +1,5 @@
 package server;
+
 import com.sun.net.httpserver.*;
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -6,6 +7,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.*;
 
+/**
+ * Main class for PantryPal's server.
+ *
+ * <p>In charge of setting up APIs and data structures
+ */
 public class PantryPalServer {
   private static final int SERVER_PORT = 8100;
   private static final String SERVER_HOSTNAME = "localhost";
@@ -19,10 +25,10 @@ public class PantryPalServer {
     // create a server
     HttpServer server = HttpServer.create(new InetSocketAddress(SERVER_HOSTNAME, SERVER_PORT), 0);
     HttpContext recipeListContext = server.createContext("/recipes", new RecipeListAPI(data));
-    HttpContext DetailedRecipeContext =
+    HttpContext detailedRecipeContext =
         server.createContext("/recipe", new DetailedRecipeAPI(data));
     NewRecipeCreator creator = new NewRecipeCreator(new ChatGPTBot());
-    HttpContext NewRecipeContext = server.createContext("/newrecipe", new NewRecipeAPI(creator));
+    HttpContext newRecipeContext = server.createContext("/newrecipe", new NewRecipeAPI(creator));
     server.setExecutor(threadPoolExecutor);
     server.start();
   }

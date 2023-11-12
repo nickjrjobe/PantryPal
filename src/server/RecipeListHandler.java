@@ -1,10 +1,11 @@
 package server;
+
 import com.sun.net.httpserver.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
-import org.json.JSONObject;
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 abstract class HttpAPI implements HttpHandler {
 
@@ -34,27 +35,32 @@ abstract class HttpAPI implements HttpHandler {
     outStream.write(response.getBytes());
     outStream.close();
   }
+
   String handleGet(HttpExchange httpExchange) throws IOException {
     throw new IOException("Request type not supported");
-  };
+  }
+
   String handlePost(HttpExchange httpExchange) throws IOException {
     throw new IOException("Request type not supported");
   }
+
   String handlePut(HttpExchange httpExchange) throws IOException {
     throw new IOException("Request type not supported");
   }
-  String handleDelete(HttpExchange httpExchange) throws IOException{
+
+  String handleDelete(HttpExchange httpExchange) throws IOException {
     throw new IOException("Request type not supported");
   }
 }
+
 class DetailedRecipeAPI extends HttpAPI {
   private Map<String, Recipe> data;
+
   DetailedRecipeAPI(Map<String, Recipe> map) {
     this.data = map;
   }
-  /**
-   * Get a specific recipe
-   */
+
+  /** Get a specific recipe */
   String handleGet(HttpExchange httpExchange) throws IOException {
     URI uri = httpExchange.getRequestURI();
     String query = uri.getRawQuery();
@@ -68,9 +74,7 @@ class DetailedRecipeAPI extends HttpAPI {
     return response;
   }
 
-  /**
-   * Create a new recipe
-   */
+  /** Create a new recipe */
   String handlePost(HttpExchange httpExchange) throws IOException {
     InputStream inStream = httpExchange.getRequestBody();
     Scanner scanner = new Scanner(inStream);
@@ -98,48 +102,47 @@ class DetailedRecipeAPI extends HttpAPI {
     return response;
   }
 
-  /**
-   * Update recipe
-   */
+  /** Update recipe */
   String handlePut(HttpExchange httpExchange) throws IOException {
     return handlePost(httpExchange);
   }
-  /**
-   * Delete recipe
-   */
-    String handleDelete(HttpExchange httpExchange) throws IOException {
-      URI uri = httpExchange.getRequestURI();
-      String query = uri.getRawQuery();
-      String response = "404 Not Found";
-      if (query != null) {
-        String value = query.substring(query.indexOf("=") + 1);
-        Recipe recipe = data.remove(Recipe.desanitizeTitle(value)); // Retrieve data from hashmap
-        if (recipe != null) {
+
+  /** Delete recipe */
+  String handleDelete(HttpExchange httpExchange) throws IOException {
+    URI uri = httpExchange.getRequestURI();
+    String query = uri.getRawQuery();
+    String response = "404 Not Found";
+    if (query != null) {
+      String value = query.substring(query.indexOf("=") + 1);
+      Recipe recipe = data.remove(Recipe.desanitizeTitle(value)); // Retrieve data from hashmap
+      if (recipe != null) {
         response = "200 OK";
-        }
       }
-      return response;
+    }
+    return response;
   }
 }
+
 class NewRecipeAPI extends HttpAPI {
   private NewRecipeCreator creator;
+
   NewRecipeAPI(NewRecipeCreator creator) {
-      this.creator = creator;
+    this.creator = creator;
   }
+
   public JSONObject makeResponse() {
     JSONObject json = new JSONObject();
     json.put("transcript", new JSONArray(creator.getPrompts()));
 
     /* if recipe is valid include it in response, then reset */
     if (creator.getRecipe() != null) {
-        json.put("recipe", creator.getRecipe().toJSON());
-        creator.reset();
+      json.put("recipe", creator.getRecipe().toJSON());
+      creator.reset();
     }
     return json;
   }
-  /**
-   * Write responses
-   */
+
+  /** Write responses */
   String handlePost(HttpExchange httpExchange) throws IOException {
     InputStream inStream = httpExchange.getRequestBody();
     Scanner scanner = new Scanner(inStream);
@@ -163,27 +166,30 @@ class NewRecipeAPI extends HttpAPI {
 
     return response;
   }
-  /**
-   * Reset NewRecipeCreator
-   */
+
+  /** Reset NewRecipeCreator */
   String handleDelete(HttpExchange httpExchange) throws IOException {
     String response = "200 OK";
     creator.reset();
     return response;
   }
 }
+
 class RecipeListAPI extends HttpAPI {
   private Map<String, Recipe> data;
+
   RecipeListAPI(Map<String, Recipe> map) {
     this.data = map;
   }
+
   private JSONObject makeRecipeList() {
     JSONObject recipeList = new JSONObject();
-    for(Recipe recipe : data.values()){
-          recipeList.put(recipe.getTitle(), recipe.toJSON());
+    for (Recipe recipe : data.values()) {
+      recipeList.put(recipe.getTitle(), recipe.toJSON());
     }
     return recipeList;
   }
+
   String handleGet(HttpExchange httpExchange) throws IOException {
     return makeRecipeList().toString();
   }

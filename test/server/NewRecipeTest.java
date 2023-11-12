@@ -69,9 +69,11 @@ public class NewRecipeTest {
   @Test
   public void testInterpretRecipeResponse() {
     /* Checking against expected format received from ChatGPT */
-     assertEquals(newRecipeCreatorTest.interpretRecipeResponse("Cereal\nPut milk into cereal")
-                         .getDescription(),
-            new Recipe("Cereal", "Put milk into cereal").getDescription());
+    assertEquals(
+        newRecipeCreatorTest
+            .interpretRecipeResponse("Cereal\nPut milk into cereal")
+            .getDescription(),
+        new Recipe("Cereal", "Put milk into cereal").getDescription());
     /* strip off excess white space at end */
     assertEquals(
         newRecipeCreatorTest

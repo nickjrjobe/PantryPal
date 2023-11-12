@@ -4,14 +4,10 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.event.*;
-import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import javafx.scene.text.*;
 
-/**
- * Uses a state machine approach to pass control between methods 
- * when creating new recipe 
- * */
+/** Uses a state machine approach to pass control between methods when creating new recipe */
 public class NewRecipeCreator {
   String mealType;
   Boolean waitingForMeal;
@@ -23,12 +19,12 @@ public class NewRecipeCreator {
     this.recipeCreator = recipeCreator;
     reset();
   }
+
   public void reset() {
     recipe = null;
     waitingForMeal = true;
     this.prompts = new ArrayList<String>();
     prompts.add("Would you like Breakfast, Lunch, or Dinner?");
-
   }
 
   public void readResponse(String response) throws IllegalArgumentException {
@@ -41,15 +37,18 @@ public class NewRecipeCreator {
       handleIngredients(response);
     }
   }
+
   public Recipe getRecipe() {
     return recipe;
   }
+
   public List<String> getPrompts() {
     return prompts;
   }
+
   /**
-   *  Checks whether meal type is valid before changing state to accept
-   *  ingredients or reasking for meal type
+   * Checks whether meal type is valid before changing state to accept ingredients or reasking for
+   * meal type
    */
   public void handleMeal(String response) throws IllegalArgumentException {
     response = response.toLowerCase();

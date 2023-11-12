@@ -5,7 +5,6 @@ package PantryPal;
 import java.io.*;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
@@ -16,6 +15,7 @@ import javafx.event.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.*;
 import org.json.JSONObject;
+
 class RecipeListModel {
   public List<String> performRequest() {
     try {
@@ -30,10 +30,11 @@ class RecipeListModel {
       in.close();
       return processResponse(response);
     } catch (Exception e) {
-      System.err.println("HTTP request failed with error "+ e.getMessage());
+      System.err.println("HTTP request failed with error " + e.getMessage());
       return null;
     }
   }
+
   /** Synchronize recipe List UI element with application's internal recipe list */
   public List<String> processResponse(String response) throws IllegalArgumentException {
     try {
@@ -49,6 +50,7 @@ class RecipeListModel {
     }
   }
 }
+
 /** UI element which displays list of recipes */
 class RecipeListUI extends VBox {
   RecipeListUI(List<RecipeEntryUI> entries) {
