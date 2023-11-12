@@ -54,9 +54,9 @@ abstract class HttpAPI implements HttpHandler {
 }
 
 class DetailedRecipeAPI extends HttpAPI {
-  private Map<String, Recipe> data;
+  private SaveableRecipeData data;
 
-  DetailedRecipeAPI(Map<String, Recipe> map) {
+  DetailedRecipeAPI(SaveableRecipeData map) {
     this.data = map;
   }
 
@@ -176,21 +176,12 @@ class NewRecipeAPI extends HttpAPI {
 }
 
 class RecipeListAPI extends HttpAPI {
-  private Map<String, Recipe> data;
+  private SaveableRecipeData data;
 
-  RecipeListAPI(Map<String, Recipe> map) {
+  RecipeListAPI(SaveableRecipeData map) {
     this.data = map;
   }
-
-  private JSONObject makeRecipeList() {
-    JSONObject recipeList = new JSONObject();
-    for (Recipe recipe : data.values()) {
-      recipeList.put(recipe.getTitle(), recipe.toJSON());
-    }
-    return recipeList;
-  }
-
   String handleGet(HttpExchange httpExchange) throws IOException {
-    return makeRecipeList().toString();
+    return data.toJSON().toString();
   }
 }
