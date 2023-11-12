@@ -6,61 +6,71 @@ import java.net.*;
 import java.util.*;
 import org.json.JSONObject;
 
-abstract class HttpAPI implements HttpHandler {
-
+class HttpAPI implements HttpHandler {
   public void handle(HttpExchange httpExchange) throws IOException {
     String response = "Request Received";
     String method = httpExchange.getRequestMethod();
     try {
+      URI uri = httpExchange.getRequestURI();
+      String query = uri.getRawQuery();
+      String request = getRequestString(httpExchange);
       if (method.equals("GET")) {
-        response = handleGet(httpExchange);
+        response = handleGet(query, request);
       } else if (method.equals("POST")) {
-        response = handlePost(httpExchange);
+        response = handlePost(query, request);
       } else if (method.equals("DELETE")) {
-        response = handleDelete(httpExchange);
+        response = handleDelete(query, request);
       } else if (method.equals("PUT")) {
-        response = handlePut(httpExchange);
+        response = handlePut(query, request);
       } else {
         throw new Exception("Not Valid Request Method");
       }
     } catch (Exception e) {
       System.out.println("An erroneous request error: " + e.getMessage());
-      response = e.toString();
+      response = "400 Bad Request";
       e.printStackTrace();
     }
     // Sending back response to the client
+    sendResponse(httpExchange, response);
+  }
+
+  void sendResponse(HttpExchange httpExchange, String response) throws IOException {
     httpExchange.sendResponseHeaders(200, response.length());
     OutputStream outStream = httpExchange.getResponseBody();
     outStream.write(response.getBytes());
     outStream.close();
   }
 
-  JSONObject getJSONRequest(HttpExchange httpExchange) throws IOException {
+  String getRequestString(HttpExchange httpExchange) throws IOException {
     InputStream inStream = httpExchange.getRequestBody();
     Scanner scanner = new Scanner(inStream);
     String postData = scanner.nextLine();
     System.out.println("request: " + postData);
     scanner.close();
+    return postData;
+  }
+
+  JSONObject getJSONRequest(String request) throws IOException {
     try {
-      return new JSONObject(postData);
+      return new JSONObject(request);
     } catch (Exception e) {
       throw new IOException("Response was not JSON");
     }
   }
 
-  String handleGet(HttpExchange httpExchange) throws IOException {
+  String handleGet(String query, String request) throws IOException {
     throw new IOException("Request type not supported");
   }
 
-  String handlePost(HttpExchange httpExchange) throws IOException {
+  String handlePost(String query, String request) throws IOException {
     throw new IOException("Request type not supported");
   }
 
-  String handlePut(HttpExchange httpExchange) throws IOException {
+  String handlePut(String query, String request) throws IOException {
     throw new IOException("Request type not supported");
   }
 
-  String handleDelete(HttpExchange httpExchange) throws IOException {
+  String handleDelete(String query, String request) throws IOException {
     throw new IOException("Request type not supported");
   }
 }

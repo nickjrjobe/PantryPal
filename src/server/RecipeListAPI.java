@@ -12,7 +12,7 @@ class RecipeListAPI extends HttpAPI {
     this.data = map;
   }
 
-  String handleGet(HttpExchange httpExchange) throws IOException {
+  String handleGet(String query, String request) throws IOException {
     return data.toJSON().toString();
   }
 }

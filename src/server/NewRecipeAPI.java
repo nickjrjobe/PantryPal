@@ -27,9 +27,9 @@ class NewRecipeAPI extends HttpAPI {
   }
 
   /** Write responses */
-  String handlePost(HttpExchange httpExchange) throws IOException {
+  String handlePost(String query, String request) throws IOException {
     /* interpret request as JSON */
-    JSONObject json = getJSONRequest(httpExchange);
+    JSONObject json = getJSONRequest(request);
 
     /* get client's prompt response from request's JSON */
     String requestResponse;
@@ -52,14 +52,14 @@ class NewRecipeAPI extends HttpAPI {
   }
 
   /** Reset NewRecipeCreator */
-  String handleDelete(HttpExchange httpExchange) throws IOException {
+  String handleDelete(String query, String request) throws IOException {
     String response = "200 OK";
     creator.reset();
     return response;
   }
 
   /** get current prompts */
-  String handleGet(HttpExchange httpExchange) throws IOException {
+  String handleGet(String query, String request) throws IOException {
     String response = makeResponseFromPrompts().toString();
     return response;
   }
