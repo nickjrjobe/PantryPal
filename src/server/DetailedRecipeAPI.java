@@ -5,6 +5,7 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 import org.json.JSONObject;
+import utils.Recipe;
 
 class DetailedRecipeAPI extends HttpAPI {
   private SaveableRecipeData data;

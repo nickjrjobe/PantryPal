@@ -6,6 +6,7 @@ import java.util.List;
 import javafx.event.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.*;
+import utils.Recipe;
 
 /** Uses a state machine approach to pass control between methods when creating new recipe */
 public class NewRecipeCreator {

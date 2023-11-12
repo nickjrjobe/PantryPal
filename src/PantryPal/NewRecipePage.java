@@ -8,6 +8,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import utils.Recipe;
 
 class TranscriptResults {
   public final Recipe recipe;

@@ -7,6 +7,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.layout.*;
 import javafx.scene.text.*;
 import javafx.scene.text.TextAlignment;
+import utils.Recipe;
 
 /**
  * RecipeDetailPage provides a user interface to display the details of a recipe. It integrates with
