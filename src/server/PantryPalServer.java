@@ -11,9 +11,11 @@ import java.util.Map;
 import java.util.concurrent.*;
 import org.json.JSONObject;
 import org.json.JSONTokener;
+
 class SaveableRecipeData {
   private static final String path = "server_data.json";
   private Map<String, Recipe> data;
+
   public JSONObject toJSON() {
     JSONObject recipeList = new JSONObject();
     for (Recipe recipe : data.values()) {
@@ -21,6 +23,7 @@ class SaveableRecipeData {
     }
     return recipeList;
   }
+
   public void write() {
     try {
       FileWriter file = new FileWriter(path);
@@ -30,6 +33,7 @@ class SaveableRecipeData {
       System.err.println("could not write server_data to file");
     }
   }
+
   public void read() {
     try {
       FileReader fileReader = new FileReader(path);
@@ -47,6 +51,7 @@ class SaveableRecipeData {
       System.err.println("could not read server_data from file with error " + e.getMessage());
     }
   }
+
   SaveableRecipeData() {
     this.data = new HashMap<String, Recipe>();
     read();
@@ -57,9 +62,11 @@ class SaveableRecipeData {
     write();
     return r;
   }
+
   public Recipe get(String key) {
     return data.get(key);
   }
+
   public Recipe remove(String key) {
     Recipe r = data.remove(key);
     write();
