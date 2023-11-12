@@ -128,12 +128,12 @@ class RecipeDetailUI extends VBox {
   }
 
   public void save() {
-    RecipeController rc = new RecipeController();
+    RecipeDetailModel rc = new RecipeDetailModel();
     rc.update(new Recipe(titleField.getText(), descriptionField.getText()));
   }
 
   public void delete() {
-    RecipeController rc = new RecipeController();
+    RecipeDetailModel rc = new RecipeDetailModel();
     rc.delete(titleField.getText());
     getChildren().clear();
   }

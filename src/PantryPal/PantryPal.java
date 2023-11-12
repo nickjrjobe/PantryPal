@@ -56,7 +56,7 @@ class AppController implements HomeTracker {
   }
 
   public RecipeDetailPage makeRecipeDetailsPage(String title) {
-    RecipeController rc = new RecipeController();
+    RecipeDetailModel rc = new RecipeDetailModel();
     RecipeDetailPage drp = new RecipeDetailPage(new RecipeDetailUI(rc.read(title)));
     drp.footer.addButton(
         "home",
