@@ -28,33 +28,56 @@ public class RecipeDetailPage extends ScrollablePage {
   RecipeDetailPage(RecipeDetailUI recipeDetailUI) {
     super("Recipe Detail", recipeDetailUI); // This initializes and adds the header.
     this.recipeDetailUI = recipeDetailUI;
-    this.footer.addButton("delete", e -> { recipeDetailUI.delete(); });
-    this.footer.addButton("edit", e -> { edit(); });
+    this.footer.addButton(
+        "delete",
+        e -> {
+          recipeDetailUI.delete();
+        });
+    this.footer.addButton(
+        "edit",
+        e -> {
+          edit();
+        });
   }
+
   public void edit() {
     /* set correct buttons for current state */
     this.footer.deleteButton("edit");
-    this.footer.addButton("save", e -> {save();});
+    this.footer.addButton(
+        "save",
+        e -> {
+          save();
+        });
 
     recipeDetailUI.setDescriptionEditable(true);
   }
+
   public void save() {
     /* set correct buttons for current state */
     this.footer.deleteButton("save");
-    this.footer.addButton("edit", e -> {edit();});
+    this.footer.addButton(
+        "edit",
+        e -> {
+          edit();
+        });
 
     recipeDetailUI.setDescriptionEditable(false);
 
     recipeDetailUI.save();
   }
 }
+
 class NewRecipeDetailPage extends ScrollablePage {
   RecipeDetailUI recipeDetailUI;
 
   NewRecipeDetailPage(RecipeDetailUI recipeDetailUI) {
     super("Recipe Detail", recipeDetailUI); // This initializes and adds the header.
     this.recipeDetailUI = recipeDetailUI;
-    this.footer.addButton("save", e -> { recipeDetailUI.save(); });
+    this.footer.addButton(
+        "save",
+        e -> {
+          recipeDetailUI.save();
+        });
   }
 }
 
@@ -73,7 +96,8 @@ class NewRecipeDetailPage extends ScrollablePage {
 class RecipeDetailUI extends VBox {
   protected Recipe recipe;
   protected Label titleField;
-  protected TextArea descriptionField; 
+  protected TextArea descriptionField;
+
   public void format() {
     /* format title field */
     titleField.setPrefSize(600, 20);
@@ -102,10 +126,12 @@ class RecipeDetailUI extends VBox {
     this.getChildren().add(titleField);
     this.getChildren().add(descriptionField);
   }
+
   public void save() {
     RecipeController rc = new RecipeController();
     rc.update(new Recipe(titleField.getText(), descriptionField.getText()));
   }
+
   public void delete() {
     RecipeController rc = new RecipeController();
     rc.delete(titleField.getText());

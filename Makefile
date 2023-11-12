@@ -87,10 +87,10 @@ servertest: all
 	$(JAVA) $(JFLAGS) -cp $(JTESTCP):$(OUT_DIR) org.junit.runner.JUnitCore $(RUNNABLE_SERVER_TESTS)
 # TODO not currently linting testcode
 lint:
-	$(JAVA) -jar $(CHECKSTYLE) -c google_checks.xml $(SRCS)
+	$(JAVA) -jar $(CHECKSTYLE) -c google_checks.xml $(SRCS) $(SERVERSRCS)
 
 format:
-	$(JAVA) -jar $(GOOGLE_FORMAT) --replace $(SRCS) $(TESTSRCS)
+	$(JAVA) -jar $(GOOGLE_FORMAT) --replace $(SRCS) $(TESTSRCS) $(SERVERSRCS) $(TESTSERVERSRCS) 
 makeserver: $(SERVERCLASSES)
 #TODO we can avoid including OPENJFX
 server: $(SERVERCLASSES)

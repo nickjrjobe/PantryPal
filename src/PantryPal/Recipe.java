@@ -11,11 +11,8 @@ import java.net.URI;
 import java.net.URL;
 import java.util.List;
 import javafx.event.*;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import javafx.scene.text.*;
-import javafx.scene.text.TextAlignment;
 import org.json.JSONObject;
 
 /*
@@ -25,13 +22,16 @@ import org.json.JSONObject;
 interface ReadBehavior {
   public List<Recipe> read();
 }
+
 abstract class AbstractModel {
   private static final String port = "8100";
   private static final String ip = "localhost";
   private String urlString;
+
   AbstractModel(String path) {
     this.urlString = "http://" + ip + ":" + port + "/" + path;
   }
+
   protected String performRequest(String method, String query, String request) {
     // Implement your HTTP request logic here and return the response
     if (request != null) {
@@ -64,19 +64,24 @@ abstract class AbstractModel {
     }
   }
 }
+
 class RecipeController extends AbstractModel {
   RecipeController() {
     super("recipe");
   }
+
   public void create(Recipe r) {
     super.performRequest("POST", null, r.toJSON().toString());
   }
+
   public Recipe read(String title) {
     return new Recipe(new JSONObject(performRequest("GET", Recipe.sanitizeTitle(title), null)));
   }
+
   public void update(Recipe r) {
     super.performRequest("PUT", null, r.toJSON().toString());
   }
+
   public void delete(String title) {
     super.performRequest("DELETE", Recipe.sanitizeTitle(title), null);
   }
@@ -86,12 +91,15 @@ class RecipeController extends AbstractModel {
 public class Recipe {
   private final String title;
   private final String description;
+
   public static String sanitizeTitle(String title) {
     return title.replace(" ", "-");
   }
+
   public static String desanitizeTitle(String title) {
     return title.replace("-", " ");
   }
+
   public String getTitle() {
     return title;
   }
@@ -99,13 +107,16 @@ public class Recipe {
   public String getDescription() {
     return description;
   }
+
   Recipe(String title, String description) {
     this.title = title;
     this.description = description;
   }
+
   public JSONObject toJSON() {
     return new JSONObject().put("title", title).put("description", description);
   }
+
   Recipe(JSONObject j) throws IllegalArgumentException {
     System.out.println("object: " + j.toString());
     try {

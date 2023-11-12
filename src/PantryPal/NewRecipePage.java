@@ -8,10 +8,11 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.json.JSONString;
+
 class TranscriptResults {
   public final Recipe recipe;
   public final List<String> prompts;
+
   TranscriptResults(JSONObject json) throws IllegalArgumentException {
     try {
 
@@ -33,15 +34,18 @@ class TranscriptResults {
           "Input json was not valid (Error: " + e.getMessage() + ")");
     }
   }
+
   TranscriptResults() {
     this.recipe = null;
     this.prompts = new ArrayList<String>();
   }
 }
+
 class NewRecipeModel extends AbstractModel {
   NewRecipeModel() {
     super("newrecipe");
   }
+
   TranscriptResults sendTranscript(String response) throws IOException {
     JSONObject responseJson = new JSONObject();
     responseJson.put("response", response);
@@ -53,36 +57,58 @@ class NewRecipeModel extends AbstractModel {
       throw new IOException("New recipe response from server malformed, error " + e.getMessage());
     }
   }
+
   void reset() {
     super.performRequest("DELETE", "", null);
   }
 }
+
 class NewRecipeController {
   NewRecipeUI newRecipeUI;
   NewRecipePage newRecipePage;
   NewRecipeModel newRecipeModel;
   PageTracker pt;
   VoiceToText voiceToText;
-  NewRecipeController(NewRecipeUI newRecipeUI, NewRecipePage newRecipePage,
-      NewRecipeModel newRecipeModel, PageTracker pt, VoiceToText voicetotext) {
+
+  NewRecipeController(
+      NewRecipeUI newRecipeUI,
+      NewRecipePage newRecipePage,
+      NewRecipeModel newRecipeModel,
+      PageTracker pt,
+      VoiceToText voicetotext) {
     this.newRecipeUI = newRecipeUI;
     this.newRecipePage = newRecipePage;
     this.newRecipeModel = newRecipeModel;
     this.pt = pt;
     this.voiceToText = voicetotext;
-    newRecipePage.footer.addButton("start", e -> { this.start(); });
-    newRecipePage.footer.addButton("home", e -> { this.exit(); });
+    newRecipePage.footer.addButton(
+        "start",
+        e -> {
+          this.start();
+        });
+    newRecipePage.footer.addButton(
+        "home",
+        e -> {
+          this.exit();
+        });
   }
+
   ScrollablePage getPage() {
     return this.newRecipePage;
   }
-  void start() {
-      /* set correct button layout for this state */
-      newRecipePage.footer.addButton("stop", e -> { this.stop(); });
-      newRecipePage.footer.deleteButton("start");
 
-      voiceToText.startRecording();
+  void start() {
+    /* set correct button layout for this state */
+    newRecipePage.footer.addButton(
+        "stop",
+        e -> {
+          this.stop();
+        });
+    newRecipePage.footer.deleteButton("start");
+
+    voiceToText.startRecording();
   }
+
   void stop() {
     /* set correct button layout for this state */
     newRecipePage.footer.deleteButton("stop");
@@ -102,25 +128,45 @@ class NewRecipeController {
     /* finish setting up buttons based on state */
     if (results.recipe != null) {
       Recipe recipe = results.recipe;
-      newRecipePage.footer.addButton("view details", e -> { this.done(recipe); });
+      newRecipePage.footer.addButton(
+          "view details",
+          e -> {
+            this.done(recipe);
+          });
     } else {
-      newRecipePage.footer.addButton("start", e -> { this.start(); });
+      newRecipePage.footer.addButton(
+          "start",
+          e -> {
+            this.start();
+          });
     }
   }
+
   void done(Recipe recipe) {
     newRecipeModel.reset();
     NewRecipeDetailPage drp = new NewRecipeDetailPage(new RecipeDetailUI(recipe));
-    drp.footer.addButton("home", e -> { pt.goHome(); });
+    drp.footer.addButton(
+        "home",
+        e -> {
+          pt.goHome();
+        });
     pt.swapToPage(drp);
   }
+
   void exit() {
     newRecipeModel.reset();
     pt.goHome();
   }
+
   void setup() {
-    newRecipePage.footer.addButton("start", e -> { this.start(); });
+    newRecipePage.footer.addButton(
+        "start",
+        e -> {
+          this.start();
+        });
   }
 }
+
 class NewRecipeUI extends VBox {
   private void format() {
     this.setSpacing(20); // sets spacing between tasks
@@ -135,8 +181,7 @@ class NewRecipeUI extends VBox {
     this.getChildren().add(label);
   }
 
-  NewRecipeUI() {
-  }
+  NewRecipeUI() {}
 
   void setPrompts(List<String> prompts) {
     this.getChildren().clear();
@@ -146,12 +191,11 @@ class NewRecipeUI extends VBox {
   }
 }
 
-/**
- * Page wrapper for NewRecipeUI
- */
+/** Page wrapper for NewRecipeUI */
 public class NewRecipePage extends ScrollablePage {
   private NewRecipeUI newRecipeUI;
-    NewRecipePage(NewRecipeUI newRecipeUI) {
-      super("New Recipe", newRecipeUI);
-    }
+
+  NewRecipePage(NewRecipeUI newRecipeUI) {
+    super("New Recipe", newRecipeUI);
+  }
 }

@@ -4,31 +4,38 @@ package PantryPal;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import javafx.application.Application;
 import javafx.event.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.*;
 import javafx.stage.Stage;
+
 interface HomeTracker {
   public ScrollablePage getHome();
 }
 
 class AppController implements HomeTracker {
   private PageTracker pt;
+
   public AppController(PageTracker pt) {
     this.pt = pt;
   }
+
   public ScrollablePage getHome() {
     return makeRecipeListPage();
   }
+
   public RecipeListPage makeRecipeListPage() {
     RecipeListPage recipeList = new RecipeListPage(getRecipeListEntries());
     recipeList.footer.addButton(
-        "New Recipe", e -> { pt.swapToPage(makeNewRecipeController().getPage()); });
+        "New Recipe",
+        e -> {
+          pt.swapToPage(makeNewRecipeController().getPage());
+        });
     return recipeList;
   }
+
   public List<RecipeEntryUI> getRecipeListEntries() {
     RecipeListModel model = new RecipeListModel();
     ArrayList<RecipeEntryUI> entries = new ArrayList<>();
@@ -40,17 +47,25 @@ class AppController implements HomeTracker {
 
   public RecipeEntryUI makeRecipeEntryUI(String title) {
     RecipeEntryUI entry = new RecipeEntryUI(title);
-    entry.addButton("details", e -> {
-      pt.swapToPage(makeRecipeDetailsPage(title));
-    });
+    entry.addButton(
+        "details",
+        e -> {
+          pt.swapToPage(makeRecipeDetailsPage(title));
+        });
     return entry;
   }
+
   public RecipeDetailPage makeRecipeDetailsPage(String title) {
     RecipeController rc = new RecipeController();
     RecipeDetailPage drp = new RecipeDetailPage(new RecipeDetailUI(rc.read(title)));
-    drp.footer.addButton("home", e -> { pt.swapToPage(makeRecipeListPage()); });
+    drp.footer.addButton(
+        "home",
+        e -> {
+          pt.swapToPage(makeRecipeListPage());
+        });
     return drp;
   }
+
   public NewRecipeController makeNewRecipeController() {
     NewRecipeUI newRecipeUI = new NewRecipeUI();
     NewRecipePage newRecipePage = new NewRecipePage(newRecipeUI);
@@ -59,6 +74,7 @@ class AppController implements HomeTracker {
     return new NewRecipeController(newRecipeUI, newRecipePage, newRecipeModel, pt, voiceToText);
   }
 }
+
 /*
  * Object which handles which Page is currently displayed
  */
@@ -92,9 +108,7 @@ class PageTracker {
   }
 }
 
-/**
- * Runner class which starts the UI
- */
+/** Runner class which starts the UI */
 public class PantryPal extends Application {
   RecipeListPage recipelist;
   PageTracker pageTracker;
@@ -106,6 +120,7 @@ public class PantryPal extends Application {
     pt.setHomeTracker(appController);
     pt.goHome();
   }
+
   public static void main(String[] args) {
     launch(args);
   }
