@@ -10,8 +10,12 @@ Replace the key value in the supplied config.json file
 **TODO** create a mac script that installs the right JavaFX library
 
 ### running
+#### To test app/ui (must run both server and app at same time) 
 - app: `$ make && make run`
-- test: `$ make && make test`
+- server: `$ make && make server`
+#### To run tests
+- client test: `$ make && make test`
+- server test: `$ make && make servertest`
 - lint: `$ make lint`
 
 ### Install required libraries (Windows)
