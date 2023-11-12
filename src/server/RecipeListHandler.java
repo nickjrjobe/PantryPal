@@ -4,6 +4,7 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 import org.json.JSONObject;
+import org.json.JSONArray;
 
 abstract class HttpAPI implements HttpHandler {
 
@@ -76,12 +77,14 @@ class DetailedRecipeAPI extends HttpAPI {
     String postData = scanner.nextLine();
     JSONObject json;
     Recipe recipe;
+    System.out.println("request: " + postData);
     try {
-      json = new JSONObject(httpExchange);
+      json = new JSONObject(postData);
     } catch (Exception e) {
       throw new IOException("Response was not JSON");
     }
     try {
+      System.out.println("object :" + json.toString());
       recipe = new Recipe(json);
     } catch (Exception e) {
       throw new IOException(e.getMessage());
@@ -116,6 +119,57 @@ class DetailedRecipeAPI extends HttpAPI {
         }
       }
       return response;
+  }
+}
+class NewRecipeAPI extends HttpAPI {
+  private NewRecipeCreator creator;
+  NewRecipeAPI(NewRecipeCreator creator) {
+      this.creator = creator;
+  }
+  public JSONObject makeResponse() {
+    JSONObject json = new JSONObject();
+    json.put("transcript", new JSONArray(creator.getPrompts()));
+
+    /* if recipe is valid include it in response, then reset */
+    if (creator.getRecipe() != null) {
+        json.put("recipe", creator.getRecipe().toJSON());
+        creator.reset();
+    }
+    return json;
+  }
+  /**
+   * Write responses
+   */
+  String handlePost(HttpExchange httpExchange) throws IOException {
+    InputStream inStream = httpExchange.getRequestBody();
+    Scanner scanner = new Scanner(inStream);
+    String postData = scanner.nextLine();
+    JSONObject json;
+    Recipe recipe;
+    System.out.println("request: " + postData);
+    try {
+      json = new JSONObject(postData);
+    } catch (Exception e) {
+      throw new IOException("Response was not JSON");
+    }
+    try {
+      System.out.println("object :" + json.toString());
+      creator.readResponse(json.getString("response"));
+    } catch (Exception e) {
+      throw new IOException("Response was invalid");
+    }
+    String response = makeResponse().toString();
+    scanner.close();
+
+    return response;
+  }
+  /**
+   * Reset NewRecipeCreator
+   */
+  String handleDelete(HttpExchange httpExchange) throws IOException {
+    String response = "200 OK";
+    creator.reset();
+    return response;
   }
 }
 class RecipeListAPI extends HttpAPI {

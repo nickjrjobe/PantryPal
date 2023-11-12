@@ -3,18 +3,68 @@
 package PantryPal;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import javafx.application.Application;
 import javafx.event.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.*;
 import javafx.stage.Stage;
+interface HomeTracker {
+  public ScrollablePage getHome();
+}
 
+class AppController implements HomeTracker {
+  private PageTracker pt;
+  public AppController(PageTracker pt) {
+    this.pt = pt;
+  }
+  public ScrollablePage getHome() {
+    return makeRecipeListPage();
+  }
+  public RecipeListPage makeRecipeListPage() {
+    RecipeListPage recipeList = new RecipeListPage(getRecipeListEntries());
+    recipeList.footer.addButton(
+        "New Recipe", e -> { pt.swapToPage(makeNewRecipeController().getPage()); });
+    return recipeList;
+  }
+  public List<RecipeEntryUI> getRecipeListEntries() {
+    RecipeListModel model = new RecipeListModel();
+    ArrayList<RecipeEntryUI> entries = new ArrayList<>();
+    for (String title : model.performRequest()) {
+      entries.add(makeRecipeEntryUI(title));
+    }
+    return entries;
+  }
+
+  public RecipeEntryUI makeRecipeEntryUI(String title) {
+    RecipeEntryUI entry = new RecipeEntryUI(title);
+    entry.addButton("details", e -> {
+      pt.swapToPage(makeRecipeDetailsPage(title));
+    });
+    return entry;
+  }
+  public RecipeDetailPage makeRecipeDetailsPage(String title) {
+    RecipeController rc = new RecipeController();
+    RecipeDetailPage drp = new RecipeDetailPage(new RecipeDetailUI(rc.read(title)));
+    drp.footer.addButton("home", e -> { pt.swapToPage(makeRecipeListPage()); });
+    return drp;
+  }
+  public NewRecipeController makeNewRecipeController() {
+    NewRecipeUI newRecipeUI = new NewRecipeUI();
+    NewRecipePage newRecipePage = new NewRecipePage(newRecipeUI);
+    NewRecipeModel newRecipeModel = new NewRecipeModel();
+    VoiceToText voiceToText = new WhisperBot();
+    return new NewRecipeController(newRecipeUI, newRecipePage, newRecipeModel, pt, voiceToText);
+  }
+}
 /*
  * Object which handles which Page is currently displayed
  */
 class PageTracker {
   private Stage primaryStage;
-  private ScrollablePage home;
+  private HomeTracker homeTracker;
 
   PageTracker(Stage primaryStage) {
     // Set the title of the app
@@ -22,8 +72,8 @@ class PageTracker {
     this.primaryStage = primaryStage;
   }
 
-  void setHome(ScrollablePage page) {
-    this.home = page;
+  void setHomeTracker(HomeTracker tracker) {
+    this.homeTracker = tracker;
   }
 
   /**
@@ -38,7 +88,7 @@ class PageTracker {
   }
 
   void goHome() {
-    swapToPage(home);
+    swapToPage(homeTracker.getHome());
   }
 }
 
@@ -51,34 +101,11 @@ public class PantryPal extends Application {
 
   @Override
   public void start(Stage primaryStage) throws Exception {
-    pageTracker = new PageTracker(primaryStage);
-    this.recipelist = new RecipeListPage(pageTracker);
-    pageTracker.setHome(recipelist);
-    pageTracker.goHome();
-    recipelist.footer.addButton(
-        "New Recipe",
-        e -> {
-        });
+    PageTracker pt = new PageTracker(primaryStage);
+    AppController appController = new AppController(pt);
+    pt.setHomeTracker(appController);
+    pt.goHome();
   }
-
-  /*
-  private void createNewRecipePage() {
-    NewRecipeUI newRecipeUI = new NewRecipeUI();
-    NewRecipePage newRecipePage = new NewRecipePage(newRecipeUI);
-    newRecipePage.footer.addButton(
-        "Cancel",
-        e -> {
-          pageTracker.swapToPage(recipelist);
-        });
-    newRecipePage.footer.addButton(
-        "next",
-        e -> {
-          recipelist.saveNewRecipe(newRecipeUI);
-        });
-    pageTracker.swapToPage(newRecipePage);
-  }
-*/
-
   public static void main(String[] args) {
     launch(args);
   }

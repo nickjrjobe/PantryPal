@@ -25,26 +25,19 @@ import org.json.JSONObject;
 interface ReadBehavior {
   public List<Recipe> read();
 }
-class RecipeController {
-  public void create(Recipe r) {
-    performRequest("POST", null, r.toJSON().toString());
+abstract class AbstractModel {
+  private static final String port = "8100";
+  private static final String ip = "localhost";
+  private String urlString;
+  AbstractModel(String path) {
+    this.urlString = "http://" + ip + ":" + port + "/" + path;
   }
-  public Recipe read(String title) {
-    return new Recipe(new JSONObject(performRequest("GET", title, null)));
-  }
-  public void update(Recipe r) {
-     performRequest("PUT", null, r.toJSON().toString());
-  }
-  public void delete(String title) {
-    performRequest("DELETE", title, null);
-  }
-  public String performRequest(String method, String query, String request) {
+  protected String performRequest(String method, String query, String request) {
     // Implement your HTTP request logic here and return the response
     if (request != null) {
       System.out.println("Request :" + request);
     }
     try {
-      String urlString = "http://localhost:8100/recipe";
       if (query != null) {
         urlString += "?" + query;
       }
@@ -71,11 +64,28 @@ class RecipeController {
     }
   }
 }
+class RecipeController extends AbstractModel {
+  RecipeController() {
+    super("recipe");
+  }
+  public void create(Recipe r) {
+    super.performRequest("POST", null, r.toJSON().toString());
+  }
+  public Recipe read(String title) {
+    return new Recipe(new JSONObject(performRequest("GET", title, null)));
+  }
+  public void update(Recipe r) {
+    super.performRequest("PUT", null, r.toJSON().toString());
+  }
+  public void delete(String title) {
+    super.performRequest("DELETE", title, null);
+  }
+}
 
 /** internal representation of recipe */
 public class Recipe {
-  private String title;
-  private String description;
+  private final String title;
+  private final String description;
 
   public String getTitle() {
     return title;
