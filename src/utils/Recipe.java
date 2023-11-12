@@ -20,6 +20,14 @@ public class Recipe {
   public static String desanitizeTitle(String title) {
     return title.replace("-", " ");
   }
+  @Override
+  public boolean equals(Object other) {
+    if (other instanceof Recipe) {
+      Recipe rother = (Recipe) other;
+      return rother.getTitle() == title && rother.getDescription() == description;
+    }
+    return false;
+  }
 
   public String getTitle() {
     return title;

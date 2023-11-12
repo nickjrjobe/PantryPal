@@ -6,11 +6,26 @@ import java.net.*;
 import java.util.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import utils.Recipe;
+
+interface InteractiveRecipeMaker {
+  /** get recipe if created, returns null otherwise */
+  public Recipe getRecipe();
+
+  /** Reset recipe maker to initial state */
+  public void reset();
+
+  /** gets interactive prompts to be displayed to user */
+  public List<String> getPrompts();
+
+  /** provide user-created prompt for processing */
+  public void readResponse(String response);
+}
 
 class NewRecipeAPI extends HttpAPI {
-  private NewRecipeCreator creator;
+  private InteractiveRecipeMaker creator;
 
-  NewRecipeAPI(NewRecipeCreator creator) {
+  NewRecipeAPI(InteractiveRecipeMaker creator) {
     this.creator = creator;
   }
 
@@ -51,7 +66,7 @@ class NewRecipeAPI extends HttpAPI {
     return response;
   }
 
-  /** Reset NewRecipeCreator */
+  /** Reset InteractiveRecipeMaker */
   String handleDelete(String query, String request) throws IOException {
     String response = "200 OK";
     creator.reset();

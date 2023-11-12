@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import java.io.*;
 import java.util.ArrayList;
 import org.junit.Test;
+import utils.Recipe;
 
 class RecipeCreatorStub implements RecipeCreator {
   String recipe;
