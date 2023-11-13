@@ -2,6 +2,7 @@ package PantryPal;
 
 import java.util.ArrayList;
 import java.util.List;
+import utils.Recipe;
 
 class MockReadBehavior implements ReadBehavior {
   public MockReadBehavior() {

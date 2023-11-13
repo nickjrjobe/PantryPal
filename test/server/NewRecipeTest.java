@@ -1,9 +1,11 @@
-package PantryPal;
+package server;
 
 import static org.junit.Assert.*;
 
 import java.io.*;
+import java.util.ArrayList;
 import org.junit.Test;
+import utils.Recipe;
 
 class RecipeCreatorStub implements RecipeCreator {
   String recipe;
@@ -17,6 +19,7 @@ class RecipeCreatorStub implements RecipeCreator {
   }
 }
 
+/* TODO move this somewhere else
 class VoiceToTextStub implements VoiceToText {
   public Boolean waitingForMeal = true;
   String mealType;
@@ -40,18 +43,24 @@ class VoiceToTextStub implements VoiceToText {
     this.ingredients = ingredients;
   }
 }
+*/
 
 public class NewRecipeTest {
 
   RecipeCreatorStub recipeCreatorTest = new RecipeCreatorStub();
-  VoiceToTextStub voiceToTextTest = new VoiceToTextStub();
 
-  NewRecipeCreator newRecipeCreatorTest = new NewRecipeCreator(voiceToTextTest, recipeCreatorTest);
+  NewRecipeCreator newRecipeCreatorTest = new NewRecipeCreator(recipeCreatorTest);
 
   @Test
   public void testHandleMealType() {
+    boolean gotCorrectException = false;
     /* Ensuring calling with improper meal type does not advance state */
-    newRecipeCreatorTest.handleMeal("snack");
+    try {
+      newRecipeCreatorTest.handleMeal("snack");
+    } catch (IllegalArgumentException e) {
+      gotCorrectException = e.getMessage() == "Not a valid meal type";
+    }
+    assertEquals(gotCorrectException, true);
     assertEquals(newRecipeCreatorTest.waitingForMeal, true);
     /* Ensuring calling with proper meal type advances state */
     newRecipeCreatorTest.handleMeal("dinner");
@@ -66,7 +75,7 @@ public class NewRecipeTest {
             .interpretRecipeResponse("Cereal\nPut milk into cereal")
             .getDescription(),
         new Recipe("Cereal", "Put milk into cereal").getDescription());
-    /* when there is extra line at the end */
+    /* strip off excess white space at end */
     assertEquals(
         newRecipeCreatorTest
             .interpretRecipeResponse("Tea\nPut teabag into hot water\n")
@@ -80,14 +89,40 @@ public class NewRecipeTest {
   @Test
   public void testNewRecipe() {
     /*Mocking and whole class test for New Recipe*/
-    voiceToTextTest.setMealType("dinner");
-    newRecipeCreatorTest.handleMeal(voiceToTextTest.mealType);
+    String mealType = "dinner";
+    String ingredients = "instant noodles, water";
+    String title = "Instant Noodles";
+    String desc = "Add noodles to boiling water for two minutes";
+    String rawRecipe = title + "\n" + desc;
+    ArrayList<String> expectedPrompts = new ArrayList<>();
+
+    expectedPrompts.add("Would you like Breakfast, Lunch, or Dinner?");
+
+    /*check expected pre-meal state */
+    assertEquals(expectedPrompts, newRecipeCreatorTest.getPrompts());
+    assertEquals(null, newRecipeCreatorTest.getRecipe());
+    assertEquals(true, newRecipeCreatorTest.waitingForMeal);
+
+    /* Prompt with meal */
+    newRecipeCreatorTest.readResponse(mealType);
+    expectedPrompts.add(mealType);
+    expectedPrompts.add("What ingredients do you have?");
+
+    /* check expected for post meal state */
+    assertEquals(expectedPrompts, newRecipeCreatorTest.getPrompts());
     assertEquals(false, newRecipeCreatorTest.waitingForMeal);
-    voiceToTextTest.setIngredients("instant noodles, water");
-    recipeCreatorTest.setRecipe("Instant Noodles\nAdd noodles to boiling water for two minutes");
-    assertEquals(
-        new Recipe("Instant Noodles", "Add noodles to boiling water for two minutes")
-            .getDescription(),
-        newRecipeCreatorTest.interpretRecipeResponse(recipeCreatorTest.recipe).getDescription());
+    assertEquals(mealType, newRecipeCreatorTest.mealType);
+    assertEquals(null, newRecipeCreatorTest.getRecipe());
+
+    /*prompt with ingredients */
+    recipeCreatorTest.setRecipe(rawRecipe);
+    newRecipeCreatorTest.readResponse(ingredients);
+
+    /* check expected values for final state */
+    expectedPrompts.add(ingredients);
+    assertEquals(expectedPrompts, newRecipeCreatorTest.getPrompts());
+    assertEquals(false, newRecipeCreatorTest.waitingForMeal);
+    assertEquals(title, newRecipeCreatorTest.getRecipe().getTitle());
+    assertEquals(desc, newRecipeCreatorTest.getRecipe().getDescription());
   }
 }

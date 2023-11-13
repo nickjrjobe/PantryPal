@@ -1,7 +1,7 @@
 # Makefile
 
 # Dependencies
-JAVAC = javac
+JAVAC = javac 
 JAVA = java
 ABSOLUTE_PROJECT_DIR = $(shell pwd)
 JUNIT = $(ABSOLUTE_PROJECT_DIR)/lib/junit-4.13.2.jar
@@ -27,46 +27,83 @@ OUT_DIR = out
 
 # Package name
 PROGRAM = PantryPal
+SERVER_PROGRAM = server
+UTIL_PROGRAM = utils
 # Executable name
 REALPROGRAM = PantryPal
 
 # Define the main class
 MAIN_CLASS = $(PROGRAM).$(REALPROGRAM)
+SERVER_CLASS = $(SERVER_PROGRAM).PantryPalServer
 
 # Find all .java files in the source directory
 SRCS = $(wildcard $(SRC_DIR)/$(PROGRAM)/*.java)
+UTILSRCS = $(wildcard $(SRC_DIR)/$(UTIL_PROGRAM)/*.java)
 TESTSRCS = $(wildcard $(TEST_DIR)/$(PROGRAM)/*.java)
+SERVERSRCS = $(wildcard $(SRC_DIR)/$(SERVER_PROGRAM)/*.java)
+TESTSERVERSRCS = $(wildcard $(TEST_DIR)/$(SERVER_PROGRAM)/*.java)
 
 # Generate .class file names from .java file names
 CLASSES = $(patsubst $(SRC_DIR)/$(PROGRAM)/%.java, $(OUT_DIR)/$(PROGRAM)/%.class, $(SRCS))
+
+UTILCLASSES = $(patsubst $(SRC_DIR)/$(UTIL_PROGRAM)/%.java, $(OUT_DIR)/$(PROGRAM)/%.class, $(UTILSRCS))
 TESTCLASSES = $(patsubst $(TEST_DIR)/$(PROGRAM)/%.java, $(OUT_DIR)/$(PROGRAM)/%.class, $(TESTSRCS))
+SERVERCLASSES = $(patsubst $(SRC_DIR)/$(SERVER_PROGRAM)/%.java, $(OUT_DIR)/$(SERVER_PROGRAM)/%.class, $(SERVERSRCS))
+SERVERTESTCLASSES = $(patsubst $(TEST_DIR)/$(SERVER_PROGRAM)/%.java, $(OUT_DIR)/$(SERVER_PROGRAM)/%.class, $(TESTSERVERSRCS))
 
 # Convert Testclass names to executable path names (/ to .)
 RUNNABLE_TEST_CLASSES = $(patsubst $(TEST_DIR)/$(PROGRAM)/%.java, $(PROGRAM).%, $(TESTSRCS))
+RUNNABLE_SERVER_TEST_CLASSES = $(patsubst $(TEST_DIR)/$(SERVER_PROGRAM)/%.java, $(SERVER_PROGRAM).%, $(TESTSERVERSRCS))
+$(info runnable server tests $(RUNNABLE_SERVER_TEST_CLASSES))
 
 # Filter test class executable names by ones which are actually tests
 RUNNABLE_TESTS = $(filter %Test,$(RUNNABLE_TEST_CLASSES))
+RUNNABLE_SERVER_TESTS = $(filter %Test,$(RUNNABLE_SERVER_TEST_CLASSES))
 
-all: $(CLASSES) $(TESTCLASSES)
-$(TESTCLASSES): $(SRCS) $(TESTSRCS)
-	@mkdir -p $(@D)
-	$(JAVAC) $(JFLAGS) -cp $(JTESTCP) -d $(OUT_DIR) $^
+all: $(CLASSES) $(TESTCLASSES) $(SERVERCLASSES) $(SERVERTESTCLASSES)
 
-$(CLASSES): $(SRCS)
+$(UTILCLASSES): build_util_classes
+build_util_classes: $(UTILSRCS)
 	@mkdir -p $(@D)
-	$(JAVAC) $(JFLAGS) -cp $(JCP) -d $(OUT_DIR) $^
+	$(JAVAC) $(JFLAGS) -cp $(OUT_DIR):$(JCP):. -d $(OUT_DIR) $^
+
+$(SERVERCLASSES): build_util_classes build_server_classes
+build_server_classes: $(SERVERSRCS)
+	@mkdir -p $(@D)
+	$(JAVAC) $(JFLAGS) -cp $(OUT_DIR):$(JCP):. -d $(OUT_DIR) $^
+
+$(TESTCLASSES): build_util_classes build_test_classes
+build_test_classes: $(SRCS) $(TESTSRCS)
+	@mkdir -p $(@D)
+	$(JAVAC) $(JFLAGS) -cp $(OUT_DIR):$(JTESTCP) -d $(OUT_DIR) $^
+$(SERVERTESTCLASSES): build_util_classes build_servertest_classes
+build_servertest_classes: $(SERVERSRCS) $(TESTSERVERSRCS)
+	@mkdir -p $(@D)
+	$(JAVAC) $(JFLAGS) -cp $(OUT_DIR):$(JTESTCP) -d $(OUT_DIR) $^
+
+$(CLASSES): build_util_classes build_classes
+build_classes: $(SRCS)
+	@mkdir -p $(@D)
+	$(JAVAC) $(JFLAGS) -cp $(OUT_DIR):$(JCP):. -d $(OUT_DIR) $^
 
 # Run the Java application
-run: all
+run: $(CLASSES) 
 	$(JAVA) $(JFLAGS) -cp $(OUT_DIR):$(JCP) $(MAIN_CLASS)
 test: all
 	$(JAVA) $(JFLAGS) -cp $(JTESTCP):$(OUT_DIR) org.junit.runner.JUnitCore $(RUNNABLE_TESTS)
+
+servertest: all
+	$(JAVA) $(JFLAGS) -cp $(JTESTCP):$(OUT_DIR) org.junit.runner.JUnitCore $(RUNNABLE_SERVER_TESTS)
 # TODO not currently linting testcode
 lint:
-	java -jar $(CHECKSTYLE) -c google_checks.xml $(SRCS)
+	$(JAVA) -jar $(CHECKSTYLE) -c google_checks.xml $(SRCS) $(SERVERSRCS)
 
 format:
-	java -jar $(GOOGLE_FORMAT) --replace $(SRCS) $(TESTSRCS)
+	$(JAVA) -jar $(GOOGLE_FORMAT) --replace $(SRCS) $(TESTSRCS) $(SERVERSRCS) $(TESTSERVERSRCS) 
+makeserver: $(SERVERCLASSES)
+#TODO we can avoid including OPENJFX
+server: $(SERVERCLASSES)
+	$(JAVA) $(JFLAGS) -cp $(OUT_DIR):$(JCP) $(SERVER_CLASS)
 
 clean:
 	rm -rf $(OUT_DIR)

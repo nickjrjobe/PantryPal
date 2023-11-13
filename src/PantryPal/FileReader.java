@@ -3,6 +3,11 @@ package PantryPal;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import utils.Recipe;
+
+interface ReadBehavior {
+  public List<Recipe> read();
+}
 
 /**
  * File based reader to read in RecipeList

@@ -7,6 +7,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.layout.*;
 import javafx.scene.text.*;
 import javafx.scene.text.TextAlignment;
+import utils.Recipe;
 
 /**
  * RecipeDetailPage provides a user interface to display the details of a recipe. It integrates with
@@ -23,11 +24,61 @@ import javafx.scene.text.TextAlignment;
  * NewDetailedRecipeUI. - exit method is placeholder for tab switch to RecipeListPage.
  */
 public class RecipeDetailPage extends ScrollablePage {
-  RecipeDetailUITemplate recipeDetailUI;
+  RecipeDetailUI recipeDetailUI;
 
-  RecipeDetailPage(RecipeDetailUITemplate recipeDetailUI) {
+  RecipeDetailPage(RecipeDetailUI recipeDetailUI) {
     super("Recipe Detail", recipeDetailUI); // This initializes and adds the header.
     this.recipeDetailUI = recipeDetailUI;
+    this.footer.addButton(
+        "delete",
+        e -> {
+          recipeDetailUI.delete();
+        });
+    this.footer.addButton(
+        "edit",
+        e -> {
+          edit();
+        });
+  }
+
+  public void edit() {
+    /* set correct buttons for current state */
+    this.footer.deleteButton("edit");
+    this.footer.addButton(
+        "save",
+        e -> {
+          save();
+        });
+
+    recipeDetailUI.setDescriptionEditable(true);
+  }
+
+  public void save() {
+    /* set correct buttons for current state */
+    this.footer.deleteButton("save");
+    this.footer.addButton(
+        "edit",
+        e -> {
+          edit();
+        });
+
+    recipeDetailUI.setDescriptionEditable(false);
+
+    recipeDetailUI.save();
+  }
+}
+
+class NewRecipeDetailPage extends ScrollablePage {
+  RecipeDetailUI recipeDetailUI;
+
+  NewRecipeDetailPage(RecipeDetailUI recipeDetailUI) {
+    super("Recipe Detail", recipeDetailUI); // This initializes and adds the header.
+    this.recipeDetailUI = recipeDetailUI;
+    this.footer.addButton(
+        "save",
+        e -> {
+          recipeDetailUI.save();
+        });
   }
 }
 
@@ -43,60 +94,53 @@ public class RecipeDetailPage extends ScrollablePage {
  * EditableRecipeUI: Includes functionality to delete a recipe and save changes. -
  * NewDetailedRecipeUI: Includes functionality to save a new recipe.
  */
-abstract class RecipeDetailUITemplate extends VBox {
+class RecipeDetailUI extends VBox {
   protected Recipe recipe;
   protected Label titleField;
-  protected TextArea descriptionField; // Changed from Label to TextField
+  protected TextArea descriptionField;
 
-  RecipeDetailUITemplate(Recipe recipe) {
-    this.recipe = recipe;
-    titleField = new Label();
+  public void format() {
+    /* format title field */
     titleField.setPrefSize(600, 20);
     titleField.setStyle("-fx-background-color: #dae5ea; -fx-border-width: 0;");
     titleField.setTextAlignment(TextAlignment.LEFT);
     titleField.setText(recipe.getTitle());
 
-    // Initialize the descriptionField as a text area
-    descriptionField = new TextArea();
+    /* format description field */
     descriptionField.setPrefSize(600, 600);
     descriptionField.setEditable(false); // Start as non-editable
     descriptionField.setText(recipe.getDescription());
     descriptionField.setWrapText(true);
+    setDescriptionEditable(false);
+  }
 
+  RecipeDetailUI(Recipe recipe) {
+    this.recipe = recipe;
+
+    // Initialize title and description fields
+    titleField = new Label();
+    titleField.setText(recipe.getTitle());
+    descriptionField = new TextArea();
+    descriptionField.setWrapText(true);
+
+    this.format();
     this.getChildren().add(titleField);
     this.getChildren().add(descriptionField);
+  }
+
+  public void save() {
+    RecipeDetailModel rc = new RecipeDetailModel(new HttpRequestModel());
+    rc.update(new Recipe(titleField.getText(), descriptionField.getText()));
+  }
+
+  public void delete() {
+    RecipeDetailModel rc = new RecipeDetailModel(new HttpRequestModel());
+    rc.delete(titleField.getText());
+    getChildren().clear();
   }
 
   // to set whether the description is editable
   public void setDescriptionEditable(boolean editable) {
     descriptionField.setEditable(editable);
-  }
-
-  public String getRecipeDescription() {
-    return recipe.getDescription();
-  }
-
-  public String getRecipeDescriptionFieldText() {
-    return descriptionField.getText();
-  }
-
-  public String getRecipeTitle() {
-    return recipe.getTitle();
-  }
-}
-
-/** UI element which displays recipe detail 2 footer buttons: deleteButton & editButton */
-class RecipeDetailUI extends RecipeDetailUITemplate {
-  public RecipeDetailUI(Recipe recipe) {
-    super(recipe);
-    super.setDescriptionEditable(false);
-  }
-}
-
-/** UI element which displays recipe detail 1 footer button: saveRecipeButton */
-class NewDetailedRecipeUI extends RecipeDetailUITemplate {
-  public NewDetailedRecipeUI(Recipe recipe) {
-    super(recipe);
-    super.setDescriptionEditable(false);
   }
 }
