@@ -5,7 +5,6 @@ package PantryPal;
  * Mock HttpModel for testing
  */
 public class MockHttpModel implements HttpModel {
-  private String path;
   private String mockResponse;
 
   @Override
