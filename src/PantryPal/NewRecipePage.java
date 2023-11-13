@@ -43,6 +43,8 @@ class TranscriptResults {
 }
 
 class NewRecipeController {
+  private static final String stopButtonTitle = "Stop Recording";
+  private static final String startButtonTitle = "Start Recording";
   NewRecipeUI newRecipeUI;
   NewRecipePage newRecipePage;
   NewRecipeModel newRecipeModel;
@@ -60,35 +62,32 @@ class NewRecipeController {
     this.newRecipeModel = newRecipeModel;
     this.pt = pt;
     this.voiceToText = voicetotext;
-    newRecipePage.footer.addButton(
-        "start",
-        e -> {
-          this.start();
-        });
-    newRecipePage.footer.addButton(
-        "home",
-        e -> {
-          this.exit();
-        });
+    init();
   }
 
   ScrollablePage getPage() {
     return this.newRecipePage;
   }
 
+  /** handle all actions for start button */
   void start() {
+    voiceToText.startRecording();
+    gotoRecordingState();
+  }
+
+  void gotoRecordingState() {
     /* set correct button layout for this state */
+    newRecipePage.footer.deleteButton(startButtonTitle);
     newRecipePage.footer.addButton(
-        "stop",
+        stopButtonTitle,
         e -> {
           this.stop();
         });
-    newRecipePage.footer.deleteButton("start");
-
-    voiceToText.startRecording();
   }
 
+  /** Setup for initial state (enter state machine) */
   void init() {
+    /* poll transcript to get initial messages */
     TranscriptResults results;
     try {
       results = newRecipeModel.getInitialTranscript();
@@ -97,14 +96,32 @@ class NewRecipeController {
       results = new TranscriptResults();
     }
     newRecipeUI.setPrompts(results.prompts);
+
+    /* setup buttons that persist all states */
+    newRecipePage.footer.addButton(
+        "home",
+        e -> {
+          this.exit();
+        });
+    /* go to waiting state */
+    gotoWaitingState();
   }
 
+  /** Handle all actions for stop button */
   void stop() {
-    /* set correct button layout for this state */
-    newRecipePage.footer.deleteButton("stop");
-
+    /* handle stop tasks */
     voiceToText.stopRecording();
+    TranscriptResults results = pollVoiceToText();
 
+    /* finish setting up buttons based on state */
+    if (results.recipe != null) {
+      gotoRecipeCompleteState(results.recipe);
+    } else {
+      gotoWaitingState();
+    }
+  }
+
+  TranscriptResults pollVoiceToText() {
     String transcript = voiceToText.getTranscript();
     TranscriptResults results;
     try {
@@ -113,25 +130,28 @@ class NewRecipeController {
       System.err.println("error: " + e.getMessage());
       results = new TranscriptResults();
     }
-    newRecipeUI.setPrompts(results.prompts);
-
-    /* finish setting up buttons based on state */
-    if (results.recipe != null) {
-      Recipe recipe = results.recipe;
-      newRecipePage.footer.addButton(
-          "view details",
-          e -> {
-            this.done(recipe);
-          });
-    } else {
-      newRecipePage.footer.addButton(
-          "start",
-          e -> {
-            this.start();
-          });
-    }
+    return results;
   }
 
+  void gotoRecipeCompleteState(Recipe recipe) {
+    newRecipePage.footer.deleteButton(stopButtonTitle);
+    newRecipePage.footer.addButton(
+        "view details",
+        e -> {
+          this.done(recipe);
+        });
+  }
+
+  void gotoWaitingState() {
+    newRecipePage.footer.deleteButton(stopButtonTitle);
+    newRecipePage.footer.addButton(
+        startButtonTitle,
+        e -> {
+          this.start();
+        });
+  }
+
+  /** exit state machine to look at new recipe */
   void done(Recipe recipe) {
     newRecipeModel.reset();
     NewRecipeDetailPage drp = new NewRecipeDetailPage(new RecipeDetailUI(recipe));
@@ -143,17 +163,10 @@ class NewRecipeController {
     pt.swapToPage(drp);
   }
 
+  /** Exit handler for early exits from state machine */
   void exit() {
     newRecipeModel.reset();
     pt.goHome();
-  }
-
-  void setup() {
-    newRecipePage.footer.addButton(
-        "start",
-        e -> {
-          this.start();
-        });
   }
 }
 

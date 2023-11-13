@@ -35,6 +35,7 @@ class NewRecipeModel {
     }
   }
 
+  /** resets state of remote New recipe creator */
   void reset() {
     httpModel.performRequest("DELETE", "", null);
   }
