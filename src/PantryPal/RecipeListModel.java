@@ -17,7 +17,7 @@ public class RecipeListModel {
 
   RecipeListModel(HttpModel httpModel) {
     this.httpModel = httpModel;
-    httpModel.setPath("/recipes");
+    httpModel.setPath("recipes");
   }
 
   public List<String> getRecipeList() {

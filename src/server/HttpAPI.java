@@ -44,7 +44,15 @@ class HttpAPI implements HttpHandler {
   String getRequestString(HttpExchange httpExchange) throws IOException {
     InputStream inStream = httpExchange.getRequestBody();
     Scanner scanner = new Scanner(inStream);
-    String postData = scanner.nextLine();
+    /* Request body optional, so simply return null if not given */
+    String postData;
+    try {
+      postData = scanner.nextLine();
+    } catch (Exception e) {
+      System.out.println("request was empty");
+      scanner.close();
+      return null;
+    }
     System.out.println("request: " + postData);
     scanner.close();
     return postData;

@@ -10,6 +10,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import utils.Recipe;
 
+/** Immutable class to store results from sending a transcript to NewRecipeAPI */
 class TranscriptResults {
   public final Recipe recipe;
   public final List<String> prompts;
@@ -42,6 +43,7 @@ class TranscriptResults {
   }
 }
 
+/** Handles UI transitions made when interacting with NewRecipeAPI */
 class NewRecipeController {
   private static final String stopButtonTitle = "Stop Recording";
   private static final String startButtonTitle = "Start Recording";
@@ -199,6 +201,7 @@ public class NewRecipePage extends ScrollablePage {
 
   NewRecipePage(NewRecipeUI newRecipeUI) {
     super("New Recipe", newRecipeUI);
+    this.newRecipeUI = newRecipeUI;
   }
 
   void setPrompts(List<String> prompts) {
