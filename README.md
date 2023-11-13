@@ -7,6 +7,10 @@ Replace the key value in the supplied config.json file
 1. `$ chmod +x setup_lib.sh`
 2. `$ bash setup_lib.sh`
 
+### Setup (Mac)
+1. `$ chmod +x setup_lib_mac.sh`
+2. `$ bash setup_lib_mac.sh`
+
 **TODO** create a mac script that installs the right JavaFX library
 
 ### running
