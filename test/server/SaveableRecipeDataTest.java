@@ -57,8 +57,8 @@ public class SaveableRecipeDataTest {
   @Test
   public void testInitPreviousUser() {
     /* add previous recipes of user */
-    data.add("sandwich", new Recipe("sandwich", "sloopy joes"));
-    data.add("pancakes", new Recipe("pancakes", "mix batter"));
+    data.put("sandwich", new Recipe("sandwich", "sloopy joes"));
+    data.put("pancakes", new Recipe("pancakes", "mix batter"));
     /* create new data object to simulate starting and stopping server */
     data = new SaveableRecipeData();
     assertEquals(false, data.toJSON().isEmpty());
