@@ -15,9 +15,7 @@ class DetailedRecipeAPI extends HttpAPI {
   }
 
   /** Get a specific recipe */
-  String handleGet(HttpExchange httpExchange) throws IOException {
-    URI uri = httpExchange.getRequestURI();
-    String query = uri.getRawQuery();
+  String handleGet(String query, String request) throws IOException {
     String response = "404 Not Found";
     if (query != null) {
       Recipe recipe = data.get(Recipe.desanitizeTitle(query)); // get recipe
@@ -29,9 +27,9 @@ class DetailedRecipeAPI extends HttpAPI {
   }
 
   /** Create a new recipe */
-  String handlePost(HttpExchange httpExchange) throws IOException {
+  String handlePost(String query, String request) throws IOException {
     /* interpret request as json */
-    JSONObject json = getJSONRequest(httpExchange);
+    JSONObject json = getJSONRequest(request);
     Recipe recipe;
     try {
       recipe = new Recipe(json);
@@ -47,14 +45,12 @@ class DetailedRecipeAPI extends HttpAPI {
   }
 
   /** Update recipe */
-  String handlePut(HttpExchange httpExchange) throws IOException {
-    return handlePost(httpExchange);
+  String handlePut(String query, String request) throws IOException {
+    return handlePost(query, request);
   }
 
   /** Delete recipe */
-  String handleDelete(HttpExchange httpExchange) throws IOException {
-    URI uri = httpExchange.getRequestURI();
-    String query = uri.getRawQuery();
+  String handleDelete(String query, String request) throws IOException {
     String response = "404 Not Found";
     if (query != null) {
       String value = query.substring(query.indexOf("=") + 1);

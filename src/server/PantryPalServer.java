@@ -14,7 +14,7 @@ import org.json.JSONTokener;
 import utils.Recipe;
 
 class SaveableRecipeData {
-  private static final String path = "server_data.json";
+  public static final String path = "server_data.json";
   private Map<String, Recipe> data;
 
   public JSONObject toJSON() {
@@ -25,6 +25,7 @@ class SaveableRecipeData {
     return recipeList;
   }
 
+  /** persistently save recipe data */
   public void write() {
     try {
       FileWriter file = new FileWriter(path);
@@ -35,6 +36,7 @@ class SaveableRecipeData {
     }
   }
 
+  /** read recipe data from persistent storage */
   public void read() {
     try {
       FileReader fileReader = new FileReader(path);
@@ -92,11 +94,14 @@ public class PantryPalServer {
     // create a server
     HttpServer server = HttpServer.create(new InetSocketAddress(SERVER_HOSTNAME, SERVER_PORT), 0);
     HttpContext recipeListContext = server.createContext("/recipes", new RecipeListAPI(data));
+
+    /* setup APIs */
     HttpContext detailedRecipeContext =
         server.createContext("/recipe", new DetailedRecipeAPI(data));
     NewRecipeCreator creator = new NewRecipeCreator(new ChatGPTBot());
     HttpContext newRecipeContext = server.createContext("/newrecipe", new NewRecipeAPI(creator));
     server.setExecutor(threadPoolExecutor);
+    /* start server */
     server.start();
   }
 }

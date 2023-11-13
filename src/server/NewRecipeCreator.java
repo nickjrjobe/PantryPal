@@ -9,7 +9,7 @@ import javafx.scene.text.*;
 import utils.Recipe;
 
 /** Uses a state machine approach to pass control between methods when creating new recipe */
-public class NewRecipeCreator {
+public class NewRecipeCreator implements InteractiveRecipeMaker {
   String mealType;
   Boolean waitingForMeal;
   RecipeCreator recipeCreator;
