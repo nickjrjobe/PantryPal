@@ -45,19 +45,16 @@ class TranscriptResults {
 class NewRecipeController {
   private static final String stopButtonTitle = "Stop Recording";
   private static final String startButtonTitle = "Start Recording";
-  NewRecipeUI newRecipeUI;
   NewRecipePage newRecipePage;
   NewRecipeModel newRecipeModel;
   PageTracker pt;
   VoiceToText voiceToText;
 
   NewRecipeController(
-      NewRecipeUI newRecipeUI,
       NewRecipePage newRecipePage,
       NewRecipeModel newRecipeModel,
       PageTracker pt,
       VoiceToText voicetotext) {
-    this.newRecipeUI = newRecipeUI;
     this.newRecipePage = newRecipePage;
     this.newRecipeModel = newRecipeModel;
     this.pt = pt;
@@ -95,7 +92,7 @@ class NewRecipeController {
       System.err.println("error: " + e.getMessage());
       results = new TranscriptResults();
     }
-    newRecipeUI.setPrompts(results.prompts);
+    newRecipePage.setPrompts(results.prompts);
 
     /* setup buttons that persist all states */
     newRecipePage.footer.addButton(
@@ -111,7 +108,8 @@ class NewRecipeController {
   void stop() {
     /* handle stop tasks */
     voiceToText.stopRecording();
-    TranscriptResults results = pollVoiceToText();
+    TranscriptResults results = sendVoiceToText();
+    newRecipePage.setPrompts(results.prompts);
 
     /* finish setting up buttons based on state */
     if (results.recipe != null) {
@@ -121,7 +119,8 @@ class NewRecipeController {
     }
   }
 
-  TranscriptResults pollVoiceToText() {
+  /** Gets transcript from VoiceToText and passes it to server */
+  TranscriptResults sendVoiceToText() {
     String transcript = voiceToText.getTranscript();
     TranscriptResults results;
     try {
@@ -200,5 +199,9 @@ public class NewRecipePage extends ScrollablePage {
 
   NewRecipePage(NewRecipeUI newRecipeUI) {
     super("New Recipe", newRecipeUI);
+  }
+
+  void setPrompts(List<String> prompts) {
+    newRecipeUI.setPrompts(prompts);
   }
 }
