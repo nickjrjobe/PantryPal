@@ -39,6 +39,7 @@ class SaveableRecipeData {
   /** read recipe data from persistent storage */
   public void read() {
     try {
+      validateJsonFile(path);
       FileReader fileReader = new FileReader(path);
       JSONTokener tokener = new JSONTokener(fileReader);
       JSONObject jsonObject = new JSONObject(tokener);
@@ -52,6 +53,19 @@ class SaveableRecipeData {
       }
     } catch (Exception e) {
       System.err.println("could not read server_data from file with error " + e.getMessage());
+    }
+  }
+
+  /**
+   * Helper method to ensure that the JSON file at `path` exists, and if not, create it.
+   */
+  public void validateJsonFile(String path) {
+    try {
+      FileWriter file = new FileWriter(path, true);
+      file.write("{}");
+      file.close();
+    } catch (Exception e) {
+      System.err.println("could not create file: " + path);
     }
   }
 
