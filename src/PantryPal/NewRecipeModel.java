@@ -21,7 +21,9 @@ class NewRecipeModel {
     try {
       return new TranscriptResults(new JSONObject(transcript));
     } catch (Exception e) {
-      throw new IOException("New recipe response from server malformed, error " + e.getMessage());
+      System.err.println(
+          "(Trying again) New recipe response from server malformed, error " + e.getMessage());
+      return getInitialTranscript();
     }
   }
 
