@@ -14,6 +14,7 @@ public class RecipeDetailModel {
   HttpModel httpModel;
 
   RecipeDetailModel(HttpModel httpModel) {
+    this.httpModel = httpModel;
     httpModel.setPath("recipe");
   }
 
