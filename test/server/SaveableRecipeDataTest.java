@@ -46,4 +46,21 @@ public class SaveableRecipeDataTest {
     data.put("recipe", testRecipe);
     assertEquals(recipeDescription, currentFileContents());
   }
+
+  /* BSD Story 1 scenario 2 */
+  @Test
+  public void testInitNewUser() {
+    assertEquals(true, data.toJSON().isEmpty());
+  }
+
+  /* BSD Story 1 scenario 1 */
+  @Test
+  public void testInitPreviousUser() {
+    /* add previous recipes of user */
+    data.add("sandwich", new Recipe("sandwich", "sloopy joes"));
+    data.add("pancakes", new Recipe("pancakes", "mix batter"));
+    /* create new data object to simulate starting and stopping server */
+    data = new SaveableRecipeData();
+    assertEquals(false, data.toJSON().isEmpty());
+  }
 }
