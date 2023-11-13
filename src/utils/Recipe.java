@@ -7,16 +7,17 @@ import javafx.scene.layout.*;
 import javafx.scene.text.*;
 import org.json.JSONObject;
 
-
-/** internal representation of recipe */
+/** IMMUTABLE representation of a recipe */
 public class Recipe {
   private final String title;
   private final String description;
 
+  /** convert title to URI friendly string */
   public static String sanitizeTitle(String title) {
     return title.replace(" ", "-");
   }
 
+  /** convert URI friendly string back to title format */
   public static String desanitizeTitle(String title) {
     return title.replace("-", " ");
   }

@@ -8,7 +8,7 @@ import javafx.event.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.*;
 
-/** UI element which displays list of recipes */
+/** UI element which displays IMMUTABLE list of recipes */
 class RecipeListUI extends VBox {
   RecipeListUI(List<RecipeEntryUI> entries) {
     this.getChildren().addAll(entries);
