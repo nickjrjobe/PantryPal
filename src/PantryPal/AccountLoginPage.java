@@ -1,13 +1,15 @@
-/** UI Page containing login form, and accompanying header and footer */
 package PantryPal;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import javafx.event.*;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 
+/**
+ * UI page that contains and reads from the textfield for account and password, and the checkbox for
+ * auto login
+ */
 class AccountLoginUI extends VBox {
   private TextField accountField;
   private PasswordField passwordField;
@@ -54,40 +56,44 @@ class AccountLoginUI extends VBox {
   }
 }
 
+/**
+ * Login Page that delegate credentials validity checks, updates the autologin choice, acquire
+ * credentials from the Ui components.
+ */
 public class AccountLoginPage extends ScrollablePage {
-  private AccountLoginUI AccountLoginUI;
+  private AccountLoginUI accountLoginUI;
 
-  AccountLoginPage(AccountLoginUI AccountLoginUI) {
-    super("Login", AccountLoginUI);
-    this.AccountLoginUI = AccountLoginUI;
+  AccountLoginPage(AccountLoginUI accountLoginUI) {
+    super("Login", accountLoginUI);
+    this.accountLoginUI = accountLoginUI;
 
     // this.footer.addButton("Login", e -> handleLoginButtonAction());
     // this.footer.addButton("Create Account", e -> handleCreateAccountButtonAction());
   }
 
   public String getAccount() {
-    return AccountLoginUI.getAccountText();
+    return accountLoginUI.getAccountText();
   }
 
   public String getPassword() {
-    return AccountLoginUI.getPasswordText();
+    return accountLoginUI.getPasswordText();
   }
 
   public boolean isValidCredential() {
 
-    String account = AccountLoginUI.getAccountText();
-    String password = AccountLoginUI.getPasswordText();
+    String account = accountLoginUI.getAccountText();
+    String password = accountLoginUI.getPasswordText();
     // boolean isValidUser = false;
     LoginCredentials credentials = new LoginCredentials(account, password);
     boolean isValidUser = credentials.isValidUser();
     if (account.isEmpty()) {
-      AccountLoginUI.setErrorText("Please enter a valid account");
+      accountLoginUI.setErrorText("Please enter a valid account");
       return isValidUser;
     }
     if (!isValidUser) {
-      AccountLoginUI.setErrorText("Incorrect account or password");
+      accountLoginUI.setErrorText("Incorrect account or password");
     } else {
-      AccountLoginUI.setErrorText("");
+      accountLoginUI.setErrorText("");
     }
     return isValidUser;
   }

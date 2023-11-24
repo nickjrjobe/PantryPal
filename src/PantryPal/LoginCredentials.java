@@ -1,5 +1,6 @@
 package PantryPal;
 
+/** Class that delegate is Valid User check, given the account and password */
 public class LoginCredentials {
   // temporarily used for loginpage
   private String account;
