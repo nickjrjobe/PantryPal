@@ -63,6 +63,7 @@ class JSONDB {
   }
 
   void clear() {
+    /* create a catchall filter by finding every entry that doesnt match a long random string */
     Bson filter = not(eq(lookupkey, "kjanfo;ifijo;ijqwpqwejpqwejqwipeqjweqw"));
     recipeCollection.deleteMany(filter);
   }
