@@ -6,9 +6,6 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.checkerframework.checker.units.qual.A;
-
 import javafx.application.Application;
 import javafx.event.*;
 import javafx.scene.layout.*;
