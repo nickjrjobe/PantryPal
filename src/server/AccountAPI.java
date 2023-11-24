@@ -10,7 +10,7 @@ import utils.Account;
 class AccountAPI extends HttpAPI {
   private AccountData data;
 
-  DetailedAccountAPI(AccountData map) {
+  AccountAPI(AccountData map) {
     this.data = map;
   }
 
@@ -27,7 +27,7 @@ class AccountAPI extends HttpAPI {
     }
     if (data.get(account.getUsername()) == null) {
       data.put(account.getUsername(), account);
-      response = "200 Ok";
+      response = "200 OK";
     }
     return response;
   }
