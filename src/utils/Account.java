@@ -20,7 +20,7 @@ public class Account {
   public boolean equals(Object other) {
     if (other instanceof Account) {
       Account rother = (Account) other;
-      return rother.getUsername() == username && rother.getPassword() == password;
+      return rother.getUsername().equals(username) && rother.getPassword().equals(password);
     }
     return false;
   }
