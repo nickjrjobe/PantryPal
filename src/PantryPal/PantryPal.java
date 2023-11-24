@@ -28,6 +28,7 @@ class AppController implements HomeTracker {
     return makeLoginPage();
   }
 
+
   public AccountLoginPage makeLoginPage() {
     AccountLoginUI accountLoginUI = new AccountLoginUI();
     AccountLoginPage accountLoginPage = new AccountLoginPage(accountLoginUI);
