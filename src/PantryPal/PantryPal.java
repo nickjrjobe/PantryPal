@@ -28,6 +28,23 @@ class AppController implements HomeTracker {
     return makeLoginPage();
   }
 
+  public AccountCreatePage makeAccountCreatePage() {
+    AccountCreateUI accountCreateUI = new AccountCreateUI();
+    AccountCreatePage accountCreatePage = new AccountCreatePage(accountCreateUI);
+    accountCreatePage.footer.addButton(
+        "Create Account",
+        e -> {
+          LoginCredentials credentials =
+              new LoginCredentials(
+                  accountCreateUI.getAccountText(), accountCreateUI.getPasswordText());
+          boolean isValidUser = accountCreatePage.isValidCredential();
+
+          if (isValidUser) {
+            pt.swapToPage(makeLoginPage());
+          }
+        });
+    return accountCreatePage;
+  }
 
   public AccountLoginPage makeLoginPage() {
     AccountLoginUI accountLoginUI = new AccountLoginUI();
@@ -46,12 +63,11 @@ class AppController implements HomeTracker {
           }
           accountLoginPage.writeAutoLoginStatus(isValidUser);
         });
-
-    // accountLoginPage.footer.addButton(
-    //     "Create Account",
-    //     e -> {
-    //       pt.swapToPage(makeAccountCreationPage());
-    //     });
+    accountLoginPage.footer.addButton(
+        "Create Account",
+        e -> {
+          pt.swapToPage(makeAccountCreatePage());
+        });
     return accountLoginPage;
   }
 

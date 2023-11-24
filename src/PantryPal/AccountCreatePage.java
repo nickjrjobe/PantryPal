@@ -3,9 +3,7 @@ package PantryPal;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 
-/**
- * UI page that contains and reads from the textfield for account and password
- *  */
+/** UI page that contains and reads from the textfield for account and password */
 class AccountCreateUI extends VBox {
   private TextField accountField;
   private PasswordField passwordField;
@@ -22,7 +20,7 @@ class AccountCreateUI extends VBox {
     errorLabel = new Label();
     errorLabel.setTextFill(javafx.scene.paint.Color.RED);
 
-    this.getChildren().addAll(accountField, passwordField,errorLabel);
+    this.getChildren().addAll(accountField, passwordField, errorLabel);
     format();
   }
 
@@ -46,7 +44,8 @@ class AccountCreateUI extends VBox {
 }
 
 /**
-  * Account creation page that reads from user inputs to UI and checks if the input credentials is valid
+ * Account creation page that reads from user inputs to UI and checks if the input credentials is
+ * valid
  */
 public class AccountCreatePage extends ScrollablePage {
   private AccountCreateUI accountCreateUI;
@@ -54,26 +53,31 @@ public class AccountCreatePage extends ScrollablePage {
   AccountCreatePage(AccountCreateUI accountCreateUI) {
     super("Create New Account", accountCreateUI);
     this.accountCreateUI = accountCreateUI;
-
-    // this.footer.addButton("Create", e -> handleCreateButtonAction());
-    // this.footer.addButton("Create Account", e -> handleCreateAccountButtonAction());
   }
 
   public boolean isValidCredential() {
 
     String account = accountCreateUI.getAccountText();
     String password = accountCreateUI.getPasswordText();
-    boolean isValidUser = false;
+    boolean isValidInput = false;
     if (account.isEmpty()) {
       accountCreateUI.setErrorText("Please enter a valid account");
-      return isValidUser;
+      return isValidInput;
     }
-    if (false) {
+    if (account.equals("existingAccount")) {
       // TODO: change the condition  -> check if account already exists
       accountCreateUI.setErrorText("Account already exists");
-      return isValidUser;
+      return isValidInput;
     }
     accountCreateUI.setErrorText("");
     return true;
+  }
+
+  String getAccount() {
+    return accountCreateUI.getAccountText();
+  }
+
+  String getPassword() {
+    return accountCreateUI.getPasswordText();
   }
 }
