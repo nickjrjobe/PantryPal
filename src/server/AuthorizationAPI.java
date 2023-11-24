@@ -29,9 +29,12 @@ class AuthorizationAPI extends HttpAPI {
     if (existingAccount == null) {
       return "404 Not Found";
     } else if (!existingAccount.equals(account)) {
+      System.out.println("\n\n\n" + existingAccount.toJSON().toString() + " did not equal "
+          + account.toJSON().toString() + "\n\n\n");
       return "401 Unauthorized";
     } else {
-      return "200 Ok";
+      System.out.println("ok");
+      return "200 OK";
     }
   }
 }
