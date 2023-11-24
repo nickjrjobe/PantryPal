@@ -18,7 +18,7 @@ BSON = $(ABSOLUTE_PROJECT_DIR)/lib/bson-4.11.0.jar
 # Compile flags
 JFLAGS = --module-path $(OPENJFX) --add-modules javafx.controls,javafx.fxml
 # Classpath for JUNIT
-JTESTCP = $(JUNIT):$(HAMCREST):$(JSON):.
+JTESTCP = $(JUNIT):$(HAMCREST):$(JCP)
 # Classpath for JSON
 JCP = $(JSON):$(MONGODB):$(MONGODB_SYNC):$(MONGODB_CORE):$(BSON_CODEC):$(BSON)
 
