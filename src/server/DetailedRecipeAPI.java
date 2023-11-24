@@ -8,9 +8,9 @@ import org.json.JSONObject;
 import utils.Recipe;
 
 class DetailedRecipeAPI extends HttpAPI {
-  private SaveableRecipeData data;
+  private RecipeData data;
 
-  DetailedRecipeAPI(SaveableRecipeData map) {
+  DetailedRecipeAPI(RecipeData map) {
     this.data = map;
   }
 
