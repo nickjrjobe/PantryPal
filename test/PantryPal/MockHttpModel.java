@@ -5,7 +5,10 @@ package PantryPal;
  * Mock HttpModel for testing
  */
 public class MockHttpModel implements HttpModel {
-  private String mockResponse;
+  public String mockResponse;
+  public String method;
+  public String query;
+  public String request;
 
   @Override
   public void setPath(String path) {
@@ -14,6 +17,9 @@ public class MockHttpModel implements HttpModel {
 
   @Override
   public String performRequest(String method, String query, String request) {
+    this.method = method;
+    this.query = query;
+    this.request = request;
     return this.mockResponse;
   }
 
