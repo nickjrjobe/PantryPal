@@ -5,7 +5,6 @@ package PantryPal;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-
 import javafx.application.Application;
 import javafx.event.*;
 import javafx.scene.layout.*;
@@ -24,24 +23,28 @@ class AppController implements HomeTracker {
   }
 
   public ScrollablePage getHome() {
-    
+
     // return makeRecipeListPage();
     return makeLoginPage();
-
   }
+
   public AccountLoginPage makeLoginPage() {
     AccountLoginUI accountLoginUI = new AccountLoginUI();
     AccountLoginPage accountLoginPage = new AccountLoginPage(accountLoginUI);
 
-    accountLoginPage.footer.addButton("Login", e -> {
-        LoginCredentials credentials = new LoginCredentials(accountLoginUI.getAccountText(),accountLoginUI.getPasswordText());
-        boolean isValidUser =  accountLoginPage.isValidCredential();
+    accountLoginPage.footer.addButton(
+        "Login",
+        e -> {
+          LoginCredentials credentials =
+              new LoginCredentials(
+                  accountLoginUI.getAccountText(), accountLoginUI.getPasswordText());
+          boolean isValidUser = accountLoginPage.isValidCredential();
 
-        if (isValidUser) {
-          pt.swapToPage(makeRecipeListPage(credentials)); // Swap to recipe list page
-        }
-        accountLoginPage.writeAutoLoginStatus(isValidUser);
-    });
+          if (isValidUser) {
+            pt.swapToPage(makeRecipeListPage(credentials)); // Swap to recipe list page
+          }
+          accountLoginPage.writeAutoLoginStatus(isValidUser);
+        });
 
     // accountLoginPage.footer.addButton(
     //     "Create Account",
@@ -50,6 +53,7 @@ class AppController implements HomeTracker {
     //     });
     return accountLoginPage;
   }
+
   // public AccountCreationPage makeAccountCreationPage() {
   //   System.out.println("Redirecting to Account Creation Page");
   // }
@@ -57,8 +61,9 @@ class AppController implements HomeTracker {
   public RecipeListPage makeRecipeListPage(LoginCredentials credentials) {
     String account = credentials.getAccount();
     String password = credentials.getPassword();
-    System.out.println("Redirecting to RecipeListPage for account: " + account + " and password: " + password);
-    
+    System.out.println(
+        "Redirecting to RecipeListPage for account: " + account + " and password: " + password);
+
     // TODO: need to pass in user to RecipeListPage
     RecipeListPage recipeList = new RecipeListPage(getRecipeListEntries(credentials));
     recipeList.footer.addButton(
@@ -83,7 +88,7 @@ class AppController implements HomeTracker {
     entry.addButton(
         "details",
         e -> {
-          pt.swapToPage(makeRecipeDetailsPage(title,credentials));
+          pt.swapToPage(makeRecipeDetailsPage(title, credentials));
         });
     return entry;
   }
