@@ -18,7 +18,7 @@ curl -O $OPENJFX
 curl -O $MONGODB
 curl -O $MONGODB_DEP
 curl -O $JSON -L
-#wget $CHECKSTYLE
+wget $CHECKSTYLE
 #wget $GOOGLE_FORMAT 
 wget $GRADLE 
 unzip $GRADLE_ZIP
