@@ -1,8 +1,5 @@
 package PantryPal;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 
@@ -99,10 +96,7 @@ public class AccountLoginPage extends ScrollablePage {
   }
 
   public void writeAutoLoginStatus(boolean isSelected) {
-    try (BufferedWriter writer = new BufferedWriter(new FileWriter("autologin.txt"))) {
-      writer.write(isSelected ? "1" : "0");
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+    // US11 TODO: write the saved account and password to a file instead
+    System.out.println("Auto login is " + (isSelected ? "selected" : "not selected"));
   }
 }
