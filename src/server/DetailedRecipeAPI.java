@@ -18,10 +18,9 @@ class DetailedRecipeAPI extends HttpAPI {
   String handleGet(String query, String request) throws IOException {
     String response = "404 Not Found";
     if (query != null) {
-      try {
-        response = data.read(Recipe.desanitizeTitle(query)).toString(); // get recipe
-      } catch(IOException e){
-        System.err.println("Query for nonexistiant recipe " + Recipe.desanitizeTitle(query));
+      Recipe recipe = data.get(Recipe.desanitizeTitle(query)); // get recipe
+      if (recipe != null) {
+        response = recipe.toJSON().toString();
       }
     }
     return response;
@@ -31,11 +30,15 @@ class DetailedRecipeAPI extends HttpAPI {
   String handlePost(String query, String request) throws IOException {
     /* interpret request as json */
     JSONObject json = getJSONRequest(request);
+    Recipe recipe;
     try {
-      data.create(json);
+      recipe = new Recipe(json);
     } catch (Exception e) {
       throw new IOException(e.getMessage());
     }
+    // Store data in hashmap
+    data.put(recipe.getTitle(), recipe);
+
     String response = "200 Ok";
 
     return response;
@@ -51,7 +54,7 @@ class DetailedRecipeAPI extends HttpAPI {
     String response = "404 Not Found";
     if (query != null) {
       String value = query.substring(query.indexOf("=") + 1);
-      data.delete(Recipe.desanitizeTitle(value)); // Retrieve data from hashmap
+      Recipe recipe = data.remove(Recipe.desanitizeTitle(value)); // Retrieve data from hashmap
       if (recipe != null) {
         response = "200 OK";
       }
