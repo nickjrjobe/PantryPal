@@ -21,22 +21,27 @@ interface InteractiveRecipeMaker {
   /** provide user-created prompt for processing */
   public void readResponse(String response);
 }
+
 interface HttpUserAPIFactory {
   public HttpAPI makeAPI(String username);
 }
+
 class UserHandler extends HttpAPI {
   private HttpUserAPIFactory factory;
   private HashMap<String, HttpAPI> apis;
+
   UserHandler(HttpUserAPIFactory factory) {
     this.factory = factory;
     this.apis = new HashMap<>();
   }
+
   HttpAPI addAPI(String username) {
     if (!this.apis.containsKey(username)) {
       this.apis.put(username, factory.makeAPI(username));
     }
     return this.apis.get(username);
   }
+
   String[] makeFields(String query) throws IOException {
     String[] fields = query.split("/");
     if (fields.length == 1) {
@@ -54,6 +59,7 @@ class UserHandler extends HttpAPI {
     HttpAPI api = addAPI(username);
     return api.handlePost(realQuery, request);
   }
+
   String handlePut(String query, String request) throws IOException {
     String[] fields = makeFields(query);
     String username = fields[0];
@@ -61,6 +67,7 @@ class UserHandler extends HttpAPI {
     HttpAPI api = addAPI(username);
     return api.handlePut(realQuery, request);
   }
+
   String handleDelete(String query, String request) throws IOException {
     String[] fields = makeFields(query);
     String username = fields[0];
@@ -68,6 +75,7 @@ class UserHandler extends HttpAPI {
     HttpAPI api = addAPI(username);
     return api.handleDelete(realQuery, request);
   }
+
   String handleGet(String query, String request) throws IOException {
     String[] fields = makeFields(query);
     String username = fields[0];

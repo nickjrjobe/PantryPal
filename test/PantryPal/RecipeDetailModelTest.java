@@ -9,7 +9,7 @@ import utils.Recipe;
 public class RecipeDetailModelTest {
   private MockHttpModel httpModel;
   private RecipeDetailModel recipeDetailModel;
-  private Account account;
+  private Account account = new Account("", "");
 
   @Before
   public void setUp() {

@@ -67,6 +67,7 @@ class JSONDB {
       return new JSONObject(lookup.toJson());
     }
   }
+
   void addFilter(String key, String val) {
     this.filter = eq(key, val);
   }

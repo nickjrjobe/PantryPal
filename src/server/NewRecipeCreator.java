@@ -7,11 +7,14 @@ import javafx.event.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.*;
 import utils.Recipe;
+
 class NewRecipeAPIFactory implements HttpUserAPIFactory {
   private RecipeCreator creator;
+
   NewRecipeAPIFactory(RecipeCreator creator) {
     this.creator = creator;
   }
+
   public HttpAPI makeAPI(String username) {
     return new NewRecipeAPI(new NewRecipeCreator(creator));
   }

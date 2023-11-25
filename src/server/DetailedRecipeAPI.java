@@ -6,6 +6,7 @@ import java.net.*;
 import java.util.*;
 import org.json.JSONObject;
 import utils.Recipe;
+
 class DetailedRecipeAPIFactory implements HttpUserAPIFactory {
   public HttpAPI makeAPI(String username) {
     return new DetailedRecipeAPI(new UserRecipeDB(new JSONDB("recipes", "title"), username));
