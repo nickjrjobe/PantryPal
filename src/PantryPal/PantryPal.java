@@ -36,13 +36,14 @@ class AppController implements HomeTracker {
         e -> {
           LoginCredentials credentials =
               new LoginCredentials(
-                  accountCreateUI.getAccountText(), accountCreateUI.getPasswordText());
+                  accountCreateUI.getUserNameText(), accountCreateUI.getPasswordText());
           boolean isValidUser = accountCreatePage.isValidCredential();
 
           if (isValidUser) {
             pt.swapToPage(makeLoginPage());
           }
         });
+
     return accountCreatePage;
   }
 
@@ -55,7 +56,7 @@ class AppController implements HomeTracker {
         e -> {
           LoginCredentials credentials =
               new LoginCredentials(
-                  accountLoginUI.getAccountText(), accountLoginUI.getPasswordText());
+                  accountLoginUI.getUserNameText(), accountLoginUI.getPasswordText());
           boolean isValidUser = accountLoginPage.isValidCredential();
 
           if (isValidUser) {
@@ -71,15 +72,16 @@ class AppController implements HomeTracker {
     return accountLoginPage;
   }
 
+
   // public AccountCreationPage makeAccountCreationPage() {
   //   System.out.println("Redirecting to Account Creation Page");
   // }
 
   public RecipeListPage makeRecipeListPage(LoginCredentials credentials) {
-    String account = credentials.getAccount();
+    String userName= credentials.getUserName();
     String password = credentials.getPassword();
     System.out.println(
-        "Redirecting to RecipeListPage for account: " + account + " and password: " + password);
+        "Redirecting to RecipeListPage for user: " + userName + " and password: " + password);
 
     // TODO: need to pass in user to RecipeListPage
     RecipeListPage recipeList = new RecipeListPage(getRecipeListEntries(credentials));

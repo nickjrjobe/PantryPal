@@ -1,29 +1,29 @@
 package PantryPal;
 
-/** Class that delegate is Valid User check, given the account and password */
+/** Class that delegate is Valid User check, given the userName and password */
 public class LoginCredentials {
   // temporarily used for loginpage
-  private String account;
+  private String userName;
   private String password;
   private boolean isValidUser;
 
-  public LoginCredentials(String account, String password) {
-    this.account = account;
+  public LoginCredentials(String userName, String password) {
+    this.userName = userName;
     this.password = password;
     this.isValidUser = false;
   }
 
   public boolean isValidUser() {
-    if (account.equals("test") && password.equals("test")) {
+    if (userName.equals("test") && password.equals("test")) {
       isValidUser = true;
     }
     System.out.println(
-        "Checking if user is valid for account: " + account + " and password: " + password);
+        "Checking if user is valid for userName: " + userName + " and password: " + password);
     return isValidUser;
   }
 
-  public String getAccount() {
-    return account;
+  public String getUserName() {
+    return userName;
   }
 
   public String getPassword() {
