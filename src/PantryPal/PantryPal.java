@@ -72,13 +72,12 @@ class AppController implements HomeTracker {
     return accountLoginPage;
   }
 
-
   // public AccountCreationPage makeAccountCreationPage() {
   //   System.out.println("Redirecting to Account Creation Page");
   // }
 
   public RecipeListPage makeRecipeListPage(LoginCredentials credentials) {
-    String userName= credentials.getUserName();
+    String userName = credentials.getUserName();
     String password = credentials.getPassword();
     System.out.println(
         "Redirecting to RecipeListPage for user: " + userName + " and password: " + password);
