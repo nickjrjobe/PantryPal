@@ -4,6 +4,11 @@ import com.sun.net.httpserver.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
+class RecipeListAPIFactory implements HttpUserAPIFactory {
+  public HttpAPI makeAPI(String username) {
+    return new RecipeListAPI(new RecipeDB(new JSONDB("recipes", "title")));
+  }
+}
 
 class RecipeListAPI extends HttpAPI {
   private RecipeData data;

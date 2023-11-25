@@ -20,6 +20,7 @@ class JSONDB {
   private MongoClient mongoClient;
   private MongoDatabase database;
   private MongoCollection<Document> recipeCollection;
+  private Bson filter;
 
   JSONDB(String collection, String lookupKey) {
     ConfigReader configReader = new ConfigReader();
@@ -27,6 +28,7 @@ class JSONDB {
     this.mongoClient = MongoClients.create(configReader.getMongoDBURI());
     this.database = mongoClient.getDatabase(configReader.getMongoDBDatabase());
     this.recipeCollection = database.getCollection(collection);
+    this.filter = not(eq(lookupkey, "kjanfo;ifijo;ijqwpqwejpqwejqwipeqjweqw"));
   }
 
   JSONObject remove(JSONObject json) {
@@ -61,15 +63,17 @@ class JSONDB {
     Document lookup = recipeCollection.find(eq(lookupkey, key)).first();
     return new JSONObject(lookup.toJson());
   }
+  void addFilter(String key, String val) {
+    this.filter = eq(key, val);
+  }
 
   void clear() {
-    Bson filter = not(eq(lookupkey, "kjanfo;ifijo;ijqwpqwejpqwejqwipeqjweqw"));
     recipeCollection.deleteMany(filter);
   }
 
   JSONObject toJSON() {
     JSONObject json = new JSONObject();
-    FindIterable<Document> iterable = recipeCollection.find();
+    FindIterable<Document> iterable = recipeCollection.find(filter);
     for (Document d : iterable) {
       JSONObject entry = new JSONObject(d.toJson());
       String key = d.getString(lookupkey);
