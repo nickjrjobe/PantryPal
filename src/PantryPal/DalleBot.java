@@ -10,33 +10,42 @@ import java.net.http.HttpResponse;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import utils.ConfigReader;
 
-/** Takes in a prompt and generates an image using the OpenAI DALL-E API. */
+/**generates an image using the OpenAI DALL-E API., called by .... */
 public class DalleBot {
   private static final String API_ENDPOINT = "https://api.openai.com/v1/images/generations";
   private static final String MODEL = "dall-e-2";
   private static String token;
-  private String prompt;
 
-  public DalleBot(String prompt) {
+  public DalleBot() {
     ConfigReader configReader = new ConfigReader();
     token = configReader.getOpenAiApiKey();
-    this.prompt = prompt;
   }
 
-  public static void main(String[] args) throws IOException, InterruptedException {
-    DalleBot bot = new DalleBot("Your prompt here");
-    // replace the prompt to take in the chatgpt output
-    JSONObject requestBody = bot.createRequestBody(1, "128x128");
-    HttpClient client = bot.initializeHttpClient();
-    HttpResponse<String> response = bot.sendRequest(client, requestBody);
-    String generatedImageURL = bot.processResponse(response);
-    bot.downloadImage(generatedImageURL);
-  }
+  public String mockGenerateImage(String recipeName, String recipeDescription){
+    System.out.println("Generating image for " + recipeName + "...");
+    System.out.println("Image generated!");
+    String imagePath = "src/PantryPal/recipeImages/" + recipeName + ".jpg";
+    System.out.println("Image saved to " + imagePath);
+    return imagePath;
 
-  private JSONObject createRequestBody(int n, String size) {
+  }
+  public String generateImage(String recipeName, String recipeDescription) throws IOException, InterruptedException {
+    String prompt = "a photo of a " + recipeName + " recipe.\n\n" + recipeDescription;
+    JSONObject requestBody = this.createRequestBody(1, "256x256", prompt);
+    HttpClient client = this.initializeHttpClient();
+    // add error handling
+    String imagePath = "recipeImages/" + recipeName + ".jpg";
+
+    HttpResponse<String> response = this.sendRequest(client, requestBody);
+    String generatedImageURL = this.processResponse(response);
+    this.downloadImage(generatedImageURL,imagePath);
+    return imagePath;
+  }
+  private JSONObject createRequestBody(int n, String size, String prompt) {
     JSONObject requestBody = new JSONObject();
     requestBody.put("model", MODEL);
     requestBody.put("prompt", prompt);
@@ -62,16 +71,26 @@ public class DalleBot {
     return client.send(request, HttpResponse.BodyHandlers.ofString());
   }
 
-  private String processResponse(HttpResponse<String> response) {
-    JSONObject responseJson = new JSONObject(response.body());
-    JSONArray dataArray = responseJson.getJSONArray("data");
-    return dataArray.getJSONObject(0).getString("url");
-  }
+    private String processResponse(HttpResponse<String> response) {
+        String responseBody = response.body();
+        System.out.println("Response: " + responseBody); // Log the entire response
 
-  private void downloadImage(String imageURL) {
+        JSONObject responseJson = new JSONObject(responseBody);
+
+        // Check if the response contains the "data" key
+        if (!responseJson.has("data")) {
+            throw new JSONException("Response does not contain 'data' key");
+        }
+
+        JSONArray dataArray = responseJson.getJSONArray("data");
+        return dataArray.getJSONObject(0).getString("url");
+    }
+
+
+  private void downloadImage(String imageURL, String path) {
     try {
       InputStream in = new URI(imageURL).toURL().openStream();
-      Files.copy(in, Paths.get("recipeImage.jpg"));
+      Files.copy(in, Paths.get(path));
       in.close();
     } catch (URISyntaxException e) {
       System.err.println("Invalid URL syntax: " + imageURL);
@@ -82,3 +101,4 @@ public class DalleBot {
     }
   }
 }
+
