@@ -5,15 +5,17 @@ import static org.junit.Assert.*;
 import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
+import utils.Account;
 
 public class RecipeListModelTest {
   private MockHttpModel httpModel;
   private RecipeListModel recipeListModel;
+  private Account account = new Account("", "");
 
   @Before
   public void setUp() {
     httpModel = new MockHttpModel();
-    recipeListModel = new RecipeListModel(httpModel);
+    recipeListModel = new RecipeListModel(httpModel, account);
   }
 
   @Test
