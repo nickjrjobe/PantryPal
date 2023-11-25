@@ -8,15 +8,15 @@ import javafx.scene.layout.VBox;
  * auto login
  */
 class AccountLoginUI extends VBox {
-  private TextField accountField;
+  private TextField userNameField;
   private PasswordField passwordField;
   private CheckBox autoLoginCheckbox;
   private Label errorLabel;
 
   AccountLoginUI() {
-    accountField = new TextField();
-    accountField.setPromptText("Account");
-    accountField.setPrefWidth(20);
+    userNameField = new TextField();
+    userNameField.setPromptText("User Name");
+    userNameField.setPrefWidth(20);
     passwordField = new PasswordField();
     passwordField.setPromptText("Password");
     passwordField.setPrefWidth(20);
@@ -26,7 +26,7 @@ class AccountLoginUI extends VBox {
     errorLabel = new Label();
     errorLabel.setTextFill(javafx.scene.paint.Color.RED);
 
-    this.getChildren().addAll(accountField, passwordField, autoLoginCheckbox, errorLabel);
+    this.getChildren().addAll(userNameField, passwordField, autoLoginCheckbox, errorLabel);
     format();
   }
 
@@ -36,8 +36,8 @@ class AccountLoginUI extends VBox {
     this.setStyle("-fx-background-color: #F0F8FF;");
   }
 
-  String getAccountText() {
-    return accountField.getText();
+  String getUserNameText() {
+    return userNameField.getText();
   }
 
   String getPasswordText() {
@@ -69,7 +69,7 @@ public class AccountLoginPage extends ScrollablePage {
   }
 
   public String getAccount() {
-    return accountLoginUI.getAccountText();
+    return accountLoginUI.getUserNameText();
   }
 
   public String getPassword() {
@@ -78,17 +78,17 @@ public class AccountLoginPage extends ScrollablePage {
 
   public boolean isValidCredential() {
 
-    String account = accountLoginUI.getAccountText();
+    String userName = accountLoginUI.getUserNameText();
     String password = accountLoginUI.getPasswordText();
     // boolean isValidUser = false;
-    LoginCredentials credentials = new LoginCredentials(account, password);
+    LoginCredentials credentials = new LoginCredentials(userName, password);
     boolean isValidUser = credentials.isValidUser();
-    if (account.isEmpty()) {
-      accountLoginUI.setErrorText("Please enter a valid account");
+    if (userName.isEmpty()) {
+      accountLoginUI.setErrorText("Please enter a valid user name");
       return isValidUser;
     }
     if (!isValidUser) {
-      accountLoginUI.setErrorText("Incorrect account or password");
+      accountLoginUI.setErrorText("Incorrect username or password");
     } else {
       accountLoginUI.setErrorText("");
     }
