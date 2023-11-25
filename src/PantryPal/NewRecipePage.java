@@ -54,8 +54,12 @@ class NewRecipeController {
   PageTracker pt;
   VoiceToText voiceToText;
 
-  NewRecipeController(NewRecipePage newRecipePage, NewRecipeModel newRecipeModel, PageTracker pt,
-      VoiceToText voicetotext, Account account) {
+  NewRecipeController(
+      NewRecipePage newRecipePage,
+      NewRecipeModel newRecipeModel,
+      PageTracker pt,
+      VoiceToText voicetotext,
+      Account account) {
     this.newRecipePage = newRecipePage;
     this.newRecipeModel = newRecipeModel;
     this.pt = pt;
@@ -155,8 +159,9 @@ class NewRecipeController {
   /** exit state machine to look at new recipe */
   void done(Recipe recipe) {
     newRecipeModel.reset();
-    NewRecipeDetailPage drp = new NewRecipeDetailPage(
-        new RecipeDetailUI(recipe, new RecipeDetailModel(new HttpRequestModel(), account)));
+    NewRecipeDetailPage drp =
+        new NewRecipeDetailPage(
+            new RecipeDetailUI(recipe, new RecipeDetailModel(new HttpRequestModel(), account)));
     drp.footer.addButton(
         "home",
         e -> {

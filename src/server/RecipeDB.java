@@ -37,6 +37,7 @@ class RecipeDB implements RecipeData {
     return db.toJSON();
   }
 }
+
 class UserRecipeDB implements RecipeData {
   private JSONDB db;
   private String user;
@@ -46,9 +47,11 @@ class UserRecipeDB implements RecipeData {
     this.user = user;
     db.addFilter("username", user);
   }
+
   public void encapsulate(JSONObject json) {
     json.put("username", this.user);
   }
+
   public void decapsulate(JSONObject json) {
     json.remove("username");
   }
