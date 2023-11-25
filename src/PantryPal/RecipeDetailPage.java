@@ -98,6 +98,7 @@ class RecipeDetailUI extends VBox {
   protected Recipe recipe;
   protected Label titleField;
   protected TextArea descriptionField;
+  RecipeDetailModel recipeDetailModel;
 
   public void format() {
     /* format title field */
@@ -114,8 +115,9 @@ class RecipeDetailUI extends VBox {
     setDescriptionEditable(false);
   }
 
-  RecipeDetailUI(Recipe recipe) {
+  RecipeDetailUI(Recipe recipe, RecipeDetailModel recipeDetailModel) {
     this.recipe = recipe;
+    this.recipeDetailModel = recipeDetailModel;
 
     // Initialize title and description fields
     titleField = new Label();
@@ -129,13 +131,11 @@ class RecipeDetailUI extends VBox {
   }
 
   public void save() {
-    RecipeDetailModel rc = new RecipeDetailModel(new HttpRequestModel());
-    rc.update(new Recipe(titleField.getText(), descriptionField.getText()));
+    recipeDetailModel.update(new Recipe(titleField.getText(), descriptionField.getText()));
   }
 
   public void delete() {
-    RecipeDetailModel rc = new RecipeDetailModel(new HttpRequestModel());
-    rc.delete(titleField.getText());
+    recipeDetailModel.delete(titleField.getText());
     getChildren().clear();
   }
 

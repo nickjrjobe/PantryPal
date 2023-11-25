@@ -10,16 +10,20 @@ import javafx.event.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.*;
 import javafx.stage.Stage;
+import utils.Account;
 
 interface HomeTracker {
   public ScrollablePage getHome();
 }
 
 class AppController implements HomeTracker {
+  private Account account;
   private PageTracker pt;
 
   public AppController(PageTracker pt) {
     this.pt = pt;
+    /*TODO remove this and manually set variable once login implemented */
+    this.account = new Account("user", "password");
   }
 
   public ScrollablePage getHome() {
@@ -37,7 +41,7 @@ class AppController implements HomeTracker {
   }
 
   public List<RecipeEntryUI> getRecipeListEntries() {
-    RecipeListModel model = new RecipeListModel(new HttpRequestModel());
+    RecipeListModel model = new RecipeListModel(new HttpRequestModel(), account);
     ArrayList<RecipeEntryUI> entries = new ArrayList<>();
     for (String title : model.getRecipeList()) {
       entries.add(makeRecipeEntryUI(title));
@@ -56,8 +60,8 @@ class AppController implements HomeTracker {
   }
 
   public RecipeDetailPage makeRecipeDetailsPage(String title) {
-    RecipeDetailModel rc = new RecipeDetailModel(new HttpRequestModel());
-    RecipeDetailPage drp = new RecipeDetailPage(new RecipeDetailUI(rc.read(title)));
+    RecipeDetailModel rc = new RecipeDetailModel(new HttpRequestModel(), account);
+    RecipeDetailPage drp = new RecipeDetailPage(new RecipeDetailUI(rc.read(title), rc));
     drp.footer.addButton(
         "home",
         e -> {
@@ -68,9 +72,9 @@ class AppController implements HomeTracker {
 
   public NewRecipeController makeNewRecipeController() {
     NewRecipePage newRecipePage = new NewRecipePage(new NewRecipeUI());
-    NewRecipeModel newRecipeModel = new NewRecipeModel(new HttpRequestModel());
+    NewRecipeModel newRecipeModel = new NewRecipeModel(new HttpRequestModel(), account);
     VoiceToText voiceToText = new WhisperBot();
-    return new NewRecipeController(newRecipePage, newRecipeModel, pt, voiceToText);
+    return new NewRecipeController(newRecipePage, newRecipeModel, pt, voiceToText, account);
   }
 }
 

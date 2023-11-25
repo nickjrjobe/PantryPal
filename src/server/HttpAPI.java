@@ -12,7 +12,9 @@ class HttpAPI implements HttpHandler {
     String method = httpExchange.getRequestMethod();
     try {
       URI uri = httpExchange.getRequestURI();
-      String query = uri.getRawQuery();
+      String query = httpExchange.getHttpContext().getPath();
+      query = uri.toString().substring(query.length() + 1);
+      System.err.println("QUERY WAS " + query);
       String request = getRequestString(httpExchange);
       if (method.equals("GET")) {
         response = handleGet(query, request);
