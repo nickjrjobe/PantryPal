@@ -7,6 +7,7 @@ import java.util.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import utils.Recipe;
+
 interface InteractiveRecipeMaker {
   /** get recipe if created, returns null otherwise */
   public Recipe getRecipe();
@@ -20,6 +21,7 @@ interface InteractiveRecipeMaker {
   /** provide user-created prompt for processing */
   public void readResponse(String response);
 }
+
 class NewRecipeAPIFactory implements HttpUserAPIFactory {
   private RecipeCreator creator;
 

@@ -4,9 +4,6 @@ import com.sun.net.httpserver.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
-import org.json.JSONArray;
-import org.json.JSONObject;
-import utils.Recipe;
 
 interface HttpUserAPIFactory {
   public HttpAPI makeAPI(String username);
