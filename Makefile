@@ -10,13 +10,17 @@ HAMCREST = $(ABSOLUTE_PROJECT_DIR)/lib/hamcrest-core-1.3.jar
 JSON = $(ABSOLUTE_PROJECT_DIR)/lib/json-20231013.jar
 CHECKSTYLE = $(ABSOLUTE_PROJECT_DIR)/lib/checkstyle-10.12.4-all.jar
 GOOGLE_FORMAT = $(ABSOLUTE_PROJECT_DIR)/lib/google-java-format-1.18.1-all-deps.jar
+MONGODB_SYNC = $(ABSOLUTE_PROJECT_DIR)/lib/mongodb-driver-sync-4.11.0.jar
+MONGODB_CORE = $(ABSOLUTE_PROJECT_DIR)/lib/mongodb-driver-core-4.11.0.jar
+BSON_CODEC = $(ABSOLUTE_PROJECT_DIR)/lib/bson-record-codec-4.11.0.jar
+BSON = $(ABSOLUTE_PROJECT_DIR)/lib/bson-4.11.0.jar
 
 # Compile flags
 JFLAGS = --module-path $(OPENJFX) --add-modules javafx.controls,javafx.fxml
 # Classpath for JUNIT
-JTESTCP = "$(JUNIT):$(HAMCREST):$(JSON):."
+JTESTCP = $(JUNIT):$(HAMCREST):$(JCP)
 # Classpath for JSON
-JCP = "$(JSON)"
+JCP = $(JSON):$(MONGODB):$(MONGODB_SYNC):$(MONGODB_CORE):$(BSON_CODEC):$(BSON)
 
 # Source directory and testing directories
 SRC_DIR = ./src
@@ -70,7 +74,7 @@ build_util_classes: $(UTILSRCS)
 $(SERVERCLASSES): build_util_classes build_server_classes
 build_server_classes: $(SERVERSRCS)
 	@mkdir -p $(@D)
-	$(JAVAC) $(JFLAGS) -cp $(OUT_DIR):$(JCP):. -d $(OUT_DIR) $^
+	$(JAVAC) $(JFLAGS) -cp "$(OUT_DIR):$(JCP):." -d $(OUT_DIR) $^
 
 $(TESTCLASSES): build_util_classes build_test_classes
 build_test_classes: $(SRCS) $(TESTSRCS)

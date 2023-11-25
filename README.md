@@ -1,8 +1,11 @@
 # cse-110-project-team-40
 
 ## Basic Usage 
-### Setup API Key
+### Setup config.json
+#### Setup API Key
 Replace the key value in the supplied config.json file
+#### Setup Database
+Replace MongoDBURI with your MongoDBURI, and MongoDBDatabase with your MongoDBDatabase
 ### Setup (Linux/Mac)
 1. `$ chmod +x setup_lib.sh`
 2. `$ bash setup_lib.sh`
