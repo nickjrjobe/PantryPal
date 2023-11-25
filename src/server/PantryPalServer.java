@@ -32,7 +32,7 @@ public class PantryPalServer {
     RecipeCreator creator = new ChatGPTBot();
     // HttpContext newRecipeContext = server.createContext("/newrecipe", new NewRecipeAPI(creator));
     HttpContext newRecipeContext =
-        server.createContext("/newrecipe", new UserHandler(new NewRecipeCreatorFactory(creator)));
+        server.createContext("/newrecipe", new UserHandler(new NewRecipeAPIFactory(creator)));
     server.setExecutor(threadPoolExecutor);
     /* start server */
     server.start();
