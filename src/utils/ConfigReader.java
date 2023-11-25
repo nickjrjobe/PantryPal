@@ -8,6 +8,8 @@ import org.json.JSONTokener;
 /** This class is responsible for reading configuration data from a JSON file. */
 public class ConfigReader {
   private String openAiApiKey = "";
+  private String mongoDBURI = "";
+  private String mongoDBDatabase = "";
 
   /** Initializes a new instance of the ConfigReader class and reads the configuration. */
   public ConfigReader() {
@@ -27,7 +29,21 @@ public class ConfigReader {
       JSONObject jsonObject = new JSONObject(tokener);
 
       // Get the OpenAiApiKey value from the JSON object
-      this.openAiApiKey = jsonObject.getString("OpenAiApiKey");
+      try {
+        this.openAiApiKey = jsonObject.getString("OpenAiApiKey");
+      } catch (Exception e) {
+        System.err.println("Warn: OpenAiApiKey not provided in config.json");
+      }
+      try {
+        this.mongoDBDatabase = jsonObject.getString("MongoDBDatabase");
+      } catch (Exception e) {
+        System.err.println("Warn: MongoDBDatabase not provided in config.json");
+      }
+      try {
+        this.mongoDBURI = jsonObject.getString("MongoDBURI");
+      } catch (Exception e) {
+        System.err.println("Warn: MongoDBURI not provided in config.json");
+      }
 
       // Close the file reader
       fileReader.close();
@@ -43,5 +59,11 @@ public class ConfigReader {
    */
   public String getOpenAiApiKey() {
     return this.openAiApiKey;
+  }
+  public String getMongoDBURI() {
+    return this.mongoDBURI;
+  }
+  public String getMongoDBDatabase() {
+    return this.mongoDBDatabase;
   }
 }

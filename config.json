@@ -1,3 +1,5 @@
 {
-  "OpenAiApiKey": "Replace this with the api key",
+  "OpenAiApiKey": "",
+  "MongoDBDatabase": "",
+  "MongoDBURI":""
 }
