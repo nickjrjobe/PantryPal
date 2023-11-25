@@ -2,6 +2,7 @@ package server;
 
 import org.json.JSONObject;
 import utils.Account;
+
 /** Interface of object which stores data for Accounts */
 interface AccountData {
   public JSONObject toJSON();
