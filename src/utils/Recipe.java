@@ -11,7 +11,6 @@ import org.json.JSONObject;
 public class Recipe {
   private final String title;
   private final String description;
-  private final String user;
 
   /** convert title to URI friendly string */
   public static String sanitizeTitle(String title) {
@@ -34,22 +33,18 @@ public class Recipe {
   public String getTitle() {
     return title;
   }
-  public String getUser() {
-    return user;
-  }
 
   public String getDescription() {
     return description;
   }
 
-  public Recipe(String title, String description, String user) {
+  public Recipe(String title, String description) {
     this.title = title;
     this.description = description;
-    this.user = user;
   }
 
   public JSONObject toJSON() {
-    return new JSONObject().put("title", title).put("description", description).put("user", user);
+    return new JSONObject().put("title", title).put("description", description);
   }
 
   public Recipe(JSONObject j) throws IllegalArgumentException {
@@ -57,13 +52,12 @@ public class Recipe {
     try {
       this.title = j.getString("title");
       this.description = j.getString("description");
-      this.description = j.getString("user");
     } catch (Exception e) {
       throw new IllegalArgumentException("JSON Object did not have required fields");
     }
   }
 
   Recipe() {
-    this("default title", "default description", "user");
+    this("default title", "default description");
   }
 }
