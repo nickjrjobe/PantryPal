@@ -52,6 +52,7 @@ public class AuthorizationAPITest {
       assertEquals("Should not have thrown exception", true, false);
     }
   }
+
   @Test
   public void testGet() {
     boolean exceptionHappened = false;

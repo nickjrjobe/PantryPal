@@ -6,7 +6,6 @@ import java.io.*;
 import javafx.event.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.*;
-import org.json.JSONObject;
 import utils.Account;
 
 /** Model to interact with Server's AccountAPI */

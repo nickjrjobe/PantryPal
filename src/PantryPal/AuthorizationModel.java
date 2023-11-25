@@ -6,10 +6,9 @@ import java.io.*;
 import javafx.event.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.*;
-import org.json.JSONObject;
 import utils.Account;
 
-/** Model to interact with Server's AuthorizationAPI **/
+/** Model to interact with Server's AuthorizationAPI * */
 public class AuthorizationModel {
   HttpModel httpModel;
 
@@ -17,6 +16,7 @@ public class AuthorizationModel {
     this.httpModel = httpModel;
     httpModel.setPath("authorization");
   }
+
   public boolean authenticate(Account account) {
     String res = httpModel.performRequest("POST", null, account.toJSON().toString());
     if (res == "200 OK") {
