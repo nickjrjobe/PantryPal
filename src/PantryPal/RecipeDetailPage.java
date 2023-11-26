@@ -135,7 +135,7 @@ class RecipeDetailUI extends VBox {
     this.format();
     this.getChildren().add(titleField);
     this.getChildren().add(descriptionField);
-    this.getChildren.add(mealTypeField);
+    this.getChildren().add(mealTypeField);
   }
 
   public void save() {

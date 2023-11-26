@@ -16,7 +16,7 @@ public class RecipeDetailModelTest {
 
     @Test
     public void testCreate() {
-        Recipe recipe = new Recipe("test title", "test description");
+        Recipe recipe = new Recipe("test title", "test meal type", "test description");
         recipeDetailModel.create(recipe);
     }
 
@@ -36,13 +36,13 @@ public class RecipeDetailModelTest {
 
     @Test
     public void testUpdate() {
-        Recipe recipe = new Recipe("test title", "test description");
+        Recipe recipe = new Recipe("test title", "test meal type", "test description");
         recipeDetailModel.create(recipe);
     }
 
     @Test
     public void testDelete() {
-        Recipe recipe = new Recipe("test title", "test description");
+        Recipe recipe = new Recipe("test title", "test meal type", "test description");
         recipeDetailModel.create(recipe);
     }
 }

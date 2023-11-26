@@ -26,7 +26,8 @@ public class Recipe {
   public boolean equals(Object other) {
     if (other instanceof Recipe) {
       Recipe rother = (Recipe) other;
-      return rother.getTitle() == title && (rother.getMealType() == mealType && rother.getDescription() == description);
+      return rother.getTitle() == title && 
+        (rother.getMealType() == mealType && rother.getDescription() == description);
     }
     return false;
   }
