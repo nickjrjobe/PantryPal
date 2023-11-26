@@ -80,12 +80,8 @@ class AppController implements HomeTracker {
   public RecipeListPage makeRecipeListPage(LoginCredentials credentials) {
     String userName = credentials.getUserName();
     String password = credentials.getPassword();
-    System.out.println(
-        "Redirecting to RecipeListPage for user: " 
+    System.out.println("Redirecting to RecipeListPage for user: " 
         + userName + " and password: " + password);
-
-    System.out.println("Redirecting to RecipeListPage for user: " + userName + " and password: " + password);
-
     // TODO: need to pass in user to RecipeListPage
     RecipeListPage recipeList = new RecipeListPage(getRecipeListEntries(credentials));
     recipeList.footer.addButton(
