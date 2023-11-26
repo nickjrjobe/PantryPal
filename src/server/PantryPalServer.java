@@ -17,24 +17,30 @@ public class PantryPalServer {
   public static void main(String[] args) throws IOException {
     ThreadPoolExecutor threadPoolExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(10);
     // create a map to store data
-    RecipeData data = new RecipeDB(new JSONDB("recipes", "title"));
+    AccountData accountData = new AccountDB(new JSONDB("accounts", "username"));
+    RecipeCreator creator = new ChatGPTBot();
 
     // create a server
     HttpServer server = HttpServer.create(new InetSocketAddress(SERVER_HOSTNAME, SERVER_PORT), 0);
-    // HttpContext recipeListContext = server.createContext("/recipes", new RecipeListAPI(data));
+
+    // setup APIS
+
     HttpContext recipeListUsersContext =
         server.createContext("/recipes", new UserHandler(new RecipeListAPIFactory()));
+
     HttpContext detailedRecipeContext =
         server.createContext("/recipe", new UserHandler(new DetailedRecipeAPIFactory()));
-    /* setup APIs */
-    // HttpContext detailedRecipeContext =
-    //     server.createContext("/recipe", new DetailedRecipeAPI(data));
-    RecipeCreator creator = new ChatGPTBot();
-    // HttpContext newRecipeContext = server.createContext("/newrecipe", new NewRecipeAPI(creator));
+
+    HttpContext authorizationContext =
+        server.createContext("/authorization", new AuthorizationAPI(accountData));
+
+    HttpContext accountContext = server.createContext("/account", new AccountAPI(accountData));
+
     HttpContext newRecipeContext =
         server.createContext("/newrecipe", new UserHandler(new NewRecipeAPIFactory(creator)));
-    server.setExecutor(threadPoolExecutor);
+
     /* start server */
+    server.setExecutor(threadPoolExecutor);
     server.start();
   }
 }

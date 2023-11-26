@@ -7,13 +7,25 @@ import java.util.*;
 import org.json.JSONObject;
 
 class HttpAPI implements HttpHandler {
+  public String readQuery(URI uri, String base) {
+    if (base.length() == uri.toString().length()) {
+      /*handle no query case */
+      return "";
+    } else if (uri.toString().substring(base.length(), base.length() + 1) == "/") {
+      /* handle subpage case */
+      return uri.toString().substring(base.length() + 1);
+    } else {
+      /* handle regular query case */
+      return uri.getQuery();
+    }
+  }
   public void handle(HttpExchange httpExchange) throws IOException {
     String response = "Request Received";
     String method = httpExchange.getRequestMethod();
     try {
       URI uri = httpExchange.getRequestURI();
-      String query = httpExchange.getHttpContext().getPath();
-      query = uri.toString().substring(query.length() + 1);
+      String base = httpExchange.getHttpContext().getPath();
+      String query = readQuery(uri, base);
       System.err.println("QUERY WAS " + query);
       String request = getRequestString(httpExchange);
       if (method.equals("GET")) {
