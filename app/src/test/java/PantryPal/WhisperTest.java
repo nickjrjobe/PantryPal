@@ -44,7 +44,7 @@ public class WhisperTest {
   @Test
   public void testWriteFileToOutputStream() throws IOException {
     String boundary = "boundary";
-    File testFile = new File("test/PantryPal/testfile.txt");
+    File testFile = new File("src/test/java/PantryPal/testfile.txt");
 
     WhisperBot.writeFileToOutputStream(outputStream, testFile, boundary);
     outputStream.close();

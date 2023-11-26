@@ -10,7 +10,7 @@ import utils.Recipe;
 public class FileReadBehaviorTest {
   @Test
   public void testRead() {
-    ReadBehavior reader = new FileReadBehavior("test/PantryPal/filereadtest.txt");
+    ReadBehavior reader = new FileReadBehavior("src/test/java/PantryPal/filereadtest.txt");
 
     List<Recipe> recipes = reader.read();
     assertEquals(2, recipes.size());
