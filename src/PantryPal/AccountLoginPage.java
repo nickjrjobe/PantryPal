@@ -44,6 +44,7 @@ class AccountLoginUI extends VBox {
   String getPasswordText() {
     return passwordField.getText();
   }
+
   Account getAccount() {
     return new Account(userNameField.getText(), passwordField.getText());
   }

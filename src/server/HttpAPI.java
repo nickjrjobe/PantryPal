@@ -19,6 +19,7 @@ class HttpAPI implements HttpHandler {
       return uri.getQuery();
     }
   }
+
   public void handle(HttpExchange httpExchange) throws IOException {
     String response = "Request Received";
     String method = httpExchange.getRequestMethod();

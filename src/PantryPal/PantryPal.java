@@ -31,6 +31,7 @@ class AppController implements HomeTracker {
       return makeRecipeListPage();
     }
   }
+
   public boolean makeAccount(AccountCreateUI accountCreateUI, AccountModel accountModel) {
     Account account = accountCreateUI.getAccount();
     if (!Account.isValidUsername(account.getUsername())) {
@@ -43,8 +44,9 @@ class AppController implements HomeTracker {
     }
     return true;
   }
+
   public boolean validateAccount(
-    AccountLoginUI accountLoginUI, AuthorizationModel authorizationModel) {
+      AccountLoginUI accountLoginUI, AuthorizationModel authorizationModel) {
     Account account = accountLoginUI.getAccount();
     if (!Account.isValidUsername(account.getUsername())) {
       accountLoginUI.setErrorText("Please enter a valid username");
@@ -56,15 +58,19 @@ class AppController implements HomeTracker {
     }
     return true;
   }
+
   public AccountCreatePage makeAccountCreatePage() {
     AccountCreateUI accountCreateUI = new AccountCreateUI();
     AccountCreatePage accountCreatePage = new AccountCreatePage(accountCreateUI);
-    accountCreatePage.footer.addButton("Create Account", e -> {
-      boolean madeAccount = makeAccount(accountCreateUI, new AccountModel(new HttpRequestModel()));
-      if (madeAccount) {
-        pt.swapToPage(makeLoginPage());
-      }
-    });
+    accountCreatePage.footer.addButton(
+        "Create Account",
+        e -> {
+          boolean madeAccount =
+              makeAccount(accountCreateUI, new AccountModel(new HttpRequestModel()));
+          if (madeAccount) {
+            pt.swapToPage(makeLoginPage());
+          }
+        });
 
     return accountCreatePage;
   }
@@ -74,18 +80,20 @@ class AppController implements HomeTracker {
     AccountLoginPage accountLoginPage = new AccountLoginPage(accountLoginUI);
     // TODO check if autologin exists and if so autoswap to home page
 
-    accountLoginPage.footer.addButton("Login", e -> {
-      Account account =
-          new Account(accountLoginUI.getUserNameText(), accountLoginUI.getPasswordText());
-      boolean loggedIn =
-          validateAccount(accountLoginUI, new AuthorizationModel(new HttpRequestModel()));
+    accountLoginPage.footer.addButton(
+        "Login",
+        e -> {
+          Account account =
+              new Account(accountLoginUI.getUserNameText(), accountLoginUI.getPasswordText());
+          boolean loggedIn =
+              validateAccount(accountLoginUI, new AuthorizationModel(new HttpRequestModel()));
 
-      if (loggedIn) {
-        this.account = accountLoginUI.getAccount();
-        // TODO check if loginValid && autoLogin selected and if so enable autologin US11
-        pt.swapToPage(makeRecipeListPage()); // Swap to recipe list page
-      }
-    });
+          if (loggedIn) {
+            this.account = accountLoginUI.getAccount();
+            // TODO check if loginValid && autoLogin selected and if so enable autologin US11
+            pt.swapToPage(makeRecipeListPage()); // Swap to recipe list page
+          }
+        });
 
     accountLoginPage.footer.addButton(
         "Create Account",
@@ -94,7 +102,6 @@ class AppController implements HomeTracker {
         });
     return accountLoginPage;
   }
-
 
   public RecipeListPage makeRecipeListPage() {
     RecipeListPage recipeList = new RecipeListPage(getRecipeListEntries());
