@@ -22,8 +22,6 @@ class AppController implements HomeTracker {
 
   public AppController(PageTracker pt) {
     this.pt = pt;
-    /*TODO remove this and manually set variable once login implemented */
-    this.account = new Account("user", "password");
   }
 
   public ScrollablePage getHome() {
@@ -31,22 +29,40 @@ class AppController implements HomeTracker {
     // return makeRecipeListPage();
     return makeLoginPage();
   }
-
+  public boolean makeAccount(AccountCreateUI accountCreateUI, AccountModel accountModel) {
+    Account account = accountCreateUI.getAccount();
+    if (!Account.isValidUsername(account.getUsername())) {
+      accountCreateUI.setErrorText("Please enter a valid username");
+      return false;
+    }
+    if (!accountModel.create(account)) {
+      accountCreateUI.setErrorText("Username already exists");
+      return false;
+    }
+    return true;
+  }
+  public boolean validateAccount(
+    AccountLoginUI accountLoginUI, AuthorizationModel authorizationModel) {
+    Account account = accountLoginUI.getAccount();
+    if (!Account.isValidUsername(account.getUsername())) {
+      accountLoginUI.setErrorText("Please enter a valid username");
+      return false;
+    }
+    if (!authorizationModel.authenticate(account)) {
+      accountLoginUI.setErrorText("Invalid username/password");
+      return false;
+    }
+    return true;
+  }
   public AccountCreatePage makeAccountCreatePage() {
     AccountCreateUI accountCreateUI = new AccountCreateUI();
     AccountCreatePage accountCreatePage = new AccountCreatePage(accountCreateUI);
-    accountCreatePage.footer.addButton(
-        "Create Account",
-        e -> {
-          LoginCredentials credentials =
-              new LoginCredentials(
-                  accountCreateUI.getUserNameText(), accountCreateUI.getPasswordText());
-          boolean isValidUser = accountCreatePage.isValidCredential();
-
-          if (isValidUser) {
-            pt.swapToPage(makeLoginPage());
-          }
-        });
+    accountCreatePage.footer.addButton("Create Account", e -> {
+      boolean madeAccount = makeAccount(accountCreateUI, new AccountModel(new HttpRequestModel()));
+      if (madeAccount) {
+        pt.swapToPage(makeLoginPage());
+      }
+    });
 
     return accountCreatePage;
   }
@@ -54,20 +70,20 @@ class AppController implements HomeTracker {
   public AccountLoginPage makeLoginPage() {
     AccountLoginUI accountLoginUI = new AccountLoginUI();
     AccountLoginPage accountLoginPage = new AccountLoginPage(accountLoginUI);
+    // TODO check if autologin exists and if so autoswap to home page
 
-    accountLoginPage.footer.addButton(
-        "Login",
-        e -> {
-          LoginCredentials credentials =
-              new LoginCredentials(
-                  accountLoginUI.getUserNameText(), accountLoginUI.getPasswordText());
-          boolean isValidUser = accountLoginPage.isValidCredential();
+    accountLoginPage.footer.addButton("Login", e -> {
+      Account account =
+          new Account(accountLoginUI.getUserNameText(), accountLoginUI.getPasswordText());
+      boolean loggedIn =
+          validateAccount(accountLoginUI, new AuthorizationModel(new HttpRequestModel()));
 
-          if (isValidUser) {
-            pt.swapToPage(makeRecipeListPage(credentials)); // Swap to recipe list page
-          }
-          accountLoginPage.writeAutoLoginStatus(isValidUser);
-        });
+      if (loggedIn) {
+        this.account = accountLoginUI.getAccount();
+        // TODO check if loginValid && autoLogin selected and if so enable autologin US11
+        pt.swapToPage(makeRecipeListPage()); // Swap to recipe list page
+      }
+    });
 
     accountLoginPage.footer.addButton(
         "Create Account",
@@ -77,17 +93,9 @@ class AppController implements HomeTracker {
     return accountLoginPage;
   }
 
-  // public AccountCreationPage makeAccountCreationPage() {
-  //   System.out.println("Redirecting to Account Creation Page");
-  // }
 
-  public RecipeListPage makeRecipeListPage(LoginCredentials credentials) {
-    String userName = credentials.getUserName();
-    String password = credentials.getPassword();
-    System.out.println("Redirecting to RecipeListPage for user: " 
-        + userName + " and password: " + password);
-    // TODO: need to pass in user to RecipeListPage
-    RecipeListPage recipeList = new RecipeListPage(getRecipeListEntries(credentials));
+  public RecipeListPage makeRecipeListPage() {
+    RecipeListPage recipeList = new RecipeListPage(getRecipeListEntries());
     recipeList.footer.addButton(
         "New Recipe",
         e -> {
@@ -100,17 +108,17 @@ class AppController implements HomeTracker {
     RecipeListModel model = new RecipeListModel(new HttpRequestModel(), account);
     ArrayList<RecipeEntryUI> entries = new ArrayList<>();
     for (String title : model.getRecipeList()) {
-      entries.add(makeRecipeEntryUI(title, credentials));
+      entries.add(makeRecipeEntryUI(title));
     }
     return entries;
   }
 
-  public RecipeEntryUI makeRecipeEntryUI(String title, LoginCredentials credentials) {
+  public RecipeEntryUI makeRecipeEntryUI(String title) {
     RecipeEntryUI entry = new RecipeEntryUI(title);
     entry.addButton(
         "details",
         e -> {
-          pt.swapToPage(makeRecipeDetailsPage(title, credentials));
+          pt.swapToPage(makeRecipeDetailsPage(title));
         });
     return entry;
   }
@@ -121,7 +129,7 @@ class AppController implements HomeTracker {
     drp.footer.addButton(
         "home",
         e -> {
-          pt.swapToPage(makeRecipeListPage(credentials));
+          pt.swapToPage(makeRecipeListPage());
         });
     return drp;
   }

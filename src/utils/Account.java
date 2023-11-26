@@ -13,6 +13,7 @@ public class Account {
   private final String password;
   public static boolean isValidUsername(String username) {
     boolean invalid = username.contains(" ");
+    invalid |= username.isEmpty();
     return !invalid;
   }
 

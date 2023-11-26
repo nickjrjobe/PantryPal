@@ -2,6 +2,7 @@ package PantryPal;
 
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
+import utils.Account;
 
 /**
  * UI page that contains and reads from the textfield for account and password, and the checkbox for
@@ -43,6 +44,9 @@ class AccountLoginUI extends VBox {
   String getPasswordText() {
     return passwordField.getText();
   }
+  Account getAccount() {
+    return new Account(userNameField.getText(), passwordField.getText());
+  }
 
   boolean isAutoLoginSelected() {
     return autoLoginCheckbox.isSelected();
@@ -74,29 +78,5 @@ public class AccountLoginPage extends ScrollablePage {
 
   public String getPassword() {
     return accountLoginUI.getPasswordText();
-  }
-
-  public boolean isValidCredential() {
-
-    String userName = accountLoginUI.getUserNameText();
-    String password = accountLoginUI.getPasswordText();
-    // boolean isValidUser = false;
-    LoginCredentials credentials = new LoginCredentials(userName, password);
-    boolean isValidUser = credentials.isValidUser();
-    if (userName.isEmpty()) {
-      accountLoginUI.setErrorText("Please enter a valid user name");
-      return isValidUser;
-    }
-    if (!isValidUser) {
-      accountLoginUI.setErrorText("Incorrect username or password");
-    } else {
-      accountLoginUI.setErrorText("");
-    }
-    return isValidUser;
-  }
-
-  public void writeAutoLoginStatus(boolean isSelected) {
-    // US11 TODO: write the saved account and password to a file instead
-    System.out.println("Auto login is " + (isSelected ? "selected" : "not selected"));
   }
 }
