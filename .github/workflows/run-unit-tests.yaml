@@ -39,11 +39,9 @@ jobs:
           distribution: ${{ env.DISTRIBUTION }}
           java-version: ${{ env.JAVA_VERSION }}
 
-      # Validate the Gradle wrapper
       - name: Validate Gradle wrapper
         uses: gradle/wrapper-validation-action@v1
 
-      # Set up Gradle
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
 
@@ -60,12 +58,10 @@ jobs:
           detailed_summary: true
           include_passed: true
 
-  # Define the lint job
+  # Define the lint job, which will check the code for style issues
   lint:
-    # Run this job on the latest Ubuntu version
     runs-on: ubuntu-latest
 
-    # Define the steps for this job
     steps:
       # Check out the repository for the workflow
       - uses: actions/checkout@v3
@@ -77,6 +73,9 @@ jobs:
           distribution: ${{ env.DISTRIBUTION }}
           java-version: ${{ env.JAVA_VERSION }}
 
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+
       # Run the linting script
       - name: Lint 
-        run: gradlew lint
+        run: ./gradlew lint
