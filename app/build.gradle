@@ -11,6 +11,8 @@ plugins {
   id 'application'
   // PantryPal JavaFX plugin
   id 'org.openjfx.javafxplugin' version '0.1.0'
+  // Google Java Format plugin
+  id "com.diffplug.spotless" version "6.22.0"
 }
 
 repositories {
@@ -27,7 +29,9 @@ dependencies {
 
   // PantryPal dependencies
   implementation 'org.json:json:20231013'
+  implementation 'org.hamcrest:hamcrest-core:1.3'
   implementation 'org.mongodb:mongodb-driver-sync:4.11.1'
+
   
 
 }
@@ -51,4 +55,17 @@ javafx {
 task runServer(type: JavaExec) {
   main = 'server.PantryPalServer'
   classpath = sourceSets.main.runtimeClasspath
+}
+
+task lint(dependsOn: 'spotlessApply') {
+  doLast {
+    println 'Linting completed!'
+  }
+}
+
+// Google Java Format
+spotless {
+  java {
+    googleJavaFormat()
+  }
 }

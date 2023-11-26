@@ -1,49 +1,58 @@
+# Workflow name
 name: Initial Java CI
 
+# Trigger this workflow on every push
 on: [push]
 
+# Define permissions for the GitHub token in this workflow
 permissions:
   contents: read
   checks: write
   id-token: write
 
+# Define environment variables for use in multiple workflow steps
+env:
+  JAVA_VERSION: '11'
+  DISTRIBUTION: 'temurin'
+
+# Define the jobs to run in this workflow
 jobs:
-  junit-server:
+  # Define the build job
+  build:
+    # Run this job on the latest Ubuntu version
     runs-on: ubuntu-latest
+    # Define a strategy for running this job with different configurations
+    strategy:
+      matrix:
+        # Run this job twice, once for each component: 'server' and 'client'
+        component: ['server', 'client']
     
+    # Define the steps for this job
     steps:
+      # Check out the repository for the workflow
       - uses: actions/checkout@v3
 
+      # Set up the JDK with the version and distribution from the environment variables
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:
-          distribution: 'temurin'
-          java-version: '11'
+          distribution: ${{ env.DISTRIBUTION }}
+          java-version: ${{ env.JAVA_VERSION }}
 
-      # Get dependencies
-      - name: Install dependencies
-        run: bash setup_lib.sh
-
-     ## Build everything
-     #- name: Make
-     #  run: make
-
-     ## Run unit test
-     #- name: Run unit test
-     #  run: make test
-
+      # Validate the Gradle wrapper
       - name: Validate Gradle wrapper
         uses: gradle/wrapper-validation-action@v1
 
+      # Set up Gradle
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
 
-      # Builds everything (including running unit tests)
+      # Build the project with Gradle
       - name: Execute Gradle build
         run: ./gradlew build
 
-      # report the results
-      - name: Publish Test Resport
+      # Publish the test report
+      - name: Publish Test Report
         uses: mikepenz/action-junit-report@v3
         if: success() || failure()
         with:
@@ -51,46 +60,23 @@ jobs:
           detailed_summary: true
           include_passed: true
 
-  junit-client:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Set up JDK
-        uses: actions/setup-java@v3
-        with:
-          distribution: 'temurin'
-          java-version: '11'
-
-      # Get dependencies
-      - name: Install dependencies
-        run: bash setup_lib.sh
-
-      # Build everything
-      - name: Make
-        run: make
-
-      # Run unit test
-      - name: Run unit test
-        run: make servertest
+  # Define the lint job
   lint:
+    # Run this job on the latest Ubuntu version
     runs-on: ubuntu-latest
 
+    # Define the steps for this job
     steps:
+      # Check out the repository for the workflow
       - uses: actions/checkout@v3
 
+      # Set up the JDK with the version and distribution from the environment variables
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:
-          distribution: 'temurin'
-          java-version: '11'
+          distribution: ${{ env.DISTRIBUTION }}
+          java-version: ${{ env.JAVA_VERSION }}
 
-      # Get dependencies
-      - name: Install dependencies
-        run: bash setup_lib.sh
-
-      # Lint 
+      # Run the linting script
       - name: Lint 
-        run: make lint
-
+        run: gradlew lint
