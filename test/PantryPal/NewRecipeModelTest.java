@@ -1,11 +1,11 @@
 package PantryPal;
 
-import java.io.IOException;
-import utils.Recipe;
+import static org.junit.Assert.*;
 
+import java.io.IOException;
 import org.junit.Before;
 import org.junit.Test;
-import static org.junit.Assert.*;
+import utils.Recipe;
 
 public class NewRecipeModelTest {
   private MockHttpModel httpModel;
@@ -22,7 +22,9 @@ public class NewRecipeModelTest {
     // Set up the input and mock output
     TranscriptResults transcriptResults = null;
     String response = "Test response";
-    httpModel.setMockResponse("{\"transcript\":[\"test prompt\"],\"recipe\":{\"title\":\"test recipe\", \"description\":\"test description\"}}");
+    httpModel.setMockResponse(
+        "{\"transcript\":[\"test prompt\"],\"recipe\":{\"title\":\"test recipe\","
+            + " \"description\":\"test description\"}}");
 
     // Call the method
     try {
@@ -38,7 +40,7 @@ public class NewRecipeModelTest {
     Recipe recipe = transcriptResults.recipe;
     assertEquals("test recipe", recipe.getTitle());
     assertEquals("test description", recipe.getDescription());
-    
+
     // Verify transcript details
     assertEquals(1, transcriptResults.prompts.size());
     assertEquals("test prompt", transcriptResults.prompts.get(0));
@@ -49,7 +51,9 @@ public class NewRecipeModelTest {
     // Set up the input and mock output
     TranscriptResults transcriptResults = null;
     String response = "Test response";
-    httpModel.setMockResponse("{\"transcript\":[\"test prompt\"],\"recipe\":{\"title\":\"test recipe\", \"description\":\"test description\"}}");
+    httpModel.setMockResponse(
+        "{\"transcript\":[\"test prompt\"],\"recipe\":{\"title\":\"test recipe\","
+            + " \"description\":\"test description\"}}");
 
     // Call the method
     try {
@@ -65,7 +69,7 @@ public class NewRecipeModelTest {
     Recipe recipe = transcriptResults.recipe;
     assertEquals("test recipe", recipe.getTitle());
     assertEquals("test description", recipe.getDescription());
-    
+
     // Verify transcript details
     assertEquals(1, transcriptResults.prompts.size());
     assertEquals("test prompt", transcriptResults.prompts.get(0));
