@@ -1,5 +1,6 @@
 package server;
 
+import static com.mongodb.client.model.Filters.and;
 import static com.mongodb.client.model.Filters.eq;
 import static com.mongodb.client.model.Filters.not;
 import static com.mongodb.client.model.Updates.*;
@@ -37,12 +38,9 @@ class JSONDB {
   }
 
   JSONObject remove(String key) {
-    Bson filter = eq(lookupkey, key);
-    Document doc = recipeCollection.findOneAndDelete(filter);
-    if (doc == null) {
-      return null;
-    }
-    return new JSONObject(doc.toJson());
+    JSONObject old = read(key);
+    recipeCollection.deleteMany(and(filter, eq(lookupkey, key)));
+    return old;
   }
 
   void create(JSONObject json) {
@@ -61,8 +59,13 @@ class JSONDB {
 
   JSONObject read(String key) {
     // TODO this will throw exception if doesnt exist
+    System.out.println("looking up " + key + " in database");
     Document lookup = recipeCollection.find(eq(lookupkey, key)).first();
-    return new JSONObject(lookup.toJson());
+    if (lookup == null) {
+      return null;
+    } else {
+      return new JSONObject(lookup.toJson());
+    }
   }
   void addFilter(String key, String val) {
     this.filter = eq(key, val);

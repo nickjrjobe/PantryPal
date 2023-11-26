@@ -8,6 +8,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import utils.Account;
 import utils.Recipe;
 
 /** Immutable class to store results from sending a transcript to NewRecipeAPI */
@@ -47,20 +48,19 @@ class TranscriptResults {
 class NewRecipeController {
   private static final String stopButtonTitle = "Stop Recording";
   private static final String startButtonTitle = "Start Recording";
+  private Account account;
   NewRecipePage newRecipePage;
   NewRecipeModel newRecipeModel;
   PageTracker pt;
   VoiceToText voiceToText;
 
-  NewRecipeController(
-      NewRecipePage newRecipePage,
-      NewRecipeModel newRecipeModel,
-      PageTracker pt,
-      VoiceToText voicetotext) {
+  NewRecipeController(NewRecipePage newRecipePage, NewRecipeModel newRecipeModel, PageTracker pt,
+      VoiceToText voicetotext, Account account) {
     this.newRecipePage = newRecipePage;
     this.newRecipeModel = newRecipeModel;
     this.pt = pt;
     this.voiceToText = voicetotext;
+    this.account = account;
     init();
   }
 
@@ -155,7 +155,8 @@ class NewRecipeController {
   /** exit state machine to look at new recipe */
   void done(Recipe recipe) {
     newRecipeModel.reset();
-    NewRecipeDetailPage drp = new NewRecipeDetailPage(new RecipeDetailUI(recipe));
+    NewRecipeDetailPage drp = new NewRecipeDetailPage(
+        new RecipeDetailUI(recipe, new RecipeDetailModel(new HttpRequestModel(), account)));
     drp.footer.addButton(
         "home",
         e -> {

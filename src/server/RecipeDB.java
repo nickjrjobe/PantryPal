@@ -54,9 +54,11 @@ class UserRecipeDB implements RecipeData {
   }
 
   public Recipe put(String key, Recipe value) {
+    System.out.println("Key " + key);
     JSONObject json = value.toJSON();
     encapsulate(json);
-    db.create(value.toJSON());
+    db.remove(key);
+    db.create(json);
     return get(key);
   }
 

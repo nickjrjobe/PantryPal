@@ -7,15 +7,16 @@ import javafx.event.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.*;
 import org.json.JSONObject;
+import utils.Account;
 import utils.Recipe;
 
 /** CRUD model for server's detailed recipe data */
 public class RecipeDetailModel {
   HttpModel httpModel;
 
-  RecipeDetailModel(HttpModel httpModel) {
+  RecipeDetailModel(HttpModel httpModel, Account account) {
     this.httpModel = httpModel;
-    httpModel.setPath("recipe");
+    httpModel.setPath("recipe/" + account.getUsername() + "/");
   }
 
   public void create(Recipe r) {
