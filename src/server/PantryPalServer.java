@@ -21,13 +21,18 @@ public class PantryPalServer {
 
     // create a server
     HttpServer server = HttpServer.create(new InetSocketAddress(SERVER_HOSTNAME, SERVER_PORT), 0);
-    HttpContext recipeListContext = server.createContext("/recipes", new RecipeListAPI(data));
-
-    /* setup APIs */
+    // HttpContext recipeListContext = server.createContext("/recipes", new RecipeListAPI(data));
+    HttpContext recipeListUsersContext =
+        server.createContext("/recipes", new UserHandler(new RecipeListAPIFactory()));
     HttpContext detailedRecipeContext =
-        server.createContext("/recipe", new DetailedRecipeAPI(data));
-    NewRecipeCreator creator = new NewRecipeCreator(new ChatGPTBot());
-    HttpContext newRecipeContext = server.createContext("/newrecipe", new NewRecipeAPI(creator));
+        server.createContext("/recipe", new UserHandler(new DetailedRecipeAPIFactory()));
+    /* setup APIs */
+    // HttpContext detailedRecipeContext =
+    //     server.createContext("/recipe", new DetailedRecipeAPI(data));
+    RecipeCreator creator = new ChatGPTBot();
+    // HttpContext newRecipeContext = server.createContext("/newrecipe", new NewRecipeAPI(creator));
+    HttpContext newRecipeContext =
+        server.createContext("/newrecipe", new UserHandler(new NewRecipeCreatorFactory(creator)));
     server.setExecutor(threadPoolExecutor);
     /* start server */
     server.start();
