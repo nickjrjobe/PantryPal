@@ -1,7 +1,6 @@
 package utils;
 
 import java.io.*;
-import java.util.List;
 import javafx.event.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.*;
@@ -11,6 +10,7 @@ import org.json.JSONObject;
 public class Account {
   private final String username;
   private final String password;
+
   public static boolean isValidUsername(String username) {
     boolean invalid = username.contains(" ");
     return !invalid;
@@ -51,5 +51,4 @@ public class Account {
       throw new IllegalArgumentException("JSON Object did not have required fields");
     }
   }
-
 }
