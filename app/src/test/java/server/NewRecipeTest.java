@@ -122,7 +122,8 @@ public class NewRecipeTest {
     expectedPrompts.add(ingredients);
     assertEquals(expectedPrompts, newRecipeCreatorTest.getPrompts());
     assertEquals(false, newRecipeCreatorTest.waitingForMeal);
-    assertEquals(title, newRecipeCreatorTest.getRecipe().getTitle());
+    assertEquals(mealType, newRecipeCreatorTest.getRecipe().getTitle());
+    assertEquals(title, newRecipeCreatorTest.getRecipe().getMealType());
     assertEquals(desc, newRecipeCreatorTest.getRecipe().getDescription());
   }
 }
