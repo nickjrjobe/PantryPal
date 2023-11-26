@@ -2,6 +2,7 @@ package PantryPal;
 
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
+import utils.Account;
 
 /** UI page that contains and reads from the textfield for account and password */
 class AccountCreateUI extends VBox {
@@ -36,6 +37,10 @@ class AccountCreateUI extends VBox {
 
   String getPasswordText() {
     return passwordField.getText();
+  }
+
+  public Account getAccount() {
+    return new Account(userNameField.getText(), passwordField.getText());
   }
 
   void setErrorText(String text) {

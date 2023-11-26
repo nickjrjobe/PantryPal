@@ -3,16 +3,18 @@ package PantryPal;
 import static org.junit.Assert.*;
 
 import org.junit.*;
+import utils.Account;
 import utils.Recipe;
 
 public class RecipeDetailModelTest {
   private MockHttpModel httpModel;
   private RecipeDetailModel recipeDetailModel;
+  private Account account = new Account("", "");
 
   @Before
   public void setUp() {
     httpModel = new MockHttpModel();
-    recipeDetailModel = new RecipeDetailModel(httpModel);
+    recipeDetailModel = new RecipeDetailModel(httpModel, account);
   }
 
   @Test

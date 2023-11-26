@@ -10,14 +10,16 @@ import javafx.event.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.*;
 import org.json.JSONObject;
+import utils.Account;
 
 /** Communication model for making API requests to get Recipe List. */
 public class RecipeListModel {
   HttpModel httpModel;
+  Account account;
 
-  RecipeListModel(HttpModel httpModel) {
+  RecipeListModel(HttpModel httpModel, Account account) {
     this.httpModel = httpModel;
-    httpModel.setPath("recipes");
+    httpModel.setPath("recipes/" + account.getUsername() + "/");
   }
 
   public List<String> getRecipeList() {

@@ -10,12 +10,14 @@ import javafx.event.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.*;
 import javafx.stage.Stage;
+import utils.Account;
 
 interface HomeTracker {
   public ScrollablePage getHome();
 }
 
 class AppController implements HomeTracker {
+  private Account account;
   private PageTracker pt;
 
   public AppController(PageTracker pt) {
@@ -23,9 +25,38 @@ class AppController implements HomeTracker {
   }
 
   public ScrollablePage getHome() {
+    if (account == null) {
+      return makeLoginPage();
+    } else {
+      return makeRecipeListPage();
+    }
+  }
 
-    // return makeRecipeListPage();
-    return makeLoginPage();
+  public boolean makeAccount(AccountCreateUI accountCreateUI, AccountModel accountModel) {
+    Account account = accountCreateUI.getAccount();
+    if (!Account.isValidUsername(account.getUsername())) {
+      accountCreateUI.setErrorText("Please enter a valid username");
+      return false;
+    }
+    if (!accountModel.create(account)) {
+      accountCreateUI.setErrorText("Username already exists");
+      return false;
+    }
+    return true;
+  }
+
+  public boolean validateAccount(
+      AccountLoginUI accountLoginUI, AuthorizationModel authorizationModel) {
+    Account account = accountLoginUI.getAccount();
+    if (!Account.isValidUsername(account.getUsername())) {
+      accountLoginUI.setErrorText("Please enter a valid username");
+      return false;
+    }
+    if (!authorizationModel.authenticate(account)) {
+      accountLoginUI.setErrorText("Invalid username/password");
+      return false;
+    }
+    return true;
   }
 
   public AccountCreatePage makeAccountCreatePage() {
@@ -34,12 +65,9 @@ class AppController implements HomeTracker {
     accountCreatePage.footer.addButton(
         "Create Account",
         e -> {
-          LoginCredentials credentials =
-              new LoginCredentials(
-                  accountCreateUI.getUserNameText(), accountCreateUI.getPasswordText());
-          boolean isValidUser = accountCreatePage.isValidCredential();
-
-          if (isValidUser) {
+          boolean madeAccount =
+              makeAccount(accountCreateUI, new AccountModel(new HttpRequestModel()));
+          if (madeAccount) {
             pt.swapToPage(makeLoginPage());
           }
         });
@@ -50,19 +78,21 @@ class AppController implements HomeTracker {
   public AccountLoginPage makeLoginPage() {
     AccountLoginUI accountLoginUI = new AccountLoginUI();
     AccountLoginPage accountLoginPage = new AccountLoginPage(accountLoginUI);
+    // TODO check if autologin exists and if so autoswap to home page
 
     accountLoginPage.footer.addButton(
         "Login",
         e -> {
-          LoginCredentials credentials =
-              new LoginCredentials(
-                  accountLoginUI.getUserNameText(), accountLoginUI.getPasswordText());
-          boolean isValidUser = accountLoginPage.isValidCredential();
+          Account account =
+              new Account(accountLoginUI.getUserNameText(), accountLoginUI.getPasswordText());
+          boolean loggedIn =
+              validateAccount(accountLoginUI, new AuthorizationModel(new HttpRequestModel()));
 
-          if (isValidUser) {
-            pt.swapToPage(makeRecipeListPage(credentials)); // Swap to recipe list page
+          if (loggedIn) {
+            this.account = accountLoginUI.getAccount();
+            // TODO check if loginValid && autoLogin selected and if so enable autologin US11
+            pt.swapToPage(makeRecipeListPage()); // Swap to recipe list page
           }
-          accountLoginPage.writeAutoLoginStatus(isValidUser);
         });
 
     accountLoginPage.footer.addButton(
@@ -73,17 +103,8 @@ class AppController implements HomeTracker {
     return accountLoginPage;
   }
 
-  // public AccountCreationPage makeAccountCreationPage() {
-  //   System.out.println("Redirecting to Account Creation Page");
-  // }
-
-  public RecipeListPage makeRecipeListPage(LoginCredentials credentials) {
-    String userName = credentials.getUserName();
-    String password = credentials.getPassword();
-    System.out.println(
-        "Redirecting to RecipeListPage for user: " + userName + " and password: " + password);
-    // TODO: need to pass in user to RecipeListPage
-    RecipeListPage recipeList = new RecipeListPage(getRecipeListEntries(credentials));
+  public RecipeListPage makeRecipeListPage() {
+    RecipeListPage recipeList = new RecipeListPage(getRecipeListEntries());
     recipeList.footer.addButton(
         "New Recipe",
         e -> {
@@ -92,41 +113,41 @@ class AppController implements HomeTracker {
     return recipeList;
   }
 
-  public List<RecipeEntryUI> getRecipeListEntries(LoginCredentials credentials) {
-    RecipeListModel model = new RecipeListModel(new HttpRequestModel());
+  public List<RecipeEntryUI> getRecipeListEntries() {
+    RecipeListModel model = new RecipeListModel(new HttpRequestModel(), account);
     ArrayList<RecipeEntryUI> entries = new ArrayList<>();
     for (String title : model.getRecipeList()) {
-      entries.add(makeRecipeEntryUI(title, credentials));
+      entries.add(makeRecipeEntryUI(title));
     }
     return entries;
   }
 
-  public RecipeEntryUI makeRecipeEntryUI(String title, LoginCredentials credentials) {
+  public RecipeEntryUI makeRecipeEntryUI(String title) {
     RecipeEntryUI entry = new RecipeEntryUI(title);
     entry.addButton(
         "details",
         e -> {
-          pt.swapToPage(makeRecipeDetailsPage(title, credentials));
+          pt.swapToPage(makeRecipeDetailsPage(title));
         });
     return entry;
   }
 
-  public RecipeDetailPage makeRecipeDetailsPage(String title, LoginCredentials credentials) {
-    RecipeDetailModel rc = new RecipeDetailModel(new HttpRequestModel());
-    RecipeDetailPage drp = new RecipeDetailPage(new RecipeDetailUI(rc.read(title)));
+  public RecipeDetailPage makeRecipeDetailsPage(String title) {
+    RecipeDetailModel rc = new RecipeDetailModel(new HttpRequestModel(), account);
+    RecipeDetailPage drp = new RecipeDetailPage(new RecipeDetailUI(rc.read(title), rc));
     drp.footer.addButton(
         "home",
         e -> {
-          pt.swapToPage(makeRecipeListPage(credentials));
+          pt.swapToPage(makeRecipeListPage());
         });
     return drp;
   }
 
   public NewRecipeController makeNewRecipeController() {
     NewRecipePage newRecipePage = new NewRecipePage(new NewRecipeUI());
-    NewRecipeModel newRecipeModel = new NewRecipeModel(new HttpRequestModel());
+    NewRecipeModel newRecipeModel = new NewRecipeModel(new HttpRequestModel(), account);
     VoiceToText voiceToText = new WhisperBot();
-    return new NewRecipeController(newRecipePage, newRecipeModel, pt, voiceToText);
+    return new NewRecipeController(newRecipePage, newRecipeModel, pt, voiceToText, account);
   }
 }
 

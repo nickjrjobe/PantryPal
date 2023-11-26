@@ -4,13 +4,14 @@ import java.io.*;
 import javafx.event.*;
 import javafx.scene.layout.*;
 import org.json.JSONObject;
+import utils.Account;
 
 class NewRecipeModel {
   HttpModel httpModel;
 
-  NewRecipeModel(HttpModel httpModel) {
+  NewRecipeModel(HttpModel httpModel, Account account) {
     this.httpModel = httpModel;
-    httpModel.setPath("newrecipe");
+    httpModel.setPath("newrecipe/" + account.getUsername() + "/");
   }
 
   TranscriptResults sendTranscript(String response) throws IOException {

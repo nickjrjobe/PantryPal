@@ -5,16 +5,18 @@ import static org.junit.Assert.*;
 import java.io.IOException;
 import org.junit.Before;
 import org.junit.Test;
+import utils.Account;
 import utils.Recipe;
 
 public class NewRecipeModelTest {
   private MockHttpModel httpModel;
   private NewRecipeModel newRecipeModel;
+  private Account account = new Account("", "");
 
   @Before
   public void setUp() {
     httpModel = new MockHttpModel();
-    newRecipeModel = new NewRecipeModel(httpModel);
+    newRecipeModel = new NewRecipeModel(httpModel, account);
   }
 
   @Test
