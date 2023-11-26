@@ -11,7 +11,7 @@ class HttpAPI implements HttpHandler {
     if (base.length() == uri.toString().length()) {
       /*handle no query case */
       return "";
-    } else if (uri.toString().substring(base.length(), base.length() + 1) == "/") {
+    } else if (uri.toString().substring(base.length(), base.length() + 1).equals("/")) {
       /* handle subpage case */
       return uri.toString().substring(base.length() + 1);
     } else {

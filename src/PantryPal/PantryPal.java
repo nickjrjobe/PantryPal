@@ -25,9 +25,11 @@ class AppController implements HomeTracker {
   }
 
   public ScrollablePage getHome() {
-
-    // return makeRecipeListPage();
-    return makeLoginPage();
+    if (account == null) {
+      return makeLoginPage();
+    } else {
+      return makeRecipeListPage();
+    }
   }
   public boolean makeAccount(AccountCreateUI accountCreateUI, AccountModel accountModel) {
     Account account = accountCreateUI.getAccount();
