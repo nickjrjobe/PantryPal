@@ -10,7 +10,7 @@ permissions:
 jobs:
   junit-server:
     runs-on: ubuntu-latest
-
+    
     steps:
       - uses: actions/checkout@v3
 
@@ -33,18 +33,18 @@ jobs:
         run: make test
 
       - name: Validate Gradle wrapper
-      - uses: gradle/wrapper-validation-action@v1
+        uses: gradle/wrapper-validation-action@v1
 
       - name: Setup Gradle
-      - uses: gradle/gradle-build-action@v2
+        uses: gradle/gradle-build-action@v2
 
       # Builds everything (including running unit tests)
-      -name: Execute Gradle build
-      -uses: ./gradlew build
+      - name: Execute Gradle build
+        uses: ./gradlew build
 
       # report the results
       - name: Publish Test Resport
-      - uses: mikepenz/action-junit-report@v3
+        uses: mikepenz/action-junit-report@v3
         if: success() || failure()
         with:
           report_paths: '**/build/test-results/test/TEST-*.xml'
