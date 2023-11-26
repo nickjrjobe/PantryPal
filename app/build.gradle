@@ -49,7 +49,7 @@ tasks.named('test') {
 // Thing for JavaFX
 javafx {
     version = "21.0.1"
-    modules = [ 'javafx.controls' ]
+    modules = [ 'javafx.controls', 'javafx.fxml' ]
 }
 
 task runServer(type: JavaExec) {
