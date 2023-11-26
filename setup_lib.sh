@@ -22,9 +22,9 @@ wget $CHECKSTYLE
 #wget $GOOGLE_FORMAT 
 wget $GRADLE 
 unzip $GRADLE_ZIP
-#cp ../build.gradle .
-#./gradle-8.4/bin/gradle wrapper
-#./gradlew build
+cp ../build.gradle .
+./gradle-8.4/bin/gradle wrapper
+./gradlew build
 cp libs/* .
 rm -rf libs
 unzip $OPENJFX_ZIP
