@@ -1,7 +1,6 @@
 output.wav
 lib/
 bin/
-.vscode/
 src.zip
 server_data.json
 
