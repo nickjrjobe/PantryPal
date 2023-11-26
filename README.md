@@ -1,6 +1,16 @@
 # cse-110-project-team-40
 
-## How to Build
+## What has moved
+- All root-level files are contained in `app`, like `config.json`, `output.wav`, etc
+- There is no longer a makefile - we are using `./gradlew` instead. The definitions for the tasks that `./gradlew` can do is in `app/build.gradle`
+- `spotless` is a gradle library that does Google Style
+- All tests are run through a single command `./gradlew test`
+- Run GUI: `./gradlew run`
+- Run Server: `./gradlew runServer`
+- Format automatically `./gradlew format`
+- Clear Files: `./gradlew clean`
+
+## How to Build from Scratch
 1. Install Java JDK - tested on versions 11 and 17
     - Verify by typing `java --version`
 2. Install [gradle](https://gradle.org/install/)
