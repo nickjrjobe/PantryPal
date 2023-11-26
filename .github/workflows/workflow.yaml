@@ -1,45 +1,35 @@
-# Workflow name
-name: Initial Java CI
+name: Run Unit Tests and Linting
 
-# Trigger this workflow on every push
 on: [push]
 
-# Define permissions for the GitHub token in this workflow
 permissions:
   contents: read
   checks: write
   id-token: write
 
-# Define environment variables for use in multiple workflow steps
 env:
   JAVA_VERSION: '11'
   DISTRIBUTION: 'temurin'
 
-# Define the jobs to run in this workflow
 jobs:
-  # Define the build job
   build:
-    # Run this job on the latest Ubuntu version
     runs-on: ubuntu-latest    
     steps:
-      # Check out the repository for the workflow
+      # Download the repository
       - uses: actions/checkout@v3
 
-      # Set up the JDK with the version and distribution from the environment variables
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:
           distribution: ${{ env.DISTRIBUTION }}
           java-version: ${{ env.JAVA_VERSION }}
 
-      # Set up Gradle
       - name: Validate Gradle wrapper
         uses: gradle/wrapper-validation-action@v1
 
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
 
-      # Build the project with Gradle
       - name: Execute Gradle build
         run: ./gradlew assemble
 
@@ -47,7 +37,7 @@ jobs:
       - name: Execute Gradle test
         run: ./gradlew test
 
-      # Publish the test report
+      # Generate the fancy test report
       - name: Publish Test Report
         uses: mikepenz/action-junit-report@v3
         if: success() || failure()
@@ -56,15 +46,12 @@ jobs:
           detailed_summary: true
           include_passed: true
 
-  # Define the lint job, which will check the code for style issues
+  # Define lint, which will check the code for style issues
   lint:
     runs-on: ubuntu-latest
-
     steps:
-      # Check out the repository for the workflow
       - uses: actions/checkout@v3
 
-      # Set up the JDK with the version and distribution from the environment variables
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:
@@ -74,6 +61,6 @@ jobs:
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
 
-      # Run the linting script
+      # Run the linting script defined in the build.gradle file
       - name: Lint 
         run: ./gradlew lint
