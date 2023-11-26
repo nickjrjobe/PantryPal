@@ -18,7 +18,7 @@ public class AccountModel {
   }
 
   public boolean create(Account r) {
-    return httpModel.performRequest("POST", null, r.toJSON().toString()) == "200 OK";
+    return httpModel.performRequest("POST", null, r.toJSON().toString()).equals("200 OK");
   }
 
   public void delete(String username) {
