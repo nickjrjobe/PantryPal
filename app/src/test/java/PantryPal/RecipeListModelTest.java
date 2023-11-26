@@ -6,6 +6,7 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import utils.Account;
+import utils.Recipe;
 
 public class RecipeListModelTest {
   private MockHttpModel httpModel;
@@ -30,7 +31,7 @@ public class RecipeListModelTest {
     httpModel.setMockResponse(response);
 
     // Test the method
-    List<String> result = recipeListModel.getRecipeList();
+    List<Recipe> result = recipeListModel.getRecipeList();
     for (int i = 0; i < result.size(); i++) {
       assertEquals("title" + (i + 1), result.get(i));
     }
@@ -39,16 +40,14 @@ public class RecipeListModelTest {
   @Test
   public void testProcessResponse() {
     String response =
-        "{"
-            + "\"title1\": \"value1\","
-            + "\"title2\": \"value2\","
-            + "\"title3\": \"value3\""
-            + "}";
-
+         "{\"recipe\":{\"title\":\"test recipe\","
+        + "\"mealtype\":\"test meal type\","
+          + "\"description\":\"test description\"}}";
     // Test the method
-    List<String> result = recipeListModel.processResponse(response);
-    for (int i = 0; i < result.size(); i++) {
-      assertEquals("title" + (i + 1), result.get(i));
-    }
+    List<Recipe> result = recipeListModel.processResponse(response);
+    Recipe recipe = result.get(0);
+    assertEquals(recipe.getTitle(), "test recipe");
+    assertEquals(recipe.getMealType(), "test meal type");
+    assertEquals(recipe.getDescription(), "test description");
   }
 }
