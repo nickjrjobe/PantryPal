@@ -7,6 +7,7 @@
     - Verify by typing `gradle --version`
 3. Clone this repository
     - `git clone https://github.com/ucsd-cse110-fa23/cse-110-project-team-40`
+    - Clone a branch: `git clone -b new-build-system https://github.com/ucsd-cse110-fa23/cse-110-project-team-40`
 4. Set up MongoDB (Cloud Instructions, adapted from Lab 6)
     - Create a MongoDB account
     - Create a (Shared) database cluster of any name
