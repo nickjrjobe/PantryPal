@@ -25,6 +25,6 @@ unzip $GRADLE_ZIP
 #cp ../build.gradle .
 #./gradle-8.4/bin/gradle wrapper
 #./gradlew build
-#cp libs/* .
-#rm -rf libs
+cp libs/* .
+rm -rf libs
 unzip $OPENJFX_ZIP
