@@ -10,6 +10,7 @@ import org.json.JSONObject;
 /** IMMUTABLE representation of a recipe */
 public class Recipe {
   private final String title;
+  private final String mealType;
   private final String description;
 
   /** convert title to URI friendly string */
@@ -25,7 +26,7 @@ public class Recipe {
   public boolean equals(Object other) {
     if (other instanceof Recipe) {
       Recipe rother = (Recipe) other;
-      return rother.getTitle() == title && rother.getDescription() == description;
+      return rother.getTitle() == title && (rother.getMealType() == mealtype && rother.getDescription() == description);
     }
     return false;
   }
@@ -34,23 +35,30 @@ public class Recipe {
     return title;
   }
 
+  public String getMealType(){
+    return mealType;
+  }
+
   public String getDescription() {
     return description;
   }
 
-  public Recipe(String title, String description) {
+
+  public Recipe(String title, String mealType, String description) {
     this.title = title;
+    this.mealType = mealType;
     this.description = description;
   }
 
   public JSONObject toJSON() {
-    return new JSONObject().put("title", title).put("description", description);
+    return new JSONObject().put("title", title).put("meal-type", mealType).put("description", description);
   }
 
   public Recipe(JSONObject j) throws IllegalArgumentException {
     System.out.println("object: " + j.toString());
     try {
       this.title = j.getString("title");
+      this.mealType = j.getString("meal-type");
       this.description = j.getString("description");
     } catch (Exception e) {
       throw new IllegalArgumentException("JSON Object did not have required fields");
@@ -58,6 +66,6 @@ public class Recipe {
   }
 
   Recipe() {
-    this("default title", "default description");
+    this("default title", "breakfast", "default description");
   }
 }
