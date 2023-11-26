@@ -12,8 +12,9 @@ import utils.Recipe;
 
 public class SaveableRecipeDataTest {
   SaveableRecipeData data;
-  Recipe testRecipe = new Recipe("brocolli","dinner", "boil");
-  String recipeDescription = "{\"brocolli\":{\"meal-type\":\"dinner\",\"description\":\"boil\",\"title\":\"brocolli\"}}";
+  Recipe testRecipe = new Recipe("brocolli", "dinner", "boil");
+  String recipeDescription =
+      "{\"brocolli\":{\"meal-type\":\"dinner\",\"description\":\"boil\",\"title\":\"brocolli\"}}";
 
   public static void deleteRecipeDataFile() {
     File f = new File(SaveableRecipeData.path);

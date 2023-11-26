@@ -29,9 +29,14 @@ public class RecipeDetailModelTest {
     String title = "testTitle";
     String mealType = "testMealType";
     String description = "testDescription";
-    String mockResponse = "{\"title\":\"" + title
-      + "\",\"mealtype\":\"" + mealType 
-        + "\",\"description\":\"" + description + "\"}";
+    String mockResponse =
+        "{\"title\":\""
+            + title
+            + "\",\"mealtype\":\""
+            + mealType
+            + "\",\"description\":\""
+            + description
+            + "\"}";
     httpModel.setMockResponse(mockResponse);
 
     // Verify the output

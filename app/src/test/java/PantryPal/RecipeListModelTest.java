@@ -40,9 +40,9 @@ public class RecipeListModelTest {
   @Test
   public void testProcessResponse() {
     String response =
-         "{\"recipe\":{\"title\":\"test recipe\","
-        + "\"mealtype\":\"test meal type\","
-          + "\"description\":\"test description\"}}";
+        "{\"recipe\":{\"title\":\"test recipe\","
+            + "\"mealtype\":\"test meal type\","
+            + "\"description\":\"test description\"}}";
     // Test the method
     List<Recipe> result = recipeListModel.processResponse(response);
     Recipe recipe = result.get(0);

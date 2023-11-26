@@ -21,12 +21,13 @@ public class Recipe {
   public static String desanitizeTitle(String title) {
     return title.replace("-", " ");
   }
+
   @Override
   public boolean equals(Object other) {
     if (other instanceof Recipe) {
       Recipe rother = (Recipe) other;
-      return rother.getTitle() == title && 
-        (rother.getMealType() == mealType && rother.getDescription() == description);
+      return rother.getTitle() == title
+          && (rother.getMealType() == mealType && rother.getDescription() == description);
     }
     return false;
   }
@@ -35,14 +36,13 @@ public class Recipe {
     return title;
   }
 
-  public String getMealType(){
+  public String getMealType() {
     return mealType;
   }
 
   public String getDescription() {
     return description;
   }
-
 
   public Recipe(String title, String mealType, String description) {
     this.title = title;
@@ -51,7 +51,10 @@ public class Recipe {
   }
 
   public JSONObject toJSON() {
-    return new JSONObject().put("title", title).put("mealtype", mealType).put("description", description);
+    return new JSONObject()
+        .put("title", title)
+        .put("mealtype", mealType)
+        .put("description", description);
   }
 
   public Recipe(JSONObject j) throws IllegalArgumentException {
