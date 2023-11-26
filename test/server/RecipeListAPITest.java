@@ -57,8 +57,8 @@ public class RecipeListAPITest {
       SaveableRecipeDataTest.deleteRecipeDataFile();
       RecipeListAPI api2 = new RecipeListAPI(data2);
       SaveableRecipeDataTest.deleteRecipeDataFile();
-      data.put("Scrambled eggs", new Recipe("Scrambled eggs", "eggs"));
-      data.put("Mac and cheese", new Recipe("Mac and cheese", "step 1. mac\nstep 2.cheese"));
+      data.put("Scrambled eggs", new Recipe("Scrambled eggs", "breakfast", "eggs"));
+      data.put("Mac and cheese", new Recipe("Mac and cheese", "dinner", "step 1. mac\nstep 2.cheese"));
 
       /* test empty data */
       assertEquals("get failed for empty data", data.toJSON().toString(), api.handleGet("", ""));
