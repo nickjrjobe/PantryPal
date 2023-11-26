@@ -24,13 +24,13 @@ jobs:
       - name: Install dependencies
         run: bash setup_lib.sh
 
-      # Build everything
-      - name: Make
-        run: make
+     ## Build everything
+     #- name: Make
+     #  run: make
 
-      # Run unit test
-      - name: Run unit test
-        run: make test
+     ## Run unit test
+     #- name: Run unit test
+     #  run: make test
 
       - name: Validate Gradle wrapper
         uses: gradle/wrapper-validation-action@v1
@@ -40,7 +40,7 @@ jobs:
 
       # Builds everything (including running unit tests)
       - name: Execute Gradle build
-        uses: ./gradlew build
+        run: ./gradlew build
 
       # report the results
       - name: Publish Test Resport
