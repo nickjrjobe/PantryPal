@@ -1,16 +1,16 @@
 package PantryPal;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import utils.Account;
 
 public class AuthorizationModelTest {
   private MockHttpModel httpModel;
   private AuthorizationModel recipeListModel;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     httpModel = new MockHttpModel();
     recipeListModel = new AuthorizationModel(httpModel);

@@ -1,6 +1,6 @@
 package PantryPal;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -9,14 +9,14 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class WhisperTest {
   WhisperBot whisper;
   private ByteArrayOutputStream outputStream;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     outputStream = new ByteArrayOutputStream();
     whisper = new WhisperBot();
