@@ -6,9 +6,9 @@ import java.net.*;
 import java.util.*;
 
 class RecipeListAPI extends HttpAPI {
-  private SaveableRecipeData data;
+  private RecipeData data;
 
-  RecipeListAPI(SaveableRecipeData map) {
+  RecipeListAPI(RecipeData map) {
     this.data = map;
   }
 
