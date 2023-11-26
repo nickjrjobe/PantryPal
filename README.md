@@ -12,18 +12,18 @@
     - Create a MongoDB account
     - Create a (Shared) database cluster of any name
     - On database, Connect -> Drivers -> Java 4.3 -> copy the connection string
-    - Paste it into config.json - MongoDBURI
+    - Paste it into app/config.json - MongoDBURI
     - Go to Database Acccess on the left pane
     - Add a new user of any name/password
     - Replace the \<username> and \<password> fields in the MongoDBURI config
     - Go to Network Access, add your IP (may need to do whenever your wifi changes)
-    - Set config.json - MongoDBDatabase to the *name of your database*
+    - Set app/config.json - MongoDBDatabase to the *name of your database*
 5. Set up OpenAI API
     - Create an OpenAI account
     - Go to https://platform.openai.com/api-keys
     - Create an API key
-    - Copy the key into config.json - OpenAiApiKey
-6. Do not commit your modified config.json to Github
+    - Copy the key into app/config.json - OpenAiApiKey
+6. Do not commit your modified app/config.json to Github
 
 ## How to run
 - Run the GUI app `./gradlew run`
