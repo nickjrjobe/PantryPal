@@ -53,7 +53,7 @@ task runServer(type: JavaExec) {
   classpath = sourceSets.main.runtimeClasspath
 }
 
-task lint(dependsOn: 'spotlessApply') {
+task lint(dependsOn: 'spotlessJavaCheck') {
   doLast {
     println 'Linting completed!'
   }
@@ -64,8 +64,4 @@ spotless {
   java {
     googleJavaFormat()
   }
-}
-
-gradle.taskGraph.whenReady {
-  tasks['check'].dependsOn.remove('spotlessApply')
 }

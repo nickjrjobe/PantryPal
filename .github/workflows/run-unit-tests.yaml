@@ -20,14 +20,7 @@ jobs:
   # Define the build job
   build:
     # Run this job on the latest Ubuntu version
-    runs-on: ubuntu-latest
-    # Define a strategy for running this job with different configurations
-    strategy:
-      matrix:
-        # Run this job twice, once for each component: 'server' and 'client'
-        component: ['server', 'client']
-    
-    # Define the steps for this job
+    runs-on: ubuntu-latest    
     steps:
       # Check out the repository for the workflow
       - uses: actions/checkout@v3
@@ -39,6 +32,7 @@ jobs:
           distribution: ${{ env.DISTRIBUTION }}
           java-version: ${{ env.JAVA_VERSION }}
 
+      # Set up Gradle
       - name: Validate Gradle wrapper
         uses: gradle/wrapper-validation-action@v1
 
@@ -47,7 +41,11 @@ jobs:
 
       # Build the project with Gradle
       - name: Execute Gradle build
-        run: ./gradlew build
+        run: ./gradlew assemble
+
+      # Run the project tests
+      - name: Execute Gradle build
+        run: ./gradlew test
 
       # Publish the test report
       - name: Publish Test Report
