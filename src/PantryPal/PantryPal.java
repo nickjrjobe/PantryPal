@@ -64,6 +64,7 @@ class AppController implements HomeTracker {
           }
           accountLoginPage.writeAutoLoginStatus(isValidUser);
         });
+
     accountLoginPage.footer.addButton(
         "Create Account",
         e -> {
@@ -82,6 +83,8 @@ class AppController implements HomeTracker {
     System.out.println(
         "Redirecting to RecipeListPage for user: " 
         + userName + " and password: " + password);
+
+    System.out.println("Redirecting to RecipeListPage for user: " + userName + " and password: " + password);
 
     // TODO: need to pass in user to RecipeListPage
     RecipeListPage recipeList = new RecipeListPage(getRecipeListEntries(credentials));
