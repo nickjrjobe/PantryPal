@@ -23,7 +23,8 @@ public class NewRecipeModelTest {
     TranscriptResults transcriptResults = null;
     String response = "Test response";
     httpModel.setMockResponse(
-        "{\"transcript\":[\"test prompt\"],\"recipe\":{\"title\":\"test recipe\", \"description\":\"test description\"}}");
+        "{\"transcript\":[\"test prompt\"],\"recipe\":{\"title\":\"test recipe\","
+            + " \"description\":\"test description\"}}");
 
     // Call the method
     try {
@@ -51,7 +52,8 @@ public class NewRecipeModelTest {
     TranscriptResults transcriptResults = null;
     String response = "Test response";
     httpModel.setMockResponse(
-        "{\"transcript\":[\"test prompt\"],\"recipe\":{\"title\":\"test recipe\", \"description\":\"test description\"}}");
+        "{\"transcript\":[\"test prompt\"],\"recipe\":{\"title\":\"test recipe\","
+            + " \"description\":\"test description\"}}");
 
     // Call the method
     try {
