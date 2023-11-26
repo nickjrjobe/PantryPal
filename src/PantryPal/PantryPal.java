@@ -28,6 +28,24 @@ class AppController implements HomeTracker {
     return makeLoginPage();
   }
 
+  public AccountCreatePage makeAccountCreatePage() {
+    AccountCreateUI accountCreateUI = new AccountCreateUI();
+    AccountCreatePage accountCreatePage = new AccountCreatePage(accountCreateUI);
+    accountCreatePage.footer.addButton(
+        "Create Account",
+        e -> {
+          LoginCredentials credentials =
+              new LoginCredentials(
+                  accountCreateUI.getUserNameText(), accountCreateUI.getPasswordText());
+          boolean isValidUser = accountCreatePage.isValidCredential();
+
+          if (isValidUser) {
+            pt.swapToPage(makeLoginPage());
+          }
+        });
+
+    return accountCreatePage;
+  }
 
   public AccountLoginPage makeLoginPage() {
     AccountLoginUI accountLoginUI = new AccountLoginUI();
@@ -47,6 +65,11 @@ class AppController implements HomeTracker {
           accountLoginPage.writeAutoLoginStatus(isValidUser);
         });
 
+    accountLoginPage.footer.addButton(
+        "Create Account",
+        e -> {
+          pt.swapToPage(makeAccountCreatePage());
+        });
     return accountLoginPage;
   }
 
@@ -57,9 +80,8 @@ class AppController implements HomeTracker {
   public RecipeListPage makeRecipeListPage(LoginCredentials credentials) {
     String userName = credentials.getUserName();
     String password = credentials.getPassword();
-    System.out.println(
-        "Redirecting to RecipeListPage for userName: " + userName + " and password: " + password);
-
+    System.out.println("Redirecting to RecipeListPage for user: " 
+        + userName + " and password: " + password);
     // TODO: need to pass in user to RecipeListPage
     RecipeListPage recipeList = new RecipeListPage(getRecipeListEntries(credentials));
     recipeList.footer.addButton(
