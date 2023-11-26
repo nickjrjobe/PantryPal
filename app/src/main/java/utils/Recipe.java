@@ -1,7 +1,6 @@
 package utils;
 
 import java.io.*;
-import java.util.List;
 import javafx.event.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.*;
@@ -21,6 +20,7 @@ public class Recipe {
   public static String desanitizeTitle(String title) {
     return title.replace("-", " ");
   }
+
   @Override
   public boolean equals(Object other) {
     if (other instanceof Recipe) {

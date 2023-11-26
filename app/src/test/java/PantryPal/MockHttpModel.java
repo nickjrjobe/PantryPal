@@ -1,9 +1,6 @@
 package PantryPal;
 
-
-/**
- * Mock HttpModel for testing
- */
+/** Mock HttpModel for testing */
 public class MockHttpModel implements HttpModel {
   private String mockResponse;
 
@@ -19,7 +16,7 @@ public class MockHttpModel implements HttpModel {
 
   /**
    * Sets the response for calling performRequest
-   * 
+   *
    * @param mockResponse
    */
   public void setMockResponse(String mockResponse) {

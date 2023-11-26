@@ -10,3 +10,6 @@ app/build/
 
 # Ignore gradle temp files
 .gradle/
+
+# Ignore linter files
+build/tmp/

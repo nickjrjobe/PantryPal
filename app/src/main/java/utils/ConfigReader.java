@@ -60,9 +60,11 @@ public class ConfigReader {
   public String getOpenAiApiKey() {
     return this.openAiApiKey;
   }
+
   public String getMongoDBURI() {
     return this.mongoDBURI;
   }
+
   public String getMongoDBDatabase() {
     return this.mongoDBDatabase;
   }
