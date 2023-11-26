@@ -11,6 +11,7 @@ import javafx.scene.layout.*;
 import javafx.scene.text.*;
 import javafx.stage.Stage;
 import utils.Account;
+import utils.Recipe;
 
 interface HomeTracker {
   public ScrollablePage getHome();
@@ -116,18 +117,23 @@ class AppController implements HomeTracker {
   public List<RecipeEntryUI> getRecipeListEntries() {
     RecipeListModel model = new RecipeListModel(new HttpRequestModel(), account);
     ArrayList<RecipeEntryUI> entries = new ArrayList<>();
-    for (String title : model.getRecipeList()) {
-      entries.add(makeRecipeEntryUI(title));
+    ArrayList<Recipe> recipes = new ArrayList<>();
+
+
+    for (Recipe recipe : model.getRecipeList()) {
+      entries.add(makeRecipeEntryUI(recipe));
     }
+
+
     return entries;
   }
 
-  public RecipeEntryUI makeRecipeEntryUI(String title) {
-    RecipeEntryUI entry = new RecipeEntryUI(title);
+  public RecipeEntryUI makeRecipeEntryUI(Recipe recipe) {
+    RecipeEntryUI entry = new RecipeEntryUI(recipe);
     entry.addButton(
         "details",
         e -> {
-          pt.swapToPage(makeRecipeDetailsPage(title));
+          pt.swapToPage(makeRecipeDetailsPage(recipe.getTitle()));
         });
     return entry;
   }

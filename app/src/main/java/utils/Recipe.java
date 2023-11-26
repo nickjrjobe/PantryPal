@@ -51,14 +51,14 @@ public class Recipe {
   }
 
   public JSONObject toJSON() {
-    return new JSONObject().put("title", title).put("meal-type", mealType).put("description", description);
+    return new JSONObject().put("title", title).put("mealtype", mealType).put("description", description);
   }
 
   public Recipe(JSONObject j) throws IllegalArgumentException {
     System.out.println("object: " + j.toString());
     try {
       this.title = j.getString("title");
-      this.mealType = j.getString("meal-type");
+      this.mealType = j.getString("mealtype");
       this.description = j.getString("description");
     } catch (Exception e) {
       throw new IllegalArgumentException("JSON Object did not have required fields");
