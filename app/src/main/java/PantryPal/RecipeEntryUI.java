@@ -13,6 +13,7 @@ import javafx.scene.text.TextAlignment;
 /** UI representation of Recipe on RecipeList page */
 public class RecipeEntryUI extends HBox {
   private Label titleField;
+  private Label mealTypeField;
   private static final String buttonStyle =
       "-fx-font-style: italic; -fx-background-color: #FFFFFF;  -fx-font-weight: bold; -fx-font: 11"
           + " arial;";
@@ -37,8 +38,11 @@ public class RecipeEntryUI extends HBox {
 
   RecipeEntryUI(String title) {
     titleField = new Label();
+    mealTypeField = new Label();
     titleField.setTextAlignment(TextAlignment.LEFT);
     titleField.setText(title);
+    mealTypeField.setTextAlignment(TextAlignment.LEFT);
+    mealTypeField.setText("mealType");
     this.getChildren().add(titleField);
     format();
   }
