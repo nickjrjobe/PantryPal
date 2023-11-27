@@ -1,6 +1,7 @@
 package server;
 
 import static org.junit.jupiter.api.Assertions.*;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -67,8 +68,8 @@ public class NewRecipeAPITest {
     makerstub.prompts = examplePrompts;
     json = api.makeResponseFromPrompts();
     assertEquals(
-      new JSONObject(exampleExpectedResponse).getJSONArray("transcript").toString(),
-      json.getJSONArray("transcript").toString());
+        new JSONObject(exampleExpectedResponse).getJSONArray("transcript").toString(),
+        json.getJSONArray("transcript").toString());
     assertEquals(false, json.has("recipe"));
     assertEquals(oldResets, makerstub.resetCount, "should not have reset");
 
@@ -123,7 +124,6 @@ public class NewRecipeAPITest {
     /* test exception in meal creation logic not passed */
     makerstub.shouldThrowException = true;
     exceptionHappened = false;
-
 
     try {
       assertEquals(exampleExpectedResponse, api.handlePost("", validJson));
