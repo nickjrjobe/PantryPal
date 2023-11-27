@@ -1,17 +1,17 @@
 package PantryPal;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.IOException;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import utils.Recipe;
 
 public class NewRecipeModelTest {
   private MockHttpModel httpModel;
   private NewRecipeModel newRecipeModel;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     httpModel = new MockHttpModel();
     newRecipeModel = new NewRecipeModel(httpModel);

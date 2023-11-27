@@ -1,13 +1,12 @@
 package server;
 
-import static org.junit.Assert.*;
-
+import static org.junit.jupiter.api.Assertions.*;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import utils.Recipe;
 
 public class SaveableRecipeDataTest {
@@ -20,7 +19,7 @@ public class SaveableRecipeDataTest {
     f.delete();
   }
 
-  @After
+  @AfterEach
   public void cleanup() {
     deleteRecipeDataFile();
   }
@@ -33,7 +32,7 @@ public class SaveableRecipeDataTest {
     }
   }
 
-  @Before
+  @BeforeEach
   public void setup() {
     deleteRecipeDataFile();
     System.out.println("\nWARNING: tests delete persistent recipe data!!!!\n");
