@@ -74,13 +74,13 @@ public class NewRecipeTest {
         newRecipeCreatorTest
             .interpretRecipeResponse("Cereal\nPut milk into cereal")
             .getDescription(),
-        new Recipe("Cereal", "Put milk into cereal").getDescription());
+        new Recipe("Cereal", "breakfast", "Put milk into cereal").getDescription());
     /* strip off excess white space at end */
     assertEquals(
         newRecipeCreatorTest
             .interpretRecipeResponse("Tea\nPut teabag into hot water\n")
             .getDescription(),
-        new Recipe("Tea", "Put teabag into hot water").getDescription());
+        new Recipe("Tea", "breakfast", "Put teabag into hot water").getDescription());
     /*single line comment*/
     assertEquals(
         newRecipeCreatorTest.interpretRecipeResponse("Tea:Put teabag into hot water"), null);
@@ -123,6 +123,7 @@ public class NewRecipeTest {
     assertEquals(expectedPrompts, newRecipeCreatorTest.getPrompts());
     assertEquals(false, newRecipeCreatorTest.waitingForMeal);
     assertEquals(title, newRecipeCreatorTest.getRecipe().getTitle());
+    assertEquals(mealType, newRecipeCreatorTest.getRecipe().getMealType());
     assertEquals(desc, newRecipeCreatorTest.getRecipe().getDescription());
   }
 }

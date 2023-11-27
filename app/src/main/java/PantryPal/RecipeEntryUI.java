@@ -9,10 +9,12 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import javafx.scene.text.*;
 import javafx.scene.text.TextAlignment;
+import utils.Recipe;
 
 /** UI representation of Recipe on RecipeList page */
 public class RecipeEntryUI extends HBox {
   private Label titleField;
+  private Label mealTypeField;
   private static final String buttonStyle =
       "-fx-font-style: italic; -fx-background-color: #FFFFFF;  -fx-font-weight: bold; -fx-font: 11"
           + " arial;";
@@ -20,6 +22,7 @@ public class RecipeEntryUI extends HBox {
   private void format() {
     this.setPrefSize(500, 20); // sets size of task
     this.setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0; -fx-font-weight: bold;");
+    this.setSpacing(15);
   }
 
   /**
@@ -35,11 +38,15 @@ public class RecipeEntryUI extends HBox {
     button.setOnAction(callback);
   }
 
-  RecipeEntryUI(String title) {
+  RecipeEntryUI(Recipe recipe) {
     titleField = new Label();
+    mealTypeField = new Label();
     titleField.setTextAlignment(TextAlignment.LEFT);
-    titleField.setText(title);
+    titleField.setText(recipe.getTitle());
+    mealTypeField.setTextAlignment(TextAlignment.LEFT);
+    mealTypeField.setText(recipe.getMealType());
     this.getChildren().add(titleField);
+    this.getChildren().add(mealTypeField);
     format();
   }
 }

@@ -7,6 +7,12 @@ import java.util.*;
 import org.json.JSONObject;
 import utils.Recipe;
 
+class DetailedRecipeAPIFactory implements HttpUserAPIFactory {
+  public HttpAPI makeAPI(String username) {
+    return new DetailedRecipeAPI(new UserRecipeDB(new JSONDB("recipes", "title"), username));
+  }
+}
+
 class DetailedRecipeAPI extends HttpAPI {
   private RecipeData data;
 
@@ -17,6 +23,7 @@ class DetailedRecipeAPI extends HttpAPI {
   /** Get a specific recipe */
   String handleGet(String query, String request) throws IOException {
     String response = "404 Not Found";
+    query = query.substring(query.indexOf("?") + 1);
     if (query != null) {
       Recipe recipe = data.get(Recipe.desanitizeTitle(query)); // get recipe
       if (recipe != null) {

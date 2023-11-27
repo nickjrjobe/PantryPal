@@ -74,7 +74,7 @@ public class NewRecipeAPITest {
     assertEquals(oldResets, makerstub.resetCount, "should not have reset");
 
     /* set recipe and ensure proper state transitions occur */
-    makerstub.recipe = new Recipe("Food", "steps");
+    makerstub.recipe = new Recipe("Food", "breakfast", "steps");
     oldResets = makerstub.resetCount;
     json = api.makeResponseFromPrompts();
     assertEquals(new Recipe(json.getJSONObject("recipe")), makerstub.recipe);

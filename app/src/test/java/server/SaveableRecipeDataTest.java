@@ -12,8 +12,9 @@ import utils.Recipe;
 
 public class SaveableRecipeDataTest {
   SaveableRecipeData data;
-  Recipe testRecipe = new Recipe("brocolli", "boil");
-  String recipeDescription = "{\"brocolli\":{\"description\":\"boil\",\"title\":\"brocolli\"}}";
+  Recipe testRecipe = new Recipe("brocolli", "dinner", "boil");
+  String recipeDescription =
+      "{\"brocolli\":{\"mealtype\":\"dinner\",\"description\":\"boil\",\"title\":\"brocolli\"}}";
 
   public static void deleteRecipeDataFile() {
     File f = new File(SaveableRecipeData.path);
@@ -42,7 +43,7 @@ public class SaveableRecipeDataTest {
 
   @Test
   public void testPut() {
-    Recipe testRecipe = new Recipe("brocolli", "boil");
+    Recipe testRecipe = new Recipe("brocolli", "dinner", "boil");
     data.put("recipe", testRecipe);
     assertEquals(recipeDescription, currentFileContents());
   }
@@ -57,8 +58,8 @@ public class SaveableRecipeDataTest {
   @Test
   public void testInitPreviousUser() {
     /* add previous recipes of user */
-    data.put("sandwich", new Recipe("sandwich", "sloopy joes"));
-    data.put("pancakes", new Recipe("pancakes", "mix batter"));
+    data.put("sandwich", new Recipe("sandwich", "lunch", "sloopy joes"));
+    data.put("pancakes", new Recipe("pancakes", "lunch", "mix batter"));
     /* create new data object to simulate starting and stopping server */
     data = new SaveableRecipeData();
     assertEquals(false, data.toJSON().isEmpty());

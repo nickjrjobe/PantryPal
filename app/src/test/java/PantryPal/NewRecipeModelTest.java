@@ -5,16 +5,18 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.io.IOException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import utils.Account;
 import utils.Recipe;
 
 public class NewRecipeModelTest {
   private MockHttpModel httpModel;
   private NewRecipeModel newRecipeModel;
+  private Account account = new Account("", "");
 
   @BeforeEach
   public void setUp() {
     httpModel = new MockHttpModel();
-    newRecipeModel = new NewRecipeModel(httpModel);
+    newRecipeModel = new NewRecipeModel(httpModel, account);
   }
 
   @Test
@@ -24,7 +26,8 @@ public class NewRecipeModelTest {
     String response = "Test response";
     httpModel.setMockResponse(
         "{\"transcript\":[\"test prompt\"],\"recipe\":{\"title\":\"test recipe\","
-            + " \"description\":\"test description\"}}");
+            + "\"mealtype\":\"test meal type\","
+            + "\"description\":\"test description\"}}");
 
     // Call the method
     try {
@@ -39,6 +42,7 @@ public class NewRecipeModelTest {
     // Verify recipe details
     Recipe recipe = transcriptResults.recipe;
     assertEquals("test recipe", recipe.getTitle());
+    assertEquals("test meal type", recipe.getMealType());
     assertEquals("test description", recipe.getDescription());
 
     // Verify transcript details
@@ -53,7 +57,8 @@ public class NewRecipeModelTest {
     String response = "Test response";
     httpModel.setMockResponse(
         "{\"transcript\":[\"test prompt\"],\"recipe\":{\"title\":\"test recipe\","
-            + " \"description\":\"test description\"}}");
+            + "\"mealtype\":\"test meal type\","
+            + "\"description\":\"test description\"}}");
 
     // Call the method
     try {
@@ -68,6 +73,7 @@ public class NewRecipeModelTest {
     // Verify recipe details
     Recipe recipe = transcriptResults.recipe;
     assertEquals("test recipe", recipe.getTitle());
+    assertEquals("test meal type", recipe.getMealType());
     assertEquals("test description", recipe.getDescription());
 
     // Verify transcript details

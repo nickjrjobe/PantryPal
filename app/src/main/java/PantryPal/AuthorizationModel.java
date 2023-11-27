@@ -19,11 +19,11 @@ public class AuthorizationModel {
 
   public boolean authenticate(Account account) {
     String res = httpModel.performRequest("POST", null, account.toJSON().toString());
-    if (res == "200 OK") {
+    if (res.equals("200 OK")) {
       return true;
-    } else if (res == "401 Unauthorized") {
+    } else if (res.equals("401 Unauthorized")) {
       return false;
-    } else if (res == "404 Not Found") {
+    } else if (res.equals("404 Not Found")) {
       return false;
     } else {
       System.err.println("unexpected response from AuthorizationAPI: " + res);

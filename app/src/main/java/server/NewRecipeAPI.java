@@ -22,6 +22,18 @@ interface InteractiveRecipeMaker {
   public void readResponse(String response);
 }
 
+class NewRecipeAPIFactory implements HttpUserAPIFactory {
+  private RecipeCreator creator;
+
+  NewRecipeAPIFactory(RecipeCreator creator) {
+    this.creator = creator;
+  }
+
+  public HttpAPI makeAPI(String username) {
+    return new NewRecipeAPI(new NewRecipeCreator(creator));
+  }
+}
+
 class NewRecipeAPI extends HttpAPI {
   private InteractiveRecipeMaker creator;
 

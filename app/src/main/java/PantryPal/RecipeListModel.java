@@ -10,36 +10,41 @@ import javafx.event.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.*;
 import org.json.JSONObject;
+import utils.Account;
+import utils.Recipe;
 
 /** Communication model for making API requests to get Recipe List. */
 public class RecipeListModel {
   HttpModel httpModel;
+  Account account;
 
-  RecipeListModel(HttpModel httpModel) {
+  RecipeListModel(HttpModel httpModel, Account account) {
     this.httpModel = httpModel;
-    httpModel.setPath("recipes");
+    httpModel.setPath("recipes/" + account.getUsername() + "/");
   }
 
-  public List<String> getRecipeList() {
+  public List<Recipe> getRecipeList() {
     String response = httpModel.performRequest("GET", null, null);
     try {
       return processResponse(response);
     } catch (Exception e) {
       System.err.println("HTTP request failed with error " + e.getMessage());
-      return new ArrayList<String>();
+      return new ArrayList<Recipe>();
     }
   }
 
   /** convert JSON response into List of strings */
-  public List<String> processResponse(String response) throws IllegalArgumentException {
+  public List<Recipe> processResponse(String response) throws IllegalArgumentException {
+    System.out.println("LOOK HERE!! " + response);
     try {
       JSONObject json = new JSONObject(response);
-      List<String> title = new ArrayList<String>();
-      Iterator<String> ititles = json.keys();
-      while (ititles.hasNext()) {
-        title.add(ititles.next());
+      List<Recipe> recipes = new ArrayList<Recipe>();
+      Iterator<String> iRecipes = json.keys();
+      while (iRecipes.hasNext()) {
+        String title = iRecipes.next();
+        recipes.add(new Recipe(json.getJSONObject(title)));
       }
-      return title;
+      return recipes;
     } catch (Exception ex) {
       throw new IllegalArgumentException("response: \"" + response + "\" was invalid");
     }
