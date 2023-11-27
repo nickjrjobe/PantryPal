@@ -1,9 +1,9 @@
 package PantryPal;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import utils.Account;
 
 public class AccountModelTest {
@@ -11,7 +11,7 @@ public class AccountModelTest {
   private AccountModel accountModel;
   Account john = new Account("john", "password");
 
-  @Before
+  @BeforeEach
   public void setUp() {
     httpModel = new MockHttpModel();
     accountModel = new AccountModel(httpModel);

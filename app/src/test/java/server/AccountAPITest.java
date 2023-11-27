@@ -1,9 +1,8 @@
 package server;
 
-import static org.junit.Assert.*;
-
+import static org.junit.jupiter.api.Assertions.*;
 import java.io.*;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import utils.Account;
 
 public class AccountAPITest {
@@ -26,7 +25,7 @@ public class AccountAPITest {
       assertEquals("200 OK", dut.handleDelete("john", ""));
       assertEquals(0, data.data.size());
     } catch (Exception e) {
-      assertEquals("should not have thrown exception", true, false);
+      fail("should not have thrown exception");
     }
   }
 
@@ -45,7 +44,7 @@ public class AccountAPITest {
       /* ensure user object not modified */
       assertEquals("password", data.data.get("john").getPassword());
     } catch (Exception e) {
-      assertEquals("should not have thrown exception", true, false);
+      fail("should not have thrown exception");
     }
   }
 

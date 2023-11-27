@@ -55,3 +55,30 @@
   "MongoDBURI":"mongodb+srv://username:securepass@cluster0.something7.mongodb.net/"
 }
 ```
+
+## VSCode launch.json
+```json
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Run Server",
+            "command": "./gradlew runServer",
+            "request": "launch",
+            "type": "node-terminal"
+        },
+        {
+            "name": "Run GUI",
+            "command": "./gradlew run",
+            "request": "launch",
+            "type": "node-terminal"
+        }, 
+        {
+            "name": "Format Code",
+            "command": "./gradlew format",
+            "request": "launch",
+            "type": "node-terminal"
+        }
+    ]
+}
+```

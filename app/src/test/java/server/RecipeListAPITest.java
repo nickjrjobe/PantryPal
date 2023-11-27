@@ -1,9 +1,8 @@
 package server;
 
-import static org.junit.Assert.*;
-
+import static org.junit.jupiter.api.Assertions.*;
 import java.io.*;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import utils.Recipe;
 
 public class RecipeListAPITest {
@@ -62,28 +61,28 @@ public class RecipeListAPITest {
           "Mac and cheese", new Recipe("Mac and cheese", "dinner", "step 1. mac\nstep 2.cheese"));
 
       /* test empty data */
-      assertEquals("get failed for empty data", data.toJSON().toString(), api.handleGet("", ""));
+      assertEquals(data.toJSON().toString(), api.handleGet("", ""), "get failed for empty data");
       assertEquals(
-          "get failed for empty data,empty list",
           data2.toJSON().toString(),
-          api2.handleGet("", ""));
+          api2.handleGet("", ""), 
+          "get failed for empty data,empty list");
 
       /* test null data */
-      assertEquals("get failed for null data", data.toJSON().toString(), api.handleGet(null, null));
+      assertEquals(data.toJSON().toString(), api.handleGet(null, null), "get failed for null data");
       assertEquals(
-          "get failed for null data, empty list",
           data2.toJSON().toString(),
-          api2.handleGet(null, null));
+          api2.handleGet(null, null),
+          "get failed for null data, empty list");
 
       /* test valid data */
       assertEquals(
-          "get failed for valid data", data.toJSON().toString(), api.handleGet("hi", "hello"));
+          data.toJSON().toString(), api.handleGet("hi", "hello"), "get failed for valid data");
       assertEquals(
-          "get failed for valid data, empty list",
-          data2.toJSON().toString(),
-          api2.handleGet("hi", "hello"));
+                    data2.toJSON().toString(),
+          api2.handleGet("hi", "hello"),
+          "get failed for valid data, empty list");
     } catch (Exception e) {
-      assertEquals("Got unexpected IO exception", false, true);
+      fail("Got unexpected IO exception");
     }
   }
 }

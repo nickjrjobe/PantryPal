@@ -1,14 +1,13 @@
 package server;
 
-import static org.junit.Assert.*;
-
+import static org.junit.jupiter.api.Assertions.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import org.json.JSONObject;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import utils.Recipe;
 
 class InteractiveRecipeMakerStub implements InteractiveRecipeMaker {
@@ -45,7 +44,7 @@ public class NewRecipeAPITest {
   String validJson = "{\"response\":\"breakfast\"}";
   String exampleExpectedResponse = "{\"transcript\":[\"fee\",\"fi\",\"fo\",\"fum\"]}";
 
-  @Before
+  @BeforeEach
   public void setup() {
     makerstub = new InteractiveRecipeMakerStub();
     api = new NewRecipeAPI(makerstub);
@@ -63,22 +62,22 @@ public class NewRecipeAPITest {
     json = api.makeResponseFromPrompts();
     assertEquals(0, json.getJSONArray("transcript").length());
     assertEquals(false, json.has("recipe"));
-    assertEquals("should not have reset", oldResets, makerstub.resetCount);
+    assertEquals(oldResets, makerstub.resetCount, "should not have reset");
 
     makerstub.prompts = examplePrompts;
     json = api.makeResponseFromPrompts();
     assertEquals(
-        new JSONObject(exampleExpectedResponse).getJSONArray("transcript").toString(),
-        json.getJSONArray("transcript").toString());
+      new JSONObject(exampleExpectedResponse).getJSONArray("transcript").toString(),
+      json.getJSONArray("transcript").toString());
     assertEquals(false, json.has("recipe"));
-    assertEquals("should not have reset", oldResets, makerstub.resetCount);
+    assertEquals(oldResets, makerstub.resetCount, "should not have reset");
 
     /* set recipe and ensure proper state transitions occur */
     makerstub.recipe = new Recipe("Food", "breakfast", "steps");
     oldResets = makerstub.resetCount;
     json = api.makeResponseFromPrompts();
-    assertEquals(makerstub.recipe, new Recipe(json.getJSONObject("recipe")));
-    assertEquals("should have reset", oldResets + 1, makerstub.resetCount);
+    assertEquals(new Recipe(json.getJSONObject("recipe")), makerstub.recipe);
+    assertEquals(oldResets + 1, makerstub.resetCount, "should have reset");
   }
 
   @Test
@@ -119,11 +118,13 @@ public class NewRecipeAPITest {
     } catch (Exception e) {
       exceptionHappened = true;
     }
-    assertEquals("invalid json should throw exception", true, exceptionHappened);
+    assertEquals(true, exceptionHappened, "invalid json should throw exception");
 
     /* test exception in meal creation logic not passed */
     makerstub.shouldThrowException = true;
     exceptionHappened = false;
+
+
     try {
       assertEquals(exampleExpectedResponse, api.handlePost("", validJson));
     } catch (Exception e) {
@@ -132,7 +133,7 @@ public class NewRecipeAPITest {
     makerstub.shouldThrowException = false;
 
     /* test invalid meal */
-    assertEquals("invalid meal should NOT throw exception", false, exceptionHappened);
+    assertEquals(false, exceptionHappened, "invalid meal should NOT throw exception");
   }
 
   @Test

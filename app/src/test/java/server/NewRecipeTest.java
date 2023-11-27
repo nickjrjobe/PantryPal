@@ -1,10 +1,9 @@
 package server;
 
-import static org.junit.Assert.*;
-
+import static org.junit.jupiter.api.Assertions.*;
 import java.io.*;
 import java.util.ArrayList;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import utils.Recipe;
 
 class RecipeCreatorStub implements RecipeCreator {

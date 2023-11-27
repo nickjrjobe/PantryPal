@@ -1,9 +1,8 @@
 package server;
 
-import static org.junit.Assert.*;
-
+import static org.junit.jupiter.api.Assertions.*;
 import java.io.*;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import utils.Account;
 
 public class AuthorizationAPITest {
@@ -49,7 +48,7 @@ public class AuthorizationAPITest {
       /* try existing account correct password */
       assertEquals("200 OK", dut.handlePost("", john.toJSON().toString()));
     } catch (Exception e) {
-      assertEquals("Should not have thrown exception", true, false);
+      fail("Should not have thrown exception");
     }
   }
 
