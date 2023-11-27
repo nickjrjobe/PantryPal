@@ -1,6 +1,7 @@
 package server;
 
 import static org.junit.jupiter.api.Assertions.*;
+
 import java.io.*;
 import org.junit.jupiter.api.Test;
 import utils.Recipe;
@@ -64,7 +65,7 @@ public class RecipeListAPITest {
       assertEquals(data.toJSON().toString(), api.handleGet("", ""), "get failed for empty data");
       assertEquals(
           data2.toJSON().toString(),
-          api2.handleGet("", ""), 
+          api2.handleGet("", ""),
           "get failed for empty data,empty list");
 
       /* test null data */
@@ -78,7 +79,7 @@ public class RecipeListAPITest {
       assertEquals(
           data.toJSON().toString(), api.handleGet("hi", "hello"), "get failed for valid data");
       assertEquals(
-                    data2.toJSON().toString(),
+          data2.toJSON().toString(),
           api2.handleGet("hi", "hello"),
           "get failed for valid data, empty list");
     } catch (Exception e) {

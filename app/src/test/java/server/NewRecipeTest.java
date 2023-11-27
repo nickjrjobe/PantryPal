@@ -1,6 +1,7 @@
 package server;
 
 import static org.junit.jupiter.api.Assertions.*;
+
 import java.io.*;
 import java.util.ArrayList;
 import org.junit.jupiter.api.Test;
@@ -121,8 +122,8 @@ public class NewRecipeTest {
     expectedPrompts.add(ingredients);
     assertEquals(expectedPrompts, newRecipeCreatorTest.getPrompts());
     assertEquals(false, newRecipeCreatorTest.waitingForMeal);
-    assertEquals(mealType, newRecipeCreatorTest.getRecipe().getTitle());
-    assertEquals(title, newRecipeCreatorTest.getRecipe().getMealType());
+    assertEquals(title, newRecipeCreatorTest.getRecipe().getTitle());
+    assertEquals(mealType, newRecipeCreatorTest.getRecipe().getMealType());
     assertEquals(desc, newRecipeCreatorTest.getRecipe().getDescription());
   }
 }

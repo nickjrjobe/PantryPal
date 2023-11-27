@@ -1,6 +1,7 @@
 package server;
 
 import static org.junit.jupiter.api.Assertions.*;
+
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -13,7 +14,7 @@ public class SaveableRecipeDataTest {
   SaveableRecipeData data;
   Recipe testRecipe = new Recipe("brocolli", "dinner", "boil");
   String recipeDescription =
-      "{\"brocolli\":{\"meal-type\":\"dinner\",\"description\":\"boil\",\"title\":\"brocolli\"}}";
+      "{\"brocolli\":{\"mealtype\":\"dinner\",\"description\":\"boil\",\"title\":\"brocolli\"}}";
 
   public static void deleteRecipeDataFile() {
     File f = new File(SaveableRecipeData.path);
