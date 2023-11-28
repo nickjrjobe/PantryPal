@@ -61,9 +61,8 @@ public class NewRecipeCreator implements InteractiveRecipeMaker {
     } else if (response.contains("dinner")) {
       mealType = "dinner";
     } else {
-      mealType = "breakfast";
-      // prompts.add("Please re-specify meal type.");
-      // throw new IllegalArgumentException("Not a valid meal type");
+      prompts.add("Please re-specify meal type.");
+      throw new IllegalArgumentException("Not a valid meal type");
     }
     // Transition to waiting for ingredients state
     prompts.add(mealType);
@@ -82,9 +81,7 @@ public class NewRecipeCreator implements InteractiveRecipeMaker {
     int titleLineIndex = 0;
     /* if their is no content, return null */
     if (responseLines.length == 0) {
-      response = "banana";
-      responseLines = response.split("\n");
-      // return null;
+      return null;
     }
 
     /* title is first nonempty line */

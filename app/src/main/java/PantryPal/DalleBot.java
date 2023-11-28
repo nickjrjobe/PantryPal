@@ -47,7 +47,7 @@ public class DalleBot {
     return imagePath;
   }
 
-  public String getImagePath(String recipeName){
+  public String getImagePath(String recipeName) {
     String imagePath = "recipeImages/" + recipeName + ".jpg";
     // remove special characters from recipe name, change spaces to underscores
     imagePath = recipeName.replaceAll("[^a-zA-Z0-9]", "_");
