@@ -1,0 +1,46 @@
+package server;
+
+import com.sun.net.httpserver.*;
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.util.concurrent.*;
+
+/**
+ * Main class for PantryPal's server.
+ *
+ * <p>In charge of setting up APIs and data structures
+ */
+public class PantryPalServer {
+  private static final int SERVER_PORT = 8100;
+  private static final String SERVER_HOSTNAME = "localhost";
+
+  public static void main(String[] args) throws IOException {
+    ThreadPoolExecutor threadPoolExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(10);
+    // create a map to store data
+    AccountData accountData = new AccountDB(new JSONDB("accounts", "username"));
+    RecipeCreator creator = new ChatGPTBot();
+
+    // create a server
+    HttpServer server = HttpServer.create(new InetSocketAddress(SERVER_HOSTNAME, SERVER_PORT), 0);
+
+    // setup APIS
+
+    HttpContext recipeListUsersContext =
+        server.createContext("/recipes", new UserHandler(new RecipeListAPIFactory()));
+
+    HttpContext detailedRecipeContext =
+        server.createContext("/recipe", new UserHandler(new DetailedRecipeAPIFactory()));
+
+    HttpContext authorizationContext =
+        server.createContext("/authorization", new AuthorizationAPI(accountData));
+
+    HttpContext accountContext = server.createContext("/account", new AccountAPI(accountData));
+
+    HttpContext newRecipeContext =
+        server.createContext("/newrecipe", new UserHandler(new NewRecipeAPIFactory(creator)));
+
+    /* start server */
+    server.setExecutor(threadPoolExecutor);
+    server.start();
+  }
+}

@@ -1,0 +1,23 @@
+plugins {
+    id 'java'
+}
+
+repositories {
+    mavenCentral()
+}
+
+configurations {
+    myImplementation // Create a resolvable configuration that extends 'implementation'
+}
+
+dependencies {
+    myImplementation 'org.mongodb:mongodb-driver-sync:4.11.0'
+}
+
+task copyDependencies(type: Copy) {
+    from configurations.myImplementation
+    into 'libs' // Change 'libs' to your desired destination folder
+}
+
+// Ensure that the copyDependencies task is executed when building
+build.dependsOn copyDependencies

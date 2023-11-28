@@ -1,0 +1,66 @@
+name: Run Unit Tests and Linting
+
+on: [push]
+
+permissions:
+  contents: read
+  checks: write
+  id-token: write
+
+env:
+  JAVA_VERSION: '11'
+  DISTRIBUTION: 'temurin'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest    
+    steps:
+      # Download the repository
+      - uses: actions/checkout@v3
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: ${{ env.DISTRIBUTION }}
+          java-version: ${{ env.JAVA_VERSION }}
+
+      - name: Validate Gradle wrapper
+        uses: gradle/wrapper-validation-action@v1
+
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+
+      - name: Execute Gradle build
+        run: ./gradlew assemble
+
+      # Run the project tests
+      - name: Execute Gradle test
+        run: ./gradlew test
+
+      # Generate the fancy test report
+      - name: Publish Test Report
+        uses: mikepenz/action-junit-report@v3
+        if: success() || failure()
+        with:
+          report_paths: '**/build/test-results/test/TEST-*.xml'
+          detailed_summary: true
+          include_passed: true
+
+  # Define lint, which will check the code for style issues
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: ${{ env.DISTRIBUTION }}
+          java-version: ${{ env.JAVA_VERSION }}
+
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+
+      # Run the linting script defined in the build.gradle file
+      - name: Lint 
+        run: ./gradlew lint

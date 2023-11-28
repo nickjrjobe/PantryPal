@@ -1,6 +1,14 @@
 output.wav
 lib/
 bin/
-.vscode/
 src.zip
 server_data.json
+
+# Ignore built class files
+app/build/
+
+# Ignore gradle temp files
+.gradle/
+
+# Ignore linter files
+build/tmp/
