@@ -26,20 +26,20 @@ public class DalleBot {
   }
 
   public String mockGenerateImage(String recipeName, String recipeDescription) {
-    System.out.println("Generating image for " + recipeName + "...");
-    System.out.println("Image generated!");
+    System.err.println("Generating image for " + recipeName + "...");
+    System.err.println("Image generated!");
     String imagePath = "src/PantryPal/recipeImages/" + recipeName + ".jpg";
-    System.out.println("Image saved to " + imagePath);
+    System.err.println("Image saved to " + imagePath);
     return imagePath;
   }
 
   public String generateImage(String recipeName, String recipeDescription)
       throws IOException, InterruptedException {
-    String prompt = "a photo of a " + recipeName + " recipe.\n\n" + recipeDescription;
+    String prompt = recipeName;
     JSONObject requestBody = this.createRequestBody(1, "256x256", prompt);
     HttpClient client = this.initializeHttpClient();
     // add error handling
-    String imagePath = "recipeImages/" + recipeName + ".jpg";
+    String imagePath = this.getImagePath(recipeName);
 
     HttpResponse<String> response = this.sendRequest(client, requestBody);
     String generatedImageURL = this.processResponse(response);
@@ -47,9 +47,10 @@ public class DalleBot {
     return imagePath;
   }
 
-  public String getImage(String recipeName, String recipeDescription)
-      throws IOException, InterruptedException {
+  public String getImagePath(String recipeName){
     String imagePath = "recipeImages/" + recipeName + ".jpg";
+    // remove special characters from recipe name, change spaces to underscores
+    imagePath = recipeName.replaceAll("[^a-zA-Z0-9]", "_");
     return imagePath;
   }
 
