@@ -1,6 +1,5 @@
 {
-  "OpenAiApiKey": "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",
-  "MongoDBDatabase": "cluster0",
-  "MongoDBURI": "mongodb+srv://ybo:authentication@cluster0.h0p1ika.mongodb.net/"
-  
+  "OpenAiApiKey": "",
+  "MongoDBDatabase": "",
+  "MongoDBURI":""
 }
