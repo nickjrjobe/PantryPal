@@ -46,7 +46,7 @@ public class DalleBot {
     return imagePath;
   }
 
-  public getImage(String recipeName, String recipeDescription) throws IOException, InterruptedException {
+  public String getImage(String recipeName, String recipeDescription) throws IOException, InterruptedException {
     String imagePath = "recipeImages/" + recipeName + ".jpg";
     return imagePath;
   }
