@@ -14,7 +14,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import utils.ConfigReader;
 
-/**generates an image using the OpenAI DALL-E API., called by .... */
+/** generates an image using the OpenAI DALL-E API., called by .... */
 public class DalleBot {
   private static final String API_ENDPOINT = "https://api.openai.com/v1/images/generations";
   private static final String MODEL = "dall-e-2";
@@ -25,15 +25,16 @@ public class DalleBot {
     token = configReader.getOpenAiApiKey();
   }
 
-  public String mockGenerateImage(String recipeName, String recipeDescription){
+  public String mockGenerateImage(String recipeName, String recipeDescription) {
     System.out.println("Generating image for " + recipeName + "...");
     System.out.println("Image generated!");
     String imagePath = "src/PantryPal/recipeImages/" + recipeName + ".jpg";
     System.out.println("Image saved to " + imagePath);
     return imagePath;
-
   }
-  public String generateImage(String recipeName, String recipeDescription) throws IOException, InterruptedException {
+
+  public String generateImage(String recipeName, String recipeDescription)
+      throws IOException, InterruptedException {
     String prompt = "a photo of a " + recipeName + " recipe.\n\n" + recipeDescription;
     JSONObject requestBody = this.createRequestBody(1, "256x256", prompt);
     HttpClient client = this.initializeHttpClient();
@@ -42,14 +43,16 @@ public class DalleBot {
 
     HttpResponse<String> response = this.sendRequest(client, requestBody);
     String generatedImageURL = this.processResponse(response);
-    this.downloadImage(generatedImageURL,imagePath);
+    this.downloadImage(generatedImageURL, imagePath);
     return imagePath;
   }
 
-  public String getImage(String recipeName, String recipeDescription) throws IOException, InterruptedException {
+  public String getImage(String recipeName, String recipeDescription)
+      throws IOException, InterruptedException {
     String imagePath = "recipeImages/" + recipeName + ".jpg";
     return imagePath;
   }
+
   private JSONObject createRequestBody(int n, String size, String prompt) {
     JSONObject requestBody = new JSONObject();
     requestBody.put("model", MODEL);
@@ -76,21 +79,20 @@ public class DalleBot {
     return client.send(request, HttpResponse.BodyHandlers.ofString());
   }
 
-    private String processResponse(HttpResponse<String> response) {
-        String responseBody = response.body();
-        System.out.println("Response: " + responseBody); // Log the entire response
+  private String processResponse(HttpResponse<String> response) {
+    String responseBody = response.body();
+    System.out.println("Response: " + responseBody); // Log the entire response
 
-        JSONObject responseJson = new JSONObject(responseBody);
+    JSONObject responseJson = new JSONObject(responseBody);
 
-        // Check if the response contains the "data" key
-        if (!responseJson.has("data")) {
-            throw new JSONException("Response does not contain 'data' key");
-        }
-
-        JSONArray dataArray = responseJson.getJSONArray("data");
-        return dataArray.getJSONObject(0).getString("url");
+    // Check if the response contains the "data" key
+    if (!responseJson.has("data")) {
+      throw new JSONException("Response does not contain 'data' key");
     }
 
+    JSONArray dataArray = responseJson.getJSONArray("data");
+    return dataArray.getJSONObject(0).getString("url");
+  }
 
   private void downloadImage(String imageURL, String path) {
     try {
@@ -106,6 +108,3 @@ public class DalleBot {
     }
   }
 }
-
-
-
