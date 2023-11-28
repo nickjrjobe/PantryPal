@@ -45,6 +45,11 @@ public class DalleBot {
     this.downloadImage(generatedImageURL,imagePath);
     return imagePath;
   }
+
+  public getImage(String recipeName, String recipeDescription) throws IOException, InterruptedException {
+    String imagePath = "recipeImages/" + recipeName + ".jpg";
+    return imagePath;
+  }
   private JSONObject createRequestBody(int n, String size, String prompt) {
     JSONObject requestBody = new JSONObject();
     requestBody.put("model", MODEL);
@@ -101,4 +106,6 @@ public class DalleBot {
     }
   }
 }
+
+
 
