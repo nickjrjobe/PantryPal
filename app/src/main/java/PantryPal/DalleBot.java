@@ -14,10 +14,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import utils.ConfigReader;
 
+interface ImageGenerator {
+    String generateImage(String recipeName);
+}
+
 /**
  * generates an image using the OpenAI DALL-E API, stored locally under., called by RecipeDetail Ui
  */
-public class DalleBot {
+public class DalleBot implements ImageGenerator{
   private static final String API_ENDPOINT = "https://api.openai.com/v1/images/generations";
   private static final String MODEL = "dall-e-2";
   private static String token;
@@ -27,13 +31,6 @@ public class DalleBot {
     token = configReader.getOpenAiApiKey();
   }
 
-  public String mockGenerateImage(String recipeName) {
-    System.err.println("Generating image for " + recipeName + "...");
-    System.err.println("Image generated!");
-    String imagePath = getImagePath(recipeName);
-    System.err.println("Image saved to " + imagePath);
-    return imagePath;
-  }
 
   public String generateImage(String recipeName) {
     String prompt = recipeName;
@@ -110,3 +107,13 @@ public class DalleBot {
     }
   }
 }
+/**
+ * Mock class for testing generateImage path returned
+ */
+class mockDalleBot implements ImageGenerator {
+  public String generateImage(String recipeName) {
+    return "out/PantryPal/recipeImages/mockImage.jpg";
+  }
+}
+
+
