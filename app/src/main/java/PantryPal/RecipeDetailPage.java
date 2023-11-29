@@ -135,13 +135,13 @@ class RecipeDetailUI extends VBox {
       imageView.setPreserveRatio(true);
     } catch (FileNotFoundException e) {
       try {
-        String imagePath = dalleBot.generateImage(recipe.getTitle(), recipe.getDescription());
+        String imagePath = dalleBot.generateImage(recipe.getTitle());
         Image image = new Image(new FileInputStream(imagePath));
         imageView.setImage(image);
         imageView.setFitWidth(200); // Set preferred width
         imageView.setFitHeight(200); // Set preferred height
         imageView.setPreserveRatio(true);
-      } catch (IOException | InterruptedException ex) {
+      } catch (IOException ex) {
         System.err.println("Image file generation failed: " + e.getMessage());
       }
       // Optionally set a placeholder image or handle the error

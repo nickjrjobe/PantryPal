@@ -14,7 +14,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import utils.ConfigReader;
 
-/** generates an image using the OpenAI DALL-E API., called by .... */
+/**
+ * generates an image using the OpenAI DALL-E API, stored locally under., called by RecipeDetail Ui
+ */
 public class DalleBot {
   private static final String API_ENDPOINT = "https://api.openai.com/v1/images/generations";
   private static final String MODEL = "dall-e-2";
@@ -25,19 +27,19 @@ public class DalleBot {
     token = configReader.getOpenAiApiKey();
   }
 
-  public String mockGenerateImage(String recipeName, String recipeDescription) {
+  public String mockGenerateImage(String recipeName) {
     System.err.println("Generating image for " + recipeName + "...");
     System.err.println("Image generated!");
-    String imagePath = "src/PantryPal/recipeImages/" + recipeName + ".jpg";
+    String imagePath = getImagePath(recipeName);
     System.err.println("Image saved to " + imagePath);
     return imagePath;
   }
 
-  public String generateImage(String recipeName, String recipeDescription)
-      throws IOException, InterruptedException {
+  public String generateImage(String recipeName) {
     String prompt = recipeName;
     JSONObject requestBody = this.createRequestBody(1, "256x256", prompt);
-    HttpClient client = this.initializeHttpClient();
+    HttpClient client = HttpClient.newHttpClient();
+
     // add error handling
     String imagePath = this.getImagePath(recipeName);
 
@@ -48,7 +50,7 @@ public class DalleBot {
   }
 
   public String getImagePath(String recipeName) {
-    String imagePath = "recipeImages/" + recipeName + ".jpg";
+    String imagePath = "out/PantryPal/recipeImages/" + recipeName + ".jpg";
     // remove special characters from recipe name, change spaces to underscores
     imagePath = recipeName.replaceAll("[^a-zA-Z0-9]", "_");
     return imagePath;
@@ -63,12 +65,7 @@ public class DalleBot {
     return requestBody;
   }
 
-  private HttpClient initializeHttpClient() {
-    return HttpClient.newHttpClient();
-  }
-
-  private HttpResponse<String> sendRequest(HttpClient client, JSONObject requestBody)
-      throws IOException, InterruptedException {
+  private HttpResponse<String> sendRequest(HttpClient client, JSONObject requestBody) {
     HttpRequest request =
         HttpRequest.newBuilder()
             .uri(URI.create(API_ENDPOINT))
@@ -76,13 +73,17 @@ public class DalleBot {
             .header("Authorization", String.format("Bearer %s", token))
             .POST(HttpRequest.BodyPublishers.ofString(requestBody.toString()))
             .build();
-
-    return client.send(request, HttpResponse.BodyHandlers.ofString());
+    HttpResponse<String> response = null;
+    try {
+      response = client.send(request, HttpResponse.BodyHandlers.ofString());
+    } catch (IOException | InterruptedException e) {
+      e.printStackTrace();
+    }
+    return response;
   }
 
   private String processResponse(HttpResponse<String> response) {
     String responseBody = response.body();
-    System.out.println("Response: " + responseBody); // Log the entire response
 
     JSONObject responseJson = new JSONObject(responseBody);
 
