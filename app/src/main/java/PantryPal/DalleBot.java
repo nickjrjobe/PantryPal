@@ -105,7 +105,7 @@ public class DalleBot {
       System.err.println("Invalid URL syntax: " + imageURL);
       e.printStackTrace();
     } catch (IOException e) {
-      System.err.println("I/O Error when saving the image");
+      System.err.println("I/O Error when saving the image: " + e.getMessage());
       e.printStackTrace();
     }
   }
