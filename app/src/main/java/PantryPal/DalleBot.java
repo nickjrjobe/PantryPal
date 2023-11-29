@@ -15,13 +15,13 @@ import org.json.JSONObject;
 import utils.ConfigReader;
 
 interface ImageGenerator {
-    String generateImage(String recipeName);
+  String generateImage(String recipeName);
 }
 
 /**
  * generates an image using the OpenAI DALL-E API, stored locally under., called by RecipeDetail Ui
  */
-public class DalleBot implements ImageGenerator{
+public class DalleBot implements ImageGenerator {
   private static final String API_ENDPOINT = "https://api.openai.com/v1/images/generations";
   private static final String MODEL = "dall-e-2";
   private static String token;
@@ -30,7 +30,6 @@ public class DalleBot implements ImageGenerator{
     ConfigReader configReader = new ConfigReader();
     token = configReader.getOpenAiApiKey();
   }
-
 
   public String generateImage(String recipeName) {
     String prompt = recipeName;
@@ -53,7 +52,7 @@ public class DalleBot implements ImageGenerator{
     return imagePath;
   }
 
-  private JSONObject createRequestBody(int n, String size, String prompt) {
+  JSONObject createRequestBody(int n, String size, String prompt) {
     JSONObject requestBody = new JSONObject();
     requestBody.put("model", MODEL);
     requestBody.put("prompt", prompt);
@@ -79,7 +78,7 @@ public class DalleBot implements ImageGenerator{
     return response;
   }
 
-  private String processResponse(HttpResponse<String> response) {
+  String processResponse(HttpResponse<String> response) {
     String responseBody = response.body();
 
     JSONObject responseJson = new JSONObject(responseBody);
@@ -107,13 +106,39 @@ public class DalleBot implements ImageGenerator{
     }
   }
 }
-/**
- * Mock class for testing generateImage path returned
- */
-class mockDalleBot implements ImageGenerator {
+
+/** Mock class for testing generateImage path returned */
+/** Mock class for testing DalleBot functionality */
+class MockDalleBot implements ImageGenerator {
+  private boolean shouldThrowException;
+  private String fixedResponsePath;
+
+  public MockDalleBot() {
+    // Default behavior
+    this.shouldThrowException = false;
+    this.fixedResponsePath = "out/PantryPal/recipeImages/mockImage.jpg";
+  }
+
+  public void setShouldThrowException(boolean shouldThrowException) {
+    this.shouldThrowException = shouldThrowException;
+  }
+
+  public void setFixedResponsePath(String path) {
+    this.fixedResponsePath = path;
+  }
+
+  @Override
   public String generateImage(String recipeName) {
-    return "out/PantryPal/recipeImages/mockImage.jpg";
+    if (shouldThrowException) {
+      throw new RuntimeException("Simulated exception in generateImage");
+    }
+
+    // Generate a mock path based on the recipe name
+    String mockImagePath =
+        fixedResponsePath.equals("")
+            ? "out/PantryPal/recipeImages/" + recipeName.replaceAll("[^a-zA-Z0-9]", "_") + ".jpg"
+            : fixedResponsePath;
+
+    return mockImagePath;
   }
 }
-
-
