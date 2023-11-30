@@ -30,6 +30,8 @@ public class PantryPalServer {
 
     HttpContext detailedRecipeContext =
         server.createContext("/recipe", new UserHandler(new DetailedRecipeAPIFactory()));
+    HttpContext ShareContext =
+        server.createContext("/share", new UserHandler(new ShareAPIFactory()));
 
     HttpContext authorizationContext =
         server.createContext("/authorization", new AuthorizationAPI(accountData));
