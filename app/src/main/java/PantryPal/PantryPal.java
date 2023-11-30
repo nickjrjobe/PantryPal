@@ -109,7 +109,11 @@ class AppController implements HomeTracker {
   public SharePage makeSharePage(String title) {
     String link = linkMaker.makeLink(title, account);
     SharePage sharePage = new SharePage(link);
-    sharePage.footer.addButton("exit", e -> { pt.swapToPage(makeRecipeDetailsPage(title)); });
+    sharePage.footer.addButton(
+        "exit",
+        e -> {
+          pt.swapToPage(makeRecipeDetailsPage(title));
+        });
     return sharePage;
   }
 
@@ -148,8 +152,16 @@ class AppController implements HomeTracker {
   public RecipeDetailPage makeRecipeDetailsPage(String title) {
     RecipeDetailModel rc = new RecipeDetailModel(new HttpRequestModel(), account);
     RecipeDetailPage drp = new RecipeDetailPage(new RecipeDetailUI(rc.read(title), rc));
-    drp.footer.addButton("home", e -> { pt.swapToPage(makeRecipeListPage()); });
-    drp.footer.addButton("share", e -> { pt.swapToPage(makeSharePage(title)); });
+    drp.footer.addButton(
+        "home",
+        e -> {
+          pt.swapToPage(makeRecipeListPage());
+        });
+    drp.footer.addButton(
+        "share",
+        e -> {
+          pt.swapToPage(makeSharePage(title));
+        });
     return drp;
   }
 
