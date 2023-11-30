@@ -5,13 +5,16 @@ package PantryPal;
 import java.io.*;
 import java.util.List;
 import javafx.event.*;
+import javafx.scene.control.TextArea;
 import javafx.scene.layout.*;
 import javafx.scene.text.*;
 
-/** UI element which displays IMMUTABLE list of recipes */
-class RecipeListUI extends VBox {
-  RecipeListUI(List<RecipeEntryUI> entries) {
-    this.getChildren().addAll(entries);
+/** UI element which displays share link */
+class ShareUI extends VBox {
+  TextArea link;
+  ShareUI(String title) {
+    this.link = new TextArea(title);
+    this.getChildren().add(link);
     format();
   }
 
@@ -24,7 +27,7 @@ class RecipeListUI extends VBox {
 
 /** UI Page containing share link*/
 public class SharePage extends ScrollablePage {
-  RecipeListPage(Recipe recipe) {
-    super("Recipe List", new ShareUI(recipe));
+  SharePage(String title) {
+    super("Share", new ShareUI(title));
   }
 }
