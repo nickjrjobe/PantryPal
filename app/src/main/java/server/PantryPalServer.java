@@ -24,6 +24,7 @@ public class PantryPalServer {
     HttpServer server = HttpServer.create(new InetSocketAddress(SERVER_HOSTNAME, SERVER_PORT), 0);
 
     // setup APIS
+    HttpContext WhisperContext = server.createContext("/whisper", new WhisperAPI());
 
     HttpContext recipeListUsersContext =
         server.createContext("/recipes", new UserHandler(new RecipeListAPIFactory()));

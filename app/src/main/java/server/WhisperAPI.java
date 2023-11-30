@@ -4,15 +4,15 @@ import com.sun.net.httpserver.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
-import org.json.JSONObject;
 import utils.WhisperBot;
-import utils.ConfigReader;
 
 class WhisperAPI implements HttpHandler {
   WhisperBot whisperBot;
+
   WhisperAPI() {
     whisperBot = new WhisperBot();
   }
+
   public String readQuery(URI uri, String base) {
     if (base.length() == uri.toString().length()) {
       /*handle no query case */

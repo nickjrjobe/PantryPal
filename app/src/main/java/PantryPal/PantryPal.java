@@ -12,6 +12,7 @@ import javafx.scene.text.*;
 import javafx.stage.Stage;
 import utils.Account;
 import utils.Recipe;
+import utils.VoiceToText;
 
 interface HomeTracker {
   public ScrollablePage getHome();
@@ -150,7 +151,7 @@ class AppController implements HomeTracker {
   public NewRecipeController makeNewRecipeController() {
     NewRecipePage newRecipePage = new NewRecipePage(new NewRecipeUI());
     NewRecipeModel newRecipeModel = new NewRecipeModel(new HttpRequestModel(), account);
-    VoiceToText voiceToText = new WhisperBot();
+    VoiceToText voiceToText = new WhisperModel(new HttpRequestModel());
     return new NewRecipeController(newRecipePage, newRecipeModel, pt, voiceToText, account);
   }
 }
