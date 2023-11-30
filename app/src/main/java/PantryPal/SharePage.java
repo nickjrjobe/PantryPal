@@ -8,6 +8,19 @@ import javafx.event.*;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.*;
 import javafx.scene.text.*;
+import utils.Account;
+import utils.Recipe;
+interface LinkMaker {
+  String makeLink(String title, Account account);
+}
+class ShareLinkMaker implements LinkMaker {
+  public static final String BASEURL = "http://localhost";
+  public static final String PORT = "8100";
+  public String makeLink(String title, Account account) {
+    return ShareLinkMaker.BASEURL + ":" + ShareLinkMaker.PORT + "/share/" + account.getUsername()
+        + "/" + Recipe.sanitizeTitle(title);
+  }
+}
 
 /** UI element which displays share link */
 class ShareUI extends VBox {
