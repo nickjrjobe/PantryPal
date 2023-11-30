@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -50,21 +51,20 @@ public class WhisperBot implements VoiceToText {
   }
 
   // Helper method to write a file to the output stream
-  public static void writeFileToOutputStream(OutputStream outputStream, File file, String boundary)
-      throws IOException {
+  public static void writeInputToOutputStream(
+      OutputStream outputStream, InputStream inputStream, String boundary) throws IOException {
     outputStream.write(("--" + boundary + "\r\n").getBytes());
     outputStream.write(
-        ("Content-Disposition: form-data; name=\"file\"; filename=\"" + file.getName() + "\"\r\n")
+        ("Content-Disposition: form-data; name=\"file\"; filename=\"" + filePath + "\"\r\n")
             .getBytes());
     outputStream.write(("Content-Type: audio/mpeg\r\n\r\n").getBytes());
 
-    FileInputStream fileInputStream = new FileInputStream(file);
     byte[] buffer = new byte[1024];
     int bytesRead;
-    while ((bytesRead = fileInputStream.read(buffer)) != -1) {
+    while ((bytesRead = inputStream.read(buffer)) != -1) {
       outputStream.write(buffer, 0, bytesRead);
     }
-    fileInputStream.close();
+    inputStream.close();
     // Implementation omitted for brevity
   }
 
@@ -107,8 +107,19 @@ public class WhisperBot implements VoiceToText {
    * @return Transcript of the recorded audio, or null if an error occurs.
    */
   public String getTranscript() {
+    InputStream in;
     try {
+      File file = new File(filePath);
+      in = new FileInputStream(file);
+    } catch (Exception e) {
+      System.err.println("failed opening file " + filePath);
+      return null;
+    }
+    return getTranscript(in);
+  }
 
+  public String getTranscript(InputStream in) {
+    try {
       // Set up HTTP connection
       URL url = new URI(API_ENDPOINT).toURL();
       HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -128,7 +139,7 @@ public class WhisperBot implements VoiceToText {
       // Open file
       File file = new File(filePath);
       // Write file parameter to request body
-      writeFileToOutputStream(outputStream, file, boundary);
+      writeInputToOutputStream(outputStream, in, boundary);
 
       // Write closing boundary to request body
       outputStream.write(("\r\n--" + boundary + "--\r\n").getBytes());
