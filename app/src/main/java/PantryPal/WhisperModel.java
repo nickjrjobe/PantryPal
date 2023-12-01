@@ -7,34 +7,35 @@ import javafx.event.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.*;
 import utils.Account;
+import utils.AudioRecorder;
 import utils.VoiceToText;
-import utils.WhisperBot;
+import utils.WhisperUtils;
 
 /** Communication model for making API requests to get Recipe List. */
 public class WhisperModel implements VoiceToText {
   HttpModel httpModel;
   Account account;
-  WhisperBot whisperBot;
+  AudioRecorder audioRecorder;
 
   WhisperModel(HttpModel httpModel, Account account) {
-    this.whisperBot = new WhisperBot();
+    this.audioRecorder = new AudioRecorder();
     this.httpModel = httpModel;
     // httpModel.setPath("whisper/" + account.getUsername() + "/");
     httpModel.setPath("whisper/" + account.getUsername() + "/");
   }
 
   public String getTranscript() {
-    InputStream in = whisperBot.getClientInStream();
+    InputStream in = WhisperUtils.getClientInStream();
     String response = httpModel.performRawRequest("PUT", in);
     System.err.println("Whisper Model responded: " + response);
     return response;
   }
 
   public void startRecording() {
-    whisperBot.startRecording();
+    audioRecorder.start();
   }
 
   public void stopRecording() {
-    whisperBot.stopRecording();
+    audioRecorder.stop();
   }
 }

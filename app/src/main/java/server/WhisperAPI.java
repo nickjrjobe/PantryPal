@@ -4,7 +4,6 @@ import com.sun.net.httpserver.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
-import utils.WhisperBot;
 
 class WhisperSubject extends Observable {
   @Override
@@ -12,6 +11,7 @@ class WhisperSubject extends Observable {
     System.err.println("adding observer");
     super.addObserver(o);
   }
+
   void set(String data) {
     System.err.println("notifying observers");
     setChanged();

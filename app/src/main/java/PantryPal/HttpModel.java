@@ -13,7 +13,7 @@ import java.net.URL;
 import javafx.event.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.*;
-import utils.WhisperBot;
+import utils.WhisperUtils;
 
 interface HttpModel {
   public void setPath(String path);
@@ -48,7 +48,7 @@ class HttpRequestModel implements HttpModel {
       conn.setDoOutput(true);
       OutputStream out = conn.getOutputStream();
 
-      WhisperBot.copyInputToOutputStream(out, in);
+      WhisperUtils.copyInputToOutputStream(out, in);
       out.flush();
       out.close();
 
