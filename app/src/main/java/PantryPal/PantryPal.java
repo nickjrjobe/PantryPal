@@ -151,7 +151,7 @@ class AppController implements HomeTracker {
   public NewRecipeController makeNewRecipeController() {
     NewRecipePage newRecipePage = new NewRecipePage(new NewRecipeUI());
     NewRecipeModel newRecipeModel = new NewRecipeModel(new HttpRequestModel(), account);
-    VoiceToText voiceToText = new WhisperModel(new HttpRequestModel());
+    VoiceToText voiceToText = new WhisperModel(new HttpRequestModel(), account);
     return new NewRecipeController(newRecipePage, newRecipeModel, pt, voiceToText, account);
   }
 }

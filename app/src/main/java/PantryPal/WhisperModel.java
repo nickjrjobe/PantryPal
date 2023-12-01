@@ -16,11 +16,11 @@ public class WhisperModel implements VoiceToText {
   Account account;
   WhisperBot whisperBot;
 
-  WhisperModel(HttpModel httpModel) {
+  WhisperModel(HttpModel httpModel, Account account) {
     this.whisperBot = new WhisperBot();
     this.httpModel = httpModel;
     // httpModel.setPath("whisper/" + account.getUsername() + "/");
-    httpModel.setPath("whisper");
+    httpModel.setPath("whisper/" + account.getUsername() + "/");
   }
 
   public String getTranscript() {

@@ -13,9 +13,6 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import org.json.JSONException;
 import org.json.JSONObject;
-import utils.AudioRecorder;
-import utils.ConfigReader;
-
 
 /** Implementation of the VoiceToText interface using the OpenAI Whisper ASR API. */
 public class WhisperBot implements VoiceToText {
@@ -50,7 +47,11 @@ public class WhisperBot implements VoiceToText {
         ("Content-Disposition: form-data; name=\"file\"; filename=\"" + filePath + "\"\r\n")
             .getBytes());
     outputStream.write(("Content-Type: audio/mpeg\r\n\r\n").getBytes());
+    copyInputToOutputStream(outputStream, inputStream);
+  }
 
+  public static void copyInputToOutputStream(OutputStream outputStream, InputStream inputStream)
+      throws IOException {
     byte[] buffer = new byte[1024];
     int bytesRead;
     while ((bytesRead = inputStream.read(buffer)) != -1) {
@@ -92,6 +93,7 @@ public class WhisperBot implements VoiceToText {
     String errorResult = errorResponse.toString();
     System.out.println("Error Result: " + errorResult);
   }
+
   public InputStream getClientInStream() {
     InputStream in;
     try {
@@ -103,6 +105,7 @@ public class WhisperBot implements VoiceToText {
       return null;
     }
   }
+
   /**
    * Get the transcript of the recorded audio using the OpenAI Whisper ASR API.
    *

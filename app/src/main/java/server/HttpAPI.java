@@ -6,7 +6,7 @@ import java.net.*;
 import java.util.*;
 import org.json.JSONObject;
 
-class HttpAPI implements HttpHandler {
+class RawHttpAPI implements HttpHandler {
   public String readQuery(URI uri, String base) {
     if (base.length() == uri.toString().length()) {
       /*handle no query case */
@@ -28,15 +28,14 @@ class HttpAPI implements HttpHandler {
       String base = httpExchange.getHttpContext().getPath();
       String query = readQuery(uri, base);
       System.err.println("QUERY WAS " + query);
-      String request = getRequestString(httpExchange);
       if (method.equals("GET")) {
-        response = handleGet(query, request);
+        response = handleGet(query, httpExchange);
       } else if (method.equals("POST")) {
-        response = handlePost(query, request);
+        response = handlePost(query, httpExchange);
       } else if (method.equals("DELETE")) {
-        response = handleDelete(query, request);
+        response = handleDelete(query, httpExchange);
       } else if (method.equals("PUT")) {
-        response = handlePut(query, request);
+        response = handlePut(query, httpExchange);
       } else {
         throw new Exception("Not Valid Request Method");
       }
@@ -73,12 +72,50 @@ class HttpAPI implements HttpHandler {
     return postData;
   }
 
+  String handleGet(String query, HttpExchange httpExchange) throws IOException {
+    throw new IOException("Request type not supported");
+  }
+
+  String handlePost(String query, HttpExchange httpExchange) throws IOException {
+    throw new IOException("Request type not supported");
+  }
+
+  String handlePut(String query, HttpExchange httpExchange) throws IOException {
+    throw new IOException("Request type not supported");
+  }
+
+  String handleDelete(String query, HttpExchange httpExchange) throws IOException {
+    getRequestString(httpExchange);
+    throw new IOException("Request type not supported");
+  }
+}
+
+class HttpAPI extends RawHttpAPI {
+  String handleGet(String query, HttpExchange httpExchange) throws IOException {
+    String request = getRequestString(httpExchange);
+    return handleGet(query, request);
+  }
+
   JSONObject getJSONRequest(String request) throws IOException {
     try {
       return new JSONObject(request);
     } catch (Exception e) {
       throw new IOException("Response was not JSON");
     }
+  }
+  String handlePost(String query, HttpExchange httpExchange) throws IOException {
+    String request = getRequestString(httpExchange);
+    return handlePost(query, request);
+  }
+
+  String handlePut(String query, HttpExchange httpExchange) throws IOException {
+    String request = getRequestString(httpExchange);
+    return handlePut(query, request);
+  }
+
+  String handleDelete(String query, HttpExchange httpExchange) throws IOException {
+    String request = getRequestString(httpExchange);
+    return handleDelete(query, request);
   }
 
   String handleGet(String query, String request) throws IOException {

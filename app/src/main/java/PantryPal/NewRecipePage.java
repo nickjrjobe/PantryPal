@@ -131,7 +131,8 @@ class NewRecipeController {
     String transcript = voiceToText.getTranscript();
     TranscriptResults results;
     try {
-      results = newRecipeModel.sendTranscript(transcript);
+      // results = newRecipeModel.sendTranscript(transcript);
+      results = newRecipeModel.getInitialTranscript();
     } catch (Exception e) {
       System.err.println("error: " + e.getMessage());
       results = new TranscriptResults();

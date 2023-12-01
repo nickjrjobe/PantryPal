@@ -6,69 +6,49 @@ import java.net.*;
 import java.util.*;
 import utils.WhisperBot;
 
-class WhisperAPI implements HttpHandler {
+class WhisperSubject extends Observable {
+  @Override
+  public void addObserver(Observer o) {
+    System.err.println("adding observer");
+    super.addObserver(o);
+  }
+  void set(String data) {
+    System.err.println("notifying observers");
+    setChanged();
+    notifyObservers(data);
+  }
+}
+
+class WhisperAPIFactory implements HttpUserAPIFactory {
+  Map<String, WhisperSubject> perUserWhisperSubject;
+
+  WhisperAPIFactory(Map<String, WhisperSubject> perUserWhisperSubject) {
+    this.perUserWhisperSubject = perUserWhisperSubject;
+  }
+
+  public RawHttpAPI makeAPI(String username) {
+    WhisperSubject whisperSubject = perUserWhisperSubject.get(username);
+    if (whisperSubject == null) {
+      whisperSubject = new WhisperSubject();
+      perUserWhisperSubject.put(username, whisperSubject);
+    }
+    System.err.println("WhisperFactory subject: " + whisperSubject.toString());
+    return new WhisperAPI(whisperSubject);
+  }
+}
+
+class WhisperAPI extends RawHttpAPI {
   WhisperBot whisperBot;
+  WhisperSubject whisperSubject;
 
-  WhisperAPI() {
+  WhisperAPI(WhisperSubject whisperSubject) {
     whisperBot = new WhisperBot();
+    this.whisperSubject = whisperSubject;
   }
 
-  public String readQuery(URI uri, String base) {
-    if (base.length() == uri.toString().length()) {
-      /*handle no query case */
-      return "";
-    } else if (uri.toString().substring(base.length(), base.length() + 1).equals("/")) {
-      /* handle subpage case */
-      return uri.toString().substring(base.length() + 1);
-    } else {
-      /* handle regular query case */
-      return uri.getQuery();
-    }
-  }
-
-  public void handle(HttpExchange httpExchange) throws IOException {
-    String response = "Request Received";
-    String method = httpExchange.getRequestMethod();
-    try {
-      URI uri = httpExchange.getRequestURI();
-      String base = httpExchange.getHttpContext().getPath();
-      String query = readQuery(uri, base);
-      System.err.println("QUERY WAS " + query);
-      if (method.equals("PUT")) {
-        response = whisperBot.getTranscript(httpExchange.getRequestBody());
-      } else {
-        throw new Exception("Not Valid Request Method");
-      }
-    } catch (Exception e) {
-      System.out.println("An erroneous request error: " + e.getMessage());
-      response = "400 Bad Request";
-      e.printStackTrace();
-    }
-    // Sending back response to the client
-    sendResponse(httpExchange, response);
-  }
-
-  void sendResponse(HttpExchange httpExchange, String response) throws IOException {
-    httpExchange.sendResponseHeaders(200, response.length());
-    OutputStream outStream = httpExchange.getResponseBody();
-    outStream.write(response.getBytes());
-    outStream.close();
-  }
-
-  String getRequestString(HttpExchange httpExchange) throws IOException {
-    InputStream inStream = httpExchange.getRequestBody();
-    Scanner scanner = new Scanner(inStream);
-    /* Request body optional, so simply return null if not given */
-    String postData;
-    try {
-      postData = scanner.nextLine();
-    } catch (Exception e) {
-      System.out.println("request was empty");
-      scanner.close();
-      return null;
-    }
-    System.out.println("request: " + postData);
-    scanner.close();
-    return postData;
+  String handlePut(String query, HttpExchange httpExchange) throws IOException {
+    String transcript = whisperBot.getTranscript(httpExchange.getRequestBody());
+    whisperSubject.set(transcript);
+    return transcript;
   }
 }
