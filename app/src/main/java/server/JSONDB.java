@@ -31,6 +31,8 @@ interface JSONDB {
 
   void addFilter(String key, String val);
 
+  void clearFilters();
+
   void clear();
 
   JSONObject toJSON();
@@ -50,7 +52,7 @@ class MongoJSONDB implements JSONDB {
     this.database = mongoClient.getDatabase(configReader.getMongoDBDatabase());
     this.recipeCollection = database.getCollection(collection);
     /* create a catchall filter by finding every entry that doesnt match a long random string */
-    this.filter = not(eq(lookupkey, "kjanfo;ifijo;ijqwpqwejpqwejqwipeqjweqw"));
+    clearFilters();
   }
 
   public JSONObject remove(JSONObject json) {
@@ -61,6 +63,11 @@ class MongoJSONDB implements JSONDB {
     JSONObject old = read(key);
     recipeCollection.deleteMany(and(filter, eq(lookupkey, key)));
     return old;
+  }
+
+  public void clearFilters() {
+    /* create a catchall filter by finding every entry that doesnt match a long random string */
+    this.filter = not(eq(lookupkey, "kjanfo;ifijo;ijqwpqwejpqwejqwipeqjweqw"));
   }
 
   public void create(JSONObject json) {

@@ -3,11 +3,43 @@ package server;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.*;
+import java.util.HashMap;
+import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import utils.Recipe;
 
+class MockRecipeData implements RecipeData {
+  public JSONObject representation = new JSONObject();
+  public HashMap<String, Recipe> data = new HashMap<>();
+  String filter = "";
+
+  public JSONObject toJSON() {
+    return representation;
+  }
+
+  public Recipe put(String key, Recipe value) {
+    return data.put(key, value);
+  }
+
+  public Recipe get(String key) {
+    return data.get(key);
+  }
+
+  public Recipe remove(String key) {
+    return data.remove(key);
+  }
+
+  public void filterByMealType(String mealtype) {
+    this.filter = mealtype;
+  }
+
+  public void clearFilters() {
+    this.filter = "";
+  }
+}
+
 public class RecipeListAPITest {
-  RecipeListAPI dut = new RecipeListAPI(new SaveableRecipeData());
+  RecipeListAPI dut = new RecipeListAPI(new MockRecipeData());
   String exceptionMessage = "Request type not supported";
 
   @Test
@@ -50,16 +82,15 @@ public class RecipeListAPITest {
   public void testGet() {
     try {
       // Setup data
-      SaveableRecipeData data = new SaveableRecipeData();
-      SaveableRecipeData data2 = new SaveableRecipeData();
-      SaveableRecipeDataTest.deleteRecipeDataFile();
+      MockRecipeData data = new MockRecipeData();
+      MockRecipeData data2 = new MockRecipeData();
       RecipeListAPI api = new RecipeListAPI(data);
-      SaveableRecipeDataTest.deleteRecipeDataFile();
       RecipeListAPI api2 = new RecipeListAPI(data2);
-      SaveableRecipeDataTest.deleteRecipeDataFile();
       data.put("Scrambled eggs", new Recipe("Scrambled eggs", "breakfast", "eggs"));
       data.put(
           "Mac and cheese", new Recipe("Mac and cheese", "dinner", "step 1. mac\nstep 2.cheese"));
+      data.representation.put("Scrambled eggs", data.get("Scrambled eggs"));
+      data.representation.put("Mac and cheese", data.get("Mac and cheese"));
 
       /* test empty data */
       assertEquals(data.toJSON().toString(), api.handleGet("", ""), "get failed for empty data");
