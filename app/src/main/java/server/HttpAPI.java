@@ -85,16 +85,11 @@ class RawHttpAPI implements HttpHandler {
   }
 
   String handleDelete(String query, HttpExchange httpExchange) throws IOException {
-    getRequestString(httpExchange);
     throw new IOException("Request type not supported");
   }
 }
 
 class HttpAPI extends RawHttpAPI {
-  String handleGet(String query, HttpExchange httpExchange) throws IOException {
-    String request = getRequestString(httpExchange);
-    return handleGet(query, request);
-  }
 
   JSONObject getJSONRequest(String request) throws IOException {
     try {
@@ -103,7 +98,10 @@ class HttpAPI extends RawHttpAPI {
       throw new IOException("Response was not JSON");
     }
   }
-
+  String handleGet(String query, HttpExchange httpExchange) throws IOException {
+    String request = getRequestString(httpExchange);
+    return handleGet(query, request);
+  }
   String handlePost(String query, HttpExchange httpExchange) throws IOException {
     String request = getRequestString(httpExchange);
     return handlePost(query, request);
