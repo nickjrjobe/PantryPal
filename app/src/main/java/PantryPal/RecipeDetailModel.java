@@ -2,11 +2,8 @@
 
 package PantryPal;
 
-import java.io.*;
-import javafx.event.*;
-import javafx.scene.layout.*;
-import javafx.scene.text.*;
 import org.json.JSONObject;
+
 import utils.Account;
 import utils.Recipe;
 
@@ -34,5 +31,9 @@ public class RecipeDetailModel {
 
   public void delete(String title) {
     httpModel.performRequest("DELETE", Recipe.sanitizeTitle(title), null);
+  }
+
+  public void regenerate(Recipe r) {
+    create(r);
   }
 }
