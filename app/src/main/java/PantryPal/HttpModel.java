@@ -34,14 +34,15 @@ class HttpRequestModel implements HttpModel {
 
   public String performRequest(String method, String query, String request) {
     // Implement your HTTP request logic here and return the response
+    String requestURL = urlString;
     if (request != null) {
       System.out.println("Request :" + request);
     }
     try {
       if (query != null) {
-        urlString += "?" + query;
+        requestURL += "?" + query;
       }
-      URL url = new URI(urlString).toURL();
+      URL url = new URI(requestURL).toURL();
       HttpURLConnection conn = (HttpURLConnection) url.openConnection();
       conn.setRequestMethod(method);
       conn.setDoOutput(true);

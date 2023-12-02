@@ -10,6 +10,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import utils.Account;
 import utils.Recipe;
+import java.io.IOException;
 
 /** Immutable class to store results from sending a transcript to NewRecipeAPI */
 class TranscriptResults {
@@ -170,7 +171,13 @@ class NewRecipeController {
     drp.footer.addButton(
         "regenerate",
         e -> {
-          newRecipeModel.regenerate();
+          try {
+            Recipe newRecipe = newRecipeModel.regenerate();
+            done(newRecipe);
+          } catch (IOException ex) {
+            System.err.println("New recipe response from server malformed, error " + ex.getMessage());
+          }
+        
         });
     pt.swapToPage(drp);
 

@@ -6,6 +6,8 @@ import org.json.JSONObject;
 
 import utils.Account;
 
+import utils.Recipe;
+
 class NewRecipeModel {
   HttpModel httpModel;
 
@@ -30,7 +32,7 @@ class NewRecipeModel {
 
   TranscriptResults getInitialTranscript() throws IOException {
 
-    String transcript = httpModel.performRequest("GET", "/prompt", null);
+    String transcript = httpModel.performRequest("GET", "prompts", null);
     try {
       return new TranscriptResults(new JSONObject(transcript));
     } catch (Exception e) {
@@ -43,7 +45,12 @@ class NewRecipeModel {
     httpModel.performRequest("DELETE", "", null);
   }
 
-  void regenerate() {
-    httpModel.performRequest("GET", "/regenerate", null);
+  Recipe regenerate() throws IOException{
+    try {
+      JSONObject jObject = new JSONObject(httpModel.performRequest("GET", "regenerate", null));
+      return new Recipe(jObject.getJSONObject("recipe"));
+    } catch (Exception e) {
+      throw new IOException("New recipe response from server malformed, error " + e.getMessage());
+    }
   }
 }
