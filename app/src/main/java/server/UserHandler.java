@@ -35,35 +35,35 @@ class UserHandler extends RawHttpAPI {
     return fields;
   }
 
-  String handlePost(String query, HttpExchange httpExchange) throws IOException {
+  String handlePost(String query, InputStream body) throws IOException {
     String[] fields = makeFields(query);
     String username = fields[0];
     String realQuery = fields[1];
     RawHttpAPI api = addAPI(username);
-    return api.handlePost(realQuery, httpExchange);
+    return api.handlePost(realQuery, body);
   }
 
-  String handlePut(String query, HttpExchange httpExchange) throws IOException {
+  String handlePut(String query, InputStream body) throws IOException {
     String[] fields = makeFields(query);
     String username = fields[0];
     String realQuery = fields[1];
     RawHttpAPI api = addAPI(username);
-    return api.handlePut(realQuery, httpExchange);
+    return api.handlePut(realQuery, body);
   }
 
-  String handleDelete(String query, HttpExchange httpExchange) throws IOException {
+  String handleDelete(String query, InputStream body) throws IOException {
     String[] fields = makeFields(query);
     String username = fields[0];
     String realQuery = fields[1];
     RawHttpAPI api = addAPI(username);
-    return api.handleDelete(realQuery, httpExchange);
+    return api.handleDelete(realQuery, body);
   }
 
-  String handleGet(String query, HttpExchange httpExchange) throws IOException {
+  String handleGet(String query, InputStream body) throws IOException {
     String[] fields = makeFields(query);
     String username = fields[0];
     String realQuery = fields[1];
     RawHttpAPI api = addAPI(username);
-    return api.handleGet(realQuery, httpExchange);
+    return api.handleGet(realQuery, body);
   }
 }

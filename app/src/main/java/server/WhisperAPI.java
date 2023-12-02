@@ -53,8 +53,8 @@ class WhisperAPI extends RawHttpAPI {
     this.whisperSubject = whisperSubject;
   }
 
-  String handlePut(String query, HttpExchange httpExchange) throws IOException {
-    String transcript = serverVoiceToText.getTranscript(httpExchange.getRequestBody());
+  String handlePut(String query, InputStream body) throws IOException {
+    String transcript = serverVoiceToText.getTranscript(body);
     whisperSubject.set(transcript);
     return transcript;
   }

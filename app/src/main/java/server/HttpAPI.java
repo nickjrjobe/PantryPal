@@ -28,14 +28,15 @@ class RawHttpAPI implements HttpHandler {
       String base = httpExchange.getHttpContext().getPath();
       String query = readQuery(uri, base);
       System.err.println("QUERY WAS " + query);
+      InputStream body = httpExchange.getRequestBody();
       if (method.equals("GET")) {
-        response = handleGet(query, httpExchange);
+        response = handleGet(query, body);
       } else if (method.equals("POST")) {
-        response = handlePost(query, httpExchange);
+        response = handlePost(query, body);
       } else if (method.equals("DELETE")) {
-        response = handleDelete(query, httpExchange);
+        response = handleDelete(query, body);
       } else if (method.equals("PUT")) {
-        response = handlePut(query, httpExchange);
+        response = handlePut(query, body);
       } else {
         throw new Exception("Not Valid Request Method");
       }
@@ -55,9 +56,8 @@ class RawHttpAPI implements HttpHandler {
     outStream.close();
   }
 
-  String getRequestString(HttpExchange httpExchange) throws IOException {
-    InputStream inStream = httpExchange.getRequestBody();
-    Scanner scanner = new Scanner(inStream);
+  String getRequestString(InputStream body) throws IOException {
+    Scanner scanner = new Scanner(body);
     /* Request body optional, so simply return null if not given */
     String postData;
     try {
@@ -72,19 +72,19 @@ class RawHttpAPI implements HttpHandler {
     return postData;
   }
 
-  String handleGet(String query, HttpExchange httpExchange) throws IOException {
+  String handleGet(String query, InputStream body) throws IOException {
     throw new IOException("Request type not supported");
   }
 
-  String handlePost(String query, HttpExchange httpExchange) throws IOException {
+  String handlePost(String query, InputStream body) throws IOException {
     throw new IOException("Request type not supported");
   }
 
-  String handlePut(String query, HttpExchange httpExchange) throws IOException {
+  String handlePut(String query, InputStream body) throws IOException {
     throw new IOException("Request type not supported");
   }
 
-  String handleDelete(String query, HttpExchange httpExchange) throws IOException {
+  String handleDelete(String query, InputStream body) throws IOException {
     throw new IOException("Request type not supported");
   }
 }
@@ -99,23 +99,23 @@ class HttpAPI extends RawHttpAPI {
     }
   }
 
-  String handleGet(String query, HttpExchange httpExchange) throws IOException {
-    String request = getRequestString(httpExchange);
+  String handleGet(String query, InputStream body) throws IOException {
+    String request = getRequestString(body);
     return handleGet(query, request);
   }
 
-  String handlePost(String query, HttpExchange httpExchange) throws IOException {
-    String request = getRequestString(httpExchange);
+  String handlePost(String query, InputStream body) throws IOException {
+    String request = getRequestString(body);
     return handlePost(query, request);
   }
 
-  String handlePut(String query, HttpExchange httpExchange) throws IOException {
-    String request = getRequestString(httpExchange);
+  String handlePut(String query, InputStream body) throws IOException {
+    String request = getRequestString(body);
     return handlePut(query, request);
   }
 
-  String handleDelete(String query, HttpExchange httpExchange) throws IOException {
-    String request = getRequestString(httpExchange);
+  String handleDelete(String query, InputStream body) throws IOException {
+    String request = getRequestString(body);
     return handleDelete(query, request);
   }
 

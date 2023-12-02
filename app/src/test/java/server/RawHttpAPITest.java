@@ -2,7 +2,6 @@ package server;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import com.sun.net.httpserver.HttpExchange;
 import java.io.*;
 import org.junit.jupiter.api.Test;
 
@@ -14,7 +13,7 @@ public class RawHttpAPITest {
   public void testPut() {
     boolean exceptionHappened = false;
     try {
-      dut.handlePut("", (HttpExchange) null);
+      dut.handlePut("", (InputStream) null);
     } catch (IOException e) {
       exceptionHappened = true;
       assertEquals(exceptionMessage, e.getMessage());
@@ -26,7 +25,7 @@ public class RawHttpAPITest {
   public void testDelete() {
     boolean exceptionHappened = false;
     try {
-      dut.handleDelete("", (HttpExchange) null);
+      dut.handleDelete("", (InputStream) null);
     } catch (IOException e) {
       exceptionHappened = true;
       assertEquals(exceptionMessage, e.getMessage());
@@ -38,7 +37,7 @@ public class RawHttpAPITest {
   public void testPost() {
     boolean exceptionHappened = false;
     try {
-      dut.handlePost("", (HttpExchange) null);
+      dut.handlePost("", (InputStream) null);
     } catch (IOException e) {
       exceptionHappened = true;
       assertEquals(exceptionMessage, e.getMessage());
@@ -50,7 +49,7 @@ public class RawHttpAPITest {
   public void testGet() {
     boolean exceptionHappened = false;
     try {
-      dut.handleGet("", (HttpExchange) null);
+      dut.handleGet("", (InputStream) null);
     } catch (IOException e) {
       exceptionHappened = true;
       assertEquals(exceptionMessage, e.getMessage());
