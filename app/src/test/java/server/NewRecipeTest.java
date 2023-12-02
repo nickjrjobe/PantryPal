@@ -6,6 +6,7 @@ import java.io.*;
 import java.util.ArrayList;
 import org.junit.jupiter.api.Test;
 import utils.Recipe;
+import utils.VoiceToText;
 
 class RecipeCreatorStub implements RecipeCreator {
   String recipe;
@@ -19,7 +20,6 @@ class RecipeCreatorStub implements RecipeCreator {
   }
 }
 
-/* TODO move this somewhere else
 class VoiceToTextStub implements VoiceToText {
   public Boolean waitingForMeal = true;
   String mealType;
@@ -43,7 +43,6 @@ class VoiceToTextStub implements VoiceToText {
     this.ingredients = ingredients;
   }
 }
-*/
 
 public class NewRecipeTest {
 
@@ -87,6 +86,23 @@ public class NewRecipeTest {
   }
 
   @Test
+  public void testUpdate() {
+    String mealType = "dinner";
+    ArrayList<String> expectedPrompts = new ArrayList<>();
+
+    expectedPrompts.add("Would you like Breakfast, Lunch, or Dinner?");
+
+    /* Prompt with meal */
+    newRecipeCreatorTest.update(null, mealType);
+    expectedPrompts.add(mealType);
+    expectedPrompts.add("What ingredients do you have?");
+    assertEquals(expectedPrompts, newRecipeCreatorTest.getPrompts());
+    assertEquals(false, newRecipeCreatorTest.waitingForMeal);
+    assertEquals(mealType, newRecipeCreatorTest.mealType);
+    assertEquals(null, newRecipeCreatorTest.getRecipe());
+  }
+
+  @Test
   public void testNewRecipe() {
     /*Mocking and whole class test for New Recipe*/
     String mealType = "dinner";
@@ -126,4 +142,5 @@ public class NewRecipeTest {
     assertEquals(mealType, newRecipeCreatorTest.getRecipe().getMealType());
     assertEquals(desc, newRecipeCreatorTest.getRecipe().getDescription());
   }
+  B
 }
