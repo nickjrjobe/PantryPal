@@ -28,7 +28,8 @@ public class PantryPalServer {
     // setup APIS
     HttpContext WhisperContext =
         server.createContext(
-            "/whisper", new UserHandler(new WhisperAPIFactory(perUserWhisperSubject)));
+            "/whisper",
+            new UserHandler(new WhisperAPIFactory(perUserWhisperSubject, new WhisperBot())));
 
     HttpContext recipeListUsersContext =
         server.createContext("/recipes", new UserHandler(new RecipeListAPIFactory()));

@@ -15,11 +15,10 @@ import utils.AudioRecorder;
 import utils.ConfigReader;
 import utils.VoiceToText;
 
-public class WhisperBot {
+public class WhisperBot implements ServerVoiceToText {
   private static final String API_ENDPOINT = "https://api.openai.com/v1/audio/transcriptions";
   private static final String MODEL = "whisper-1";
   private String token;
-  private String output;
 
   public WhisperBot() {
     ConfigReader configReader = new ConfigReader();
@@ -50,7 +49,7 @@ public class WhisperBot {
   }
 
   // Helper method to handle a successful API response
-  public void handleSuccessResponse(HttpURLConnection connection)
+  public String handleSuccessResponse(HttpURLConnection connection)
       throws IOException, JSONException {
     BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
     String inputLine;
@@ -63,8 +62,7 @@ public class WhisperBot {
     JSONObject responseJson = new JSONObject(response.toString());
 
     String generatedText = responseJson.getString("text");
-
-    output = generatedText;
+    return generatedText;
   }
 
   // Helper method to handle an error response from the API
@@ -97,7 +95,8 @@ public class WhisperBot {
     }
   }
 
-  public String getTranscript(InputStream in) {
+  public String getTranscript(InputStream voiceData) {
+    String output = null;
     try {
       // Set up HTTP connection
       URL url = new URI(API_ENDPOINT).toURL();
@@ -117,7 +116,7 @@ public class WhisperBot {
       writeParameterToOutputStream(outputStream, "model", MODEL, boundary);
 
       // Write file parameter to request body
-      writeInputToOutputStream(outputStream, in, boundary);
+      writeInputToOutputStream(outputStream, voiceData, boundary);
 
       // Write closing boundary to request body
       outputStream.write(("\r\n--" + boundary + "--\r\n").getBytes());
@@ -131,7 +130,7 @@ public class WhisperBot {
 
       // Check response code and handle response accordingly
       if (responseCode == HttpURLConnection.HTTP_OK) {
-        handleSuccessResponse(connection);
+        output = handleSuccessResponse(connection);
       } else {
         handleErrorResponse(connection);
       }
@@ -142,10 +141,6 @@ public class WhisperBot {
     } catch (IOException | URISyntaxException e) {
       return null;
     }
-    return output;
-  }
-
-  public String getOutput() {
     return output;
   }
 }

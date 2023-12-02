@@ -5,6 +5,10 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
+interface ServerVoiceToText {
+  String getTranscript(InputStream voiceData);
+}
+
 class WhisperSubject extends Observable {
   @Override
   public void addObserver(Observer o) {
@@ -21,8 +25,11 @@ class WhisperSubject extends Observable {
 
 class WhisperAPIFactory implements HttpUserAPIFactory {
   Map<String, WhisperSubject> perUserWhisperSubject;
+  ServerVoiceToText serverVoiceToText;
 
-  WhisperAPIFactory(Map<String, WhisperSubject> perUserWhisperSubject) {
+  WhisperAPIFactory(
+      Map<String, WhisperSubject> perUserWhisperSubject, ServerVoiceToText serverVoiceToText) {
+    this.serverVoiceToText = serverVoiceToText;
     this.perUserWhisperSubject = perUserWhisperSubject;
   }
 
@@ -33,21 +40,21 @@ class WhisperAPIFactory implements HttpUserAPIFactory {
       perUserWhisperSubject.put(username, whisperSubject);
     }
     System.err.println("WhisperFactory subject: " + whisperSubject.toString());
-    return new WhisperAPI(whisperSubject);
+    return new WhisperAPI(whisperSubject, serverVoiceToText);
   }
 }
 
 class WhisperAPI extends RawHttpAPI {
-  WhisperBot whisperBot;
+  ServerVoiceToText serverVoiceToText;
   WhisperSubject whisperSubject;
 
-  WhisperAPI(WhisperSubject whisperSubject) {
-    whisperBot = new WhisperBot();
+  WhisperAPI(WhisperSubject whisperSubject, ServerVoiceToText serverVoiceToText) {
+    this.serverVoiceToText = serverVoiceToText;
     this.whisperSubject = whisperSubject;
   }
 
   String handlePut(String query, HttpExchange httpExchange) throws IOException {
-    String transcript = whisperBot.getTranscript(httpExchange.getRequestBody());
+    String transcript = serverVoiceToText.getTranscript(httpExchange.getRequestBody());
     whisperSubject.set(transcript);
     return transcript;
   }
