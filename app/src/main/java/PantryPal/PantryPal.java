@@ -49,6 +49,15 @@ class AppController implements HomeTracker {
   public boolean validateAccount(
       AccountLoginUI accountLoginUI, AuthorizationModel authorizationModel) {
     Account account = accountLoginUI.getAccount();
+    // delete
+
+    // if(!authorizationModel.ifConnected(account)){
+    // // if(true){
+    //   ServerError serverError = new ServerError(authorizationModel);
+    //   serverError.showError();
+    //   // serverError.serverRequest(account);
+    //   return false;
+    // }
     if (!Account.isValidUsername(account.getUsername())) {
       accountLoginUI.setErrorText("Please enter a valid username");
       return false;

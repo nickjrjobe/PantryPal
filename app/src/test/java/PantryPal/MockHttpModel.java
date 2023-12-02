@@ -8,6 +8,12 @@ public class MockHttpModel implements HttpModel {
   public String request;
 
   @Override
+  public boolean tryConnect(String method, String query, String request) {
+    // Mock constuctor
+    return false;
+  }
+
+  @Override
   public void setPath(String path) {
     // Mock constuctor
   }

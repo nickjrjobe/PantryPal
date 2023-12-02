@@ -27,4 +27,9 @@ public class AuthorizationModelTest {
     httpModel.setMockResponse("999 Not A Real Code");
     assertEquals(false, recipeListModel.authenticate(new Account("", "")));
   }
+
+  @Test
+  public void testTryConnect() {
+    assertEquals(false, recipeListModel.ifConnected(new Account("", "")));
+  }
 }

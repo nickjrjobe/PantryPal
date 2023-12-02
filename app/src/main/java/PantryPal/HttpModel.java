@@ -16,6 +16,8 @@ import javafx.scene.text.*;
 interface HttpModel {
   public void setPath(String path);
 
+  public boolean tryConnect(String method, String query, String request);
+
   public String performRequest(String method, String query, String request);
 }
 
@@ -30,6 +32,27 @@ class HttpRequestModel implements HttpModel {
 
   public void setPath(String path) {
     this.urlString = "http://" + ip + ":" + port + "/" + path;
+  }
+
+  public boolean tryConnect(String method, String query, String request) {
+    try {
+      URL url = new URI(urlString).toURL();
+      HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+      conn.setRequestMethod(method);
+      conn.setDoOutput(true);
+      if (method.equals("POST") || method.equals("PUT")) {
+        OutputStreamWriter out = new OutputStreamWriter(conn.getOutputStream());
+        out.write(request);
+        out.flush();
+        out.close();
+      }
+      System.out.println("Request Method successful: " + method);
+      return true;
+    } catch (Exception ex) {
+      ex.printStackTrace();
+      System.out.println("Request Method failed: " + method);
+      return false;
+    }
   }
 
   public String performRequest(String method, String query, String request) {
