@@ -64,6 +64,7 @@ class AppController implements HomeTracker {
 
   /**
    * Validates the account and sets the error text if the account is invalid
+   *
    * @param accountLoginUI the UI to validate
    * @param authorizationModel the model to validate against
    * @return true if the account is valid, false otherwise
