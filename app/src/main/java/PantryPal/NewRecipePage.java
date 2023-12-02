@@ -1,13 +1,13 @@
 package PantryPal;
 
-import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import javafx.event.*;
-import javafx.scene.control.Label;
-import javafx.scene.layout.*;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import javafx.scene.control.Label;
+import javafx.scene.layout.VBox;
 import utils.Account;
 import utils.Recipe;
 
@@ -174,6 +174,10 @@ class NewRecipeController {
   void exit() {
     newRecipeModel.reset();
     pt.goHome();
+  }
+
+  void regenerate() {
+    init();
   }
 }
 

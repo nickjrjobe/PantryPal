@@ -1,13 +1,14 @@
 package PantryPal;
 
-import java.io.*;
-import javafx.event.*;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.*;
-import javafx.scene.text.*;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
 import utils.Recipe;
 
@@ -81,6 +82,11 @@ class NewRecipeDetailPage extends ScrollablePage {
         e -> {
           recipeDetailUI.save();
         });
+    this.footer.addButton(
+    "regenerate",
+    e -> {
+      recipeDetailUI.regenerate();
+    });
   }
 }
 
@@ -178,6 +184,10 @@ class RecipeDetailUI extends VBox {
   public void delete() {
     recipeDetailModel.delete(titleField.getText());
     getChildren().clear();
+  }
+
+  public void regenerate() {
+    recipeDetailModel.regenerate();
   }
 
   // to set whether the description is editable
