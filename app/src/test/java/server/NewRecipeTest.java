@@ -142,5 +142,4 @@ public class NewRecipeTest {
     assertEquals(mealType, newRecipeCreatorTest.getRecipe().getMealType());
     assertEquals(desc, newRecipeCreatorTest.getRecipe().getDescription());
   }
-  B
 }

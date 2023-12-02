@@ -11,7 +11,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import utils.WhisperUtils;
+import utils.AudioRecorder;
 
 public class WhisperTest {
   WhisperBot whisper;
@@ -54,7 +54,7 @@ public class WhisperTest {
         "--boundary\r\n"
             + "Content-Disposition: form-data; name=\"file\"; filename="
             + "\""
-            + WhisperUtils.filePath
+            + AudioRecorder.filePath
             + "\"\r\n"
             + "Content-Type: audio/mpeg\r\n\r\n";
 

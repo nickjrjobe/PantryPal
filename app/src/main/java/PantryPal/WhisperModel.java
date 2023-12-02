@@ -9,7 +9,6 @@ import javafx.scene.text.*;
 import utils.Account;
 import utils.AudioRecorder;
 import utils.VoiceToText;
-import utils.WhisperUtils;
 
 /** Communication model for sending audio to Whisper during new recipe creation. */
 public class WhisperModel implements VoiceToText {
@@ -24,7 +23,7 @@ public class WhisperModel implements VoiceToText {
   }
 
   public String getTranscript() {
-    InputStream in = WhisperUtils.getClientInStream();
+    InputStream in = audioRecorder.getAudioInStream();
     String response = httpModel.performRawRequest("PUT", in);
     System.err.println("Whisper Model responded: " + response);
     return response;

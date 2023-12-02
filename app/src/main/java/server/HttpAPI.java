@@ -98,10 +98,12 @@ class HttpAPI extends RawHttpAPI {
       throw new IOException("Response was not JSON");
     }
   }
+
   String handleGet(String query, HttpExchange httpExchange) throws IOException {
     String request = getRequestString(httpExchange);
     return handleGet(query, request);
   }
+
   String handlePost(String query, HttpExchange httpExchange) throws IOException {
     String request = getRequestString(httpExchange);
     return handlePost(query, request);

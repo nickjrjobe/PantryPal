@@ -11,9 +11,9 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import org.json.JSONException;
 import org.json.JSONObject;
+import utils.AudioRecorder;
 import utils.ConfigReader;
 import utils.VoiceToText;
-import utils.WhisperUtils;
 
 public class WhisperBot {
   private static final String API_ENDPOINT = "https://api.openai.com/v1/audio/transcriptions";
@@ -42,11 +42,11 @@ public class WhisperBot {
     outputStream.write(("--" + boundary + "\r\n").getBytes());
     outputStream.write(
         ("Content-Disposition: form-data; name=\"file\"; filename=\""
-                + WhisperUtils.filePath
+                + AudioRecorder.filePath
                 + "\"\r\n")
             .getBytes());
     outputStream.write(("Content-Type: audio/mpeg\r\n\r\n").getBytes());
-    WhisperUtils.copyInputToOutputStream(outputStream, inputStream);
+    inputStream.transferTo(outputStream);
   }
 
   // Helper method to handle a successful API response
@@ -88,7 +88,8 @@ public class WhisperBot {
    * @return Transcript of the recorded audio, or null if an error occurs.
    */
   public String getTranscript() {
-    InputStream in = WhisperUtils.getClientInStream();
+    AudioRecorder recorder = new AudioRecorder();
+    InputStream in = recorder.getAudioInStream();
     if (in != null) {
       return getTranscript(in);
     } else {
