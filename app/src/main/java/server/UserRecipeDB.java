@@ -36,6 +36,7 @@ public class UserRecipeDB implements RecipeData {
     encapsulate(json);
     db.remove(key);
     db.create(json);
+    System.err.println("Created: " + json.toString());
     return get(key);
   }
 
