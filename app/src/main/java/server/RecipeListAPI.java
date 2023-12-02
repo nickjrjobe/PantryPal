@@ -21,4 +21,23 @@ class RecipeListAPI extends HttpAPI {
   String handleGet(String query, String request) throws IOException {
     return data.toJSON().toString();
   }
+
+  String handlePost(String query, String request) throws IOException {
+    String result = "200 OK";
+    if (query.equals("breakfast")) {
+      data.filterByMealType("breakfast");
+    } else if (query.equals("lunch")) {
+      data.filterByMealType("lunch");
+    } else if (query.equals("dinner")) {
+      data.filterByMealType("dinner");
+    } else {
+      result = "400 Bad Request";
+    }
+    return result;
+  }
+
+  String handleDelete(String query, String request) throws IOException {
+    data.clearFilters();
+    return "200 OK";
+  }
 }

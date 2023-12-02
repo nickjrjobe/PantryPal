@@ -39,8 +39,20 @@ class MockRecipeData implements RecipeData {
 }
 
 public class RecipeListAPITest {
-  RecipeListAPI dut = new RecipeListAPI(new MockRecipeData());
+  MockRecipeData data = new MockRecipeData();
+  RecipeListAPI dut = new RecipeListAPI(data);
   String exceptionMessage = "Request type not supported";
+
+  @Test
+  public void testDelete() {
+    data.filter = "NonEmptyFilter";
+    try {
+      assertEquals("200 OK", dut.handleDelete("", ""));
+    } catch (Exception e) {
+      fail("delete should not throw exception");
+    }
+    assertEquals("", data.filter);
+  }
 
   @Test
   public void testPut() {
@@ -55,27 +67,18 @@ public class RecipeListAPITest {
   }
 
   @Test
-  public void testDelete() {
-    boolean exceptionHappened = false;
-    try {
-      dut.handleDelete("", "");
-    } catch (IOException e) {
-      exceptionHappened = true;
-      assertEquals(exceptionMessage, e.getMessage());
-    }
-    assertEquals(true, exceptionHappened);
-  }
-
-  @Test
   public void testPost() {
-    boolean exceptionHappened = false;
     try {
-      dut.handlePost("", "");
+      assertEquals("200 OK", dut.handlePost("breakfast", ""));
+      assertEquals("breakfast", data.filter);
+      assertEquals("200 OK", dut.handlePost("lunch", ""));
+      assertEquals("lunch", data.filter);
+      assertEquals("200 OK", dut.handlePost("dinner", ""));
+      assertEquals("dinner", data.filter);
+      assertEquals("400 Bad Request", dut.handlePost("thanksgiving", ""));
     } catch (IOException e) {
-      exceptionHappened = true;
-      assertEquals(exceptionMessage, e.getMessage());
+      fail("post should not throw exception");
     }
-    assertEquals(true, exceptionHappened);
   }
 
   @Test
