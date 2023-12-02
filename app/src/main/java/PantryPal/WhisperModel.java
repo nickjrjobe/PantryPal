@@ -11,16 +11,15 @@ import utils.AudioRecorder;
 import utils.VoiceToText;
 import utils.WhisperUtils;
 
-/** Communication model for making API requests to get Recipe List. */
+/** Communication model for sending audio to Whisper during new recipe creation. */
 public class WhisperModel implements VoiceToText {
-  HttpModel httpModel;
-  Account account;
-  AudioRecorder audioRecorder;
+  private HttpModel httpModel;
+  private Account account;
+  private AudioRecorder audioRecorder;
 
   WhisperModel(HttpModel httpModel, Account account) {
     this.audioRecorder = new AudioRecorder();
     this.httpModel = httpModel;
-    // httpModel.setPath("whisper/" + account.getUsername() + "/");
     httpModel.setPath("whisper/" + account.getUsername() + "/");
   }
 
