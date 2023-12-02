@@ -187,7 +187,7 @@ class RecipeDetailUI extends VBox {
   }
 
   public void regenerate() {
-    recipeDetailModel.regenerate();
+    recipeDetailModel.regenerate(recipe);
   }
 
   // to set whether the description is editable
