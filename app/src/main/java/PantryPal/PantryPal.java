@@ -20,12 +20,28 @@ interface HomeTracker {
 class AppController implements HomeTracker {
   private Account account;
   private PageTracker pt;
+  private final String CREDENTIALS = "Secure_Credentials.txt";
 
   public AppController(PageTracker pt) {
     this.pt = pt;
   }
 
   public ScrollablePage getHome() {
+    // US 11: Check if autologin exists and if so autoswap to home page
+    try {
+      File file = new File(CREDENTIALS);
+      FileReader fr = new FileReader(file);
+      BufferedReader br = new BufferedReader(fr);
+      String username = br.readLine();
+      String password = br.readLine();
+      br.close();
+      fr.close();
+      // Set the text fields of the UI
+      account = new Account(username, password);
+    } catch (IOException ex) {
+      System.out.println("Error reading from file");
+    }
+    // Check if account exists
     if (account == null) {
       return makeLoginPage();
     } else {
@@ -46,6 +62,12 @@ class AppController implements HomeTracker {
     return true;
   }
 
+  /**
+   * Validates the account and sets the error text if the account is invalid
+   * @param accountLoginUI the UI to validate
+   * @param authorizationModel the model to validate against
+   * @return true if the account is valid, false otherwise
+   */
   public boolean validateAccount(
       AccountLoginUI accountLoginUI, AuthorizationModel authorizationModel) {
     Account account = accountLoginUI.getAccount();
@@ -79,7 +101,6 @@ class AppController implements HomeTracker {
   public AccountLoginPage makeLoginPage() {
     AccountLoginUI accountLoginUI = new AccountLoginUI();
     AccountLoginPage accountLoginPage = new AccountLoginPage(accountLoginUI);
-    // TODO check if autologin exists and if so autoswap to home page
 
     accountLoginPage.footer.addButton(
         "Login",
@@ -91,7 +112,22 @@ class AppController implements HomeTracker {
 
           if (loggedIn) {
             this.account = accountLoginUI.getAccount();
-            // TODO check if loginValid && autoLogin selected and if so enable autologin US11
+            // Check if loginValid && autoLogin selected
+            if (accountLoginUI.isAutoLoginSelected()) {
+              // Save credentials to file DontLookHere.txt
+              // Next time when opening app, we will check for this file
+              try {
+                File file = new File(CREDENTIALS);
+                FileWriter fr = new FileWriter(file, false);
+                BufferedWriter br = new BufferedWriter(fr);
+                br.write(account.getUsername() + "\n");
+                br.write(account.getPassword());
+                br.close();
+                fr.close();
+              } catch (IOException ex) {
+                System.out.println("Error writing to file");
+              }
+            }
             pt.swapToPage(makeRecipeListPage()); // Swap to recipe list page
           }
         });
