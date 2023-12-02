@@ -158,22 +158,22 @@ class NewRecipeController {
 
   /** exit state machine to look at new recipe */
   void done(Recipe recipe) {
-    newRecipeModel.reset();
     NewRecipeDetailPage drp =
         new NewRecipeDetailPage(
             new RecipeDetailUI(recipe, new RecipeDetailModel(new HttpRequestModel(), account)));
     drp.footer.addButton(
         "home",
         e -> {
+          newRecipeModel.reset();
           pt.goHome();
         });
-    pt.swapToPage(drp);
     drp.footer.addButton(
         "regenerate",
         e -> {
-          this.regenerate();
+          newRecipeModel.regenerate();
         });
     pt.swapToPage(drp);
+
   }
 
   /** Exit handler for early exits from state machine */

@@ -1,11 +1,11 @@
 package server;
 
-import com.sun.net.httpserver.*;
-import java.io.*;
-import java.net.*;
-import java.util.*;
+import java.io.IOException;
+import java.util.List;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
+
 import utils.Recipe;
 
 interface InteractiveRecipeMaker {
@@ -20,6 +20,9 @@ interface InteractiveRecipeMaker {
 
   /** provide user-created prompt for processing */
   public void readResponse(String response);
+
+  /** regenerates recipe if valid */
+  public Recipe regenerateRecipe();
 }
 
 class NewRecipeAPIFactory implements HttpUserAPIFactory {
@@ -47,6 +50,17 @@ class NewRecipeAPI extends HttpAPI {
 
     /* if recipe is valid include it in response, then reset */
     if (creator.getRecipe() != null) {
+      json.put("recipe", creator.getRecipe().toJSON());
+      creator.reset();
+    }
+
+    return json;
+  }
+
+  public JSONObject makeRegenerateResponse() {
+    JSONObject json = new JSONObject();
+    /* if recipe is valid include it in response, then reset */
+    if (creator.regenerateRecipe() != null) {
       json.put("recipe", creator.getRecipe().toJSON());
       creator.reset();
     }
@@ -87,7 +101,13 @@ class NewRecipeAPI extends HttpAPI {
 
   /** get current prompts */
   String handleGet(String query, String request) throws IOException {
-    String response = makeResponseFromPrompts().toString();
+    String response = null;
+    if(query == "/prompts"){
+      response = makeResponseFromPrompts().toString();
+    } else if(query == "/regenerate"){
+      response = makeRegenerateResponse().toString();
+
+    }
     return response;
   }
 }

@@ -82,6 +82,7 @@ class NewRecipeDetailPage extends ScrollablePage {
         e -> {
           recipeDetailUI.save();
         });
+
   }
 }
 

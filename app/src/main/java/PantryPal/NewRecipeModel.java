@@ -1,9 +1,9 @@
 package PantryPal;
 
-import java.io.*;
-import javafx.event.*;
-import javafx.scene.layout.*;
+import java.io.IOException;
+
 import org.json.JSONObject;
+
 import utils.Account;
 
 class NewRecipeModel {
@@ -30,7 +30,7 @@ class NewRecipeModel {
 
   TranscriptResults getInitialTranscript() throws IOException {
 
-    String transcript = httpModel.performRequest("GET", null, null);
+    String transcript = httpModel.performRequest("GET", "/prompt", null);
     try {
       return new TranscriptResults(new JSONObject(transcript));
     } catch (Exception e) {
@@ -41,5 +41,9 @@ class NewRecipeModel {
   /** resets state of remote New recipe creator */
   void reset() {
     httpModel.performRequest("DELETE", "", null);
+  }
+
+  void regenerate() {
+    httpModel.performRequest("GET", "/regenerate", null);
   }
 }
