@@ -23,6 +23,7 @@ class RecipeListAPI extends HttpAPI {
   }
 
   String handlePost(String query, String request) throws IOException {
+    query = query.substring(query.indexOf("?") + 1);
     String result = "200 OK";
     if (query.equals("breakfast")) {
       data.filterByMealType("breakfast");
