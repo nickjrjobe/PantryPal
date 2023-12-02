@@ -82,11 +82,6 @@ class NewRecipeDetailPage extends ScrollablePage {
         e -> {
           recipeDetailUI.save();
         });
-    this.footer.addButton(
-    "regenerate",
-    e -> {
-      recipeDetailUI.regenerate();
-    });
   }
 }
 
@@ -158,6 +153,8 @@ class RecipeDetailUI extends VBox {
     this.recipe = recipe;
     this.recipeDetailModel = recipeDetailModel;
 
+
+
     // Initialize title and description fields
     titleField = new Label();
     titleField.setText(recipe.getTitle());
@@ -184,10 +181,6 @@ class RecipeDetailUI extends VBox {
   public void delete() {
     recipeDetailModel.delete(titleField.getText());
     getChildren().clear();
-  }
-
-  public void regenerate() {
-    recipeDetailModel.regenerate(recipe);
   }
 
   // to set whether the description is editable

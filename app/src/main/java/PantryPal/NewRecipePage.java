@@ -168,6 +168,12 @@ class NewRecipeController {
           pt.goHome();
         });
     pt.swapToPage(drp);
+    drp.footer.addButton(
+        "regenerate",
+        e -> {
+          this.regenerate();
+        });
+    pt.swapToPage(drp);
   }
 
   /** Exit handler for early exits from state machine */
@@ -177,7 +183,14 @@ class NewRecipeController {
   }
 
   void regenerate() {
-    init();
+    TranscriptResults results;
+    try {
+      results = newRecipeModel.getInitialTranscript();
+    } catch (Exception e) {
+      System.err.println("error: " + e.getMessage());
+      results = new TranscriptResults();
+    }
+    newRecipePage.setPrompts(results.prompts);
   }
 }
 

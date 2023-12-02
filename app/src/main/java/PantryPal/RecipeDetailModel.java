@@ -33,7 +33,4 @@ public class RecipeDetailModel {
     httpModel.performRequest("DELETE", Recipe.sanitizeTitle(title), null);
   }
 
-  public void regenerate(Recipe r) {
-    create(r);
-  }
 }

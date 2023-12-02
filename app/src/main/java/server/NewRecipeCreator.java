@@ -15,6 +15,7 @@ public class NewRecipeCreator implements InteractiveRecipeMaker {
   RecipeCreator recipeCreator;
   public List<String> prompts;
   private Recipe recipe;
+  String ingredients;
 
   NewRecipeCreator(RecipeCreator recipeCreator) {
     this.recipeCreator = recipeCreator;
@@ -104,7 +105,16 @@ public class NewRecipeCreator implements InteractiveRecipeMaker {
   /*Hands the ingredients to chat gpt and creates a recipe object using text response from chatgpt*/
   public void handleIngredients(String response) {
     prompts.add(response);
+    this.ingredients = response;
     String recipeResponse = recipeCreator.makeRecipe(mealType, response);
     recipe = interpretRecipeResponse(recipeResponse);
+  }
+
+  public String getIngredients(){
+    return this.ingredients;
+  }
+
+  public String getMealType(){
+    return this.mealType;
   }
 }
