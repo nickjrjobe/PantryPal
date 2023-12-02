@@ -11,6 +11,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import utils.WhisperUtils;
 
 public class WhisperTest {
   WhisperBot whisper;
@@ -42,7 +43,7 @@ public class WhisperTest {
   }
 
   @Test
-  public void testWriteFileToOutputStream() throws IOException {
+  public void testWriteInputToOutputStream() throws IOException {
     String boundary = "boundary";
     File testFile = new File("src/test/java/PantryPal/testfile.txt");
 
@@ -51,7 +52,10 @@ public class WhisperTest {
 
     String expectedOutputStart =
         "--boundary\r\n"
-            + "Content-Disposition: form-data; name=\"file\"; filename=\"testfile.txt\"\r\n"
+            + "Content-Disposition: form-data; name=\"file\"; filename="
+            + "\""
+            + WhisperUtils.filePath
+            + "\"\r\n"
             + "Content-Type: audio/mpeg\r\n\r\n";
 
     // Verify the file content
