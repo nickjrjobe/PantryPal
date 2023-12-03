@@ -41,7 +41,7 @@ class InteractiveRecipeMakerStub implements InteractiveRecipeMaker {
     requestObserved = (String) data;
   }
 
-  public Recipe regenerateRecipe(){
+  public Recipe regenerateRecipe() {
     return new Recipe("new " + recipe.getTitle(), recipe.getMealType(), recipe.getDescription());
   }
 }
@@ -90,12 +90,13 @@ public class NewRecipeAPITest {
     assertEquals(new Recipe(json.getJSONObject("recipe")), makerstub.recipe);
     assertEquals(oldResets + 1, makerstub.resetCount, "should have reset");
   }
-  
+
   @Test
   public void testMakeRegenerateResponse() {
     JSONObject json;
     int oldResets; // don't care about absolute value just that one occured or didnt
-    makerstub.recipe = new Recipe("PB&J Sandwich", "breakfast", "Add peanut butter and jelly to sandwich bread.");
+    makerstub.recipe =
+        new Recipe("PB&J Sandwich", "breakfast", "Add peanut butter and jelly to sandwich bread.");
 
     /* ensure transcripts are properly converted */
     makerstub.prompts = emptyList;
@@ -109,7 +110,11 @@ public class NewRecipeAPITest {
         new JSONObject(exampleExpectedResponse).getJSONArray("transcript").toString(),
         json.getJSONArray("transcript").toString());
     assertEquals(true, json.has("recipe"));
-    assertEquals(makerstub.regenerateRecipe().getTitle(), new Recipe("new PB&J Sandwich", "breakfast", "Add peanut butter and jelly to sandwich bread.").getTitle());
+    assertEquals(
+        makerstub.regenerateRecipe().getTitle(),
+        new Recipe(
+                "new PB&J Sandwich", "breakfast", "Add peanut butter and jelly to sandwich bread.")
+            .getTitle());
   }
 
   @Test
@@ -177,7 +182,7 @@ public class NewRecipeAPITest {
     }
 
     /*You cannot call without specifying query */
-     try {
+    try {
       assertEquals(api.handleGet("", ""), "400 Bad Request");
     } catch (Exception e) {
       fail("Delete should never throw exception");

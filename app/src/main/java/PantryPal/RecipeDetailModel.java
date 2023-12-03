@@ -3,7 +3,6 @@
 package PantryPal;
 
 import org.json.JSONObject;
-
 import utils.Account;
 import utils.Recipe;
 
@@ -32,5 +31,4 @@ public class RecipeDetailModel {
   public void delete(String title) {
     httpModel.performRequest("DELETE", Recipe.sanitizeTitle(title), null);
   }
-
 }

@@ -1,11 +1,8 @@
 package PantryPal;
 
 import java.io.IOException;
-
 import org.json.JSONObject;
-
 import utils.Account;
-
 import utils.Recipe;
 
 class NewRecipeModel {
@@ -45,7 +42,7 @@ class NewRecipeModel {
     httpModel.performRequest("DELETE", "", null);
   }
 
-  Recipe regenerate() throws IOException{
+  Recipe regenerate() throws IOException {
     try {
       JSONObject jObject = new JSONObject(httpModel.performRequest("GET", "regenerate", null));
       return new Recipe(jObject.getJSONObject("recipe"));

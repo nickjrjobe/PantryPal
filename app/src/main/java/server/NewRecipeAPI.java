@@ -109,16 +109,15 @@ class NewRecipeAPI extends HttpAPI {
     return response;
   }
 
-  //to be tested
+  // to be tested
   /** get current prompts */
   String handleGet(String query, String request) throws IOException {
     String response = "400 Bad Request";
-    System.err.println("Query: "+ query);
-    if(query.equals("?prompts")){
+    System.err.println("Query: " + query);
+    if (query.equals("?prompts")) {
       response = makeResponseFromPrompts().toString();
-    } else if(query.equals("?regenerate")){
+    } else if (query.equals("?regenerate")) {
       response = makeRegenerateResponse().toString();
-
     }
     return response;
   }

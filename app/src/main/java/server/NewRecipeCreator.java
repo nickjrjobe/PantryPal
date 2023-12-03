@@ -2,7 +2,6 @@ package server;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import java.util.Observable;
 import javafx.event.*;
 import javafx.scene.layout.*;
@@ -116,16 +115,16 @@ public class NewRecipeCreator implements InteractiveRecipeMaker {
     recipe = interpretRecipeResponse(recipeResponse);
   }
 
-  public String getIngredients(){
+  public String getIngredients() {
     return this.ingredients;
   }
 
-  public String getMealType(){
+  public String getMealType() {
     return this.mealType;
   }
 
   public Recipe regenerateRecipe() {
-    if (mealType != null && ingredients != null){
+    if (mealType != null && ingredients != null) {
       String recipeResponse = recipeCreator.makeRecipe(mealType, ingredients);
       recipe = interpretRecipeResponse(recipeResponse);
     }
