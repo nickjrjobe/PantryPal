@@ -27,7 +27,7 @@ class AppController implements HomeTracker {
   }
 
   public ScrollablePage getHome() {
-    checkForAutoLogin(CREDENTIALS);
+    this.account = checkForAutoLogin(CREDENTIALS);
     // Check if account exists
     if (account == null) {
       return makeLoginPage();
@@ -37,7 +37,7 @@ class AppController implements HomeTracker {
   }
 
   /** Checks if autologin exists, then sets up account */
-  public void checkForAutoLogin(String credentials_file_path) {
+  public static Account checkForAutoLogin(String credentials_file_path) {
     try {
       File file = new File(credentials_file_path);
       FileReader fr = new FileReader(file);
@@ -47,9 +47,11 @@ class AppController implements HomeTracker {
       br.close();
       fr.close();
       // Set the text fields of the UI
-      account = new Account(username, password);
+      Account account = new Account(username, password);
+      return account;
     } catch (IOException ex) {
       System.out.println("Error reading from file");
+      return null;
     }
   }
 
