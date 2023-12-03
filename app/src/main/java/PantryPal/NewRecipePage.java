@@ -159,6 +159,8 @@ class NewRecipeController {
 
   /** exit state machine to look at new recipe */
   void done(Recipe recipe) {
+    RecipeDetailModel rc = new RecipeDetailModel(new HttpRequestModel(), account);
+    newRecipeModel.reset();
     NewRecipeDetailPage drp =
         new NewRecipeDetailPage(
             new RecipeDetailUI(recipe, rc, new ImageModel(new HttpRequestModel(), account)));
