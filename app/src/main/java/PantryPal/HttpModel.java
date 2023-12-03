@@ -34,28 +34,7 @@ class HttpRequestModel implements HttpModel {
     this.urlString = "http://" + ip + ":" + port + "/" + path;
   }
 
-  // public boolean tryConnect() {
-  //   // Implement your HTTP request logic here and return the response
-  //   try {
-  //     String method = "GET";
-  //     URL url = new URI(urlString).toURL();
-  //     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-  //     conn.setRequestMethod(method);
-  //     conn.setDoOutput(true);
-  //     OutputStreamWriter out = new OutputStreamWriter(conn.getOutputStream());
-  //     out.write("");
-  //     out.flush();
-  //     out.close();
-  //     BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-  //     String response = in.readLine();
-  //     in.close();
-  //     System.out.println("Response :" + response);
-  //     // return response;
-  //     return true;
-  //   } catch (Exception ex) {
-  //     return false;
-  //   }
-  // }
+
   public boolean tryConnect() {
     try {
         URL url = new URL(urlString);
@@ -74,6 +53,11 @@ class HttpRequestModel implements HttpModel {
         }
     } catch (IOException ex) {
         // An IOException is thrown if there is a network error or the server is unreachable
+        System.err.println("Error: " + ex.getMessage());
+        // System.err.println(\"Error: \" + ex.getMessage());
+        if (ex.getMessage().contains("Connection refused: connect")) {
+          System.err.println("Server Problem!");
+        }
         return false;
     }
 }
