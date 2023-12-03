@@ -2,18 +2,21 @@ package server;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.io.*;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Observable;
+
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import utils.Recipe;
 
 class InteractiveRecipeMakerStub implements InteractiveRecipeMaker {
   Recipe recipe = null;
+  Recipe regenRecipe = null;
   int resetCount = 0;
   List<String> prompts = new ArrayList<String>();
   String response;
@@ -39,6 +42,12 @@ class InteractiveRecipeMakerStub implements InteractiveRecipeMaker {
 
   public void update(Observable o, Object data) {
     requestObserved = (String) data;
+  }
+
+  // TODO
+  public Recipe regenerateRecipe() {
+    return new Recipe("new" + recipe.getTitle(), recipe.getMealType(), 
+      recipe.getDescription());
   }
 }
 
