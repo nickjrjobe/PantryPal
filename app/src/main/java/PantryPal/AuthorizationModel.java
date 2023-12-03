@@ -17,9 +17,8 @@ public class AuthorizationModel {
     httpModel.setPath("authorization");
   }
 
-  public boolean ifConnected(Account account) {
-    boolean connected = httpModel.tryConnect("POST", null, account.toJSON().toString());
-    System.err.println("1234connected: " + connected);
+  public boolean tryConnect() {
+    boolean connected = httpModel.tryConnect();
     return connected;
   }
 

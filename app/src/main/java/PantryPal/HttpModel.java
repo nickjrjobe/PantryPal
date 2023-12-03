@@ -16,7 +16,7 @@ import javafx.scene.text.*;
 interface HttpModel {
   public void setPath(String path);
 
-  public boolean tryConnect(String method, String query, String request);
+  public boolean tryConnect();
 
   public String performRequest(String method, String query, String request);
 }
@@ -34,58 +34,50 @@ class HttpRequestModel implements HttpModel {
     this.urlString = "http://" + ip + ":" + port + "/" + path;
   }
 
-  // public boolean tryConnect(String method, String query, String request) {
+  // public boolean tryConnect() {
+  //   // Implement your HTTP request logic here and return the response
   //   try {
+  //     String method = "GET";
   //     URL url = new URI(urlString).toURL();
   //     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
   //     conn.setRequestMethod(method);
   //     conn.setDoOutput(true);
-  //     if (method.equals("POST") || method.equals("PUT")) {
-  //       OutputStreamWriter out = new OutputStreamWriter(conn.getOutputStream());
-  //       out.write(request);
-  //       out.flush();
-  //       out.close();
-  //     }
-  //     System.out.println("Request Method successful: " + method);
+  //     OutputStreamWriter out = new OutputStreamWriter(conn.getOutputStream());
+  //     out.write("");
+  //     out.flush();
+  //     out.close();
+  //     BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+  //     String response = in.readLine();
+  //     in.close();
+  //     System.out.println("Response :" + response);
+  //     // return response;
   //     return true;
   //   } catch (Exception ex) {
-  //     ex.printStackTrace();
-  //     System.out.println("Request Method failed: " + method);
   //     return false;
   //   }
   // }
-  public boolean tryConnect(String method, String query, String request) {
-    // Implement your HTTP request logic here and return the response
-    if (request != null) {
-      System.out.println("Request :" + request);
-    }
+  public boolean tryConnect() {
     try {
-      if (query != null) {
-        urlString += "?" + query;
-      }
-      URL url = new URI(urlString).toURL();
-      HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-      conn.setRequestMethod(method);
-      conn.setDoOutput(true);
+        URL url = new URL(urlString);
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod("GET");
+        conn.connect(); // Open a connection to the server
 
-      if (method.equals("POST") || method.equals("PUT")) {
-        OutputStreamWriter out = new OutputStreamWriter(conn.getOutputStream());
-        out.write(request);
-        out.flush();
-        out.close();
-      }
-
-      BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-      String response = in.readLine();
-      in.close();
-      System.out.println("Response :" + response);
-      // return response;
-      return true;
-    } catch (Exception ex) {
-      ex.printStackTrace();
-      return false;
+        int responseCode = conn.getResponseCode();
+        // Check if the response code indicates a successful connection
+        if (responseCode == HttpURLConnection.HTTP_OK || responseCode == HttpURLConnection.HTTP_NOT_FOUND) {
+            // The server is reachable, even if the specific page/resource is not found
+            return true;
+        } else {
+            // Server returned an error response code
+            return false;
+        }
+    } catch (IOException ex) {
+        // An IOException is thrown if there is a network error or the server is unreachable
+        return false;
     }
-  }
+}
+
 
   public String performRequest(String method, String query, String request) {
     // Implement your HTTP request logic here and return the response
