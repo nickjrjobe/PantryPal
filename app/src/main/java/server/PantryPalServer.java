@@ -3,6 +3,7 @@ package server;
 import com.sun.net.httpserver.*;
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.util.HashMap;
 import java.util.concurrent.*;
 
 /**
@@ -23,7 +24,12 @@ public class PantryPalServer {
     // create a server
     HttpServer server = HttpServer.create(new InetSocketAddress(SERVER_HOSTNAME, SERVER_PORT), 0);
 
+    HashMap<String, WhisperSubject> perUserWhisperSubject = new HashMap<>();
     // setup APIS
+    HttpContext WhisperContext =
+        server.createContext(
+            "/whisper",
+            new UserHandler(new WhisperAPIFactory(perUserWhisperSubject, new WhisperBot())));
 
     HttpContext recipeListUsersContext =
         server.createContext("/recipes", new UserHandler(new RecipeListAPIFactory()));
@@ -39,7 +45,8 @@ public class PantryPalServer {
     HttpContext accountContext = server.createContext("/account", new AccountAPI(accountData));
 
     HttpContext newRecipeContext =
-        server.createContext("/newrecipe", new UserHandler(new NewRecipeAPIFactory(creator)));
+        server.createContext(
+            "/newrecipe", new UserHandler(new NewRecipeAPIFactory(creator, perUserWhisperSubject)));
 
     /* start server */
     server.setExecutor(threadPoolExecutor);
