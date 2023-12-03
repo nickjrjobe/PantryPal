@@ -5,7 +5,6 @@ package PantryPal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
 import javafx.application.Application;
 import javafx.stage.Stage;
 import utils.Account;
@@ -126,11 +125,8 @@ class AppController implements HomeTracker {
           pt.swapToPage(makeNewRecipeController().getPage());
         });
     // TODO add logic to dropdown selection
-    recipeList.footer.addDropDown(
-      mealTypes,
-      e -> {
+    recipeList.footer.addDropDown(mealTypes, e -> {});
 
-      });
     return recipeList;
   }
 
