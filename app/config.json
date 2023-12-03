@@ -1,5 +1,0 @@
-{
-  "OpenAiApiKey": "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",
-  "MongoDBDatabase": "hellocluster0",
-  "MongoDBURI":"mongodb+srv://nickjobe:Shonicj2@hellocluster0.yrimimc.mongodb.net/?retryWrites=true&w=majority"
-}
