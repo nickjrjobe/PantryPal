@@ -20,7 +20,7 @@ interface HomeTracker {
 class AppController implements HomeTracker {
   private Account account;
   private PageTracker pt;
-  private final String CREDENTIALS = "Secure_Credentials.txt";
+  private static final String CREDENTIALS = "Secure_Credentials.txt";
 
   public AppController(PageTracker pt) {
     this.pt = pt;
