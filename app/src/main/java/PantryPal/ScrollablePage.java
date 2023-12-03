@@ -50,7 +50,6 @@ class Footer extends HBox {
       dropDown.getItems().add(option);
     }
     this.getChildren().add(dropDown);
-
   }
 
   // Overloaded method that takes a pre-configured button
