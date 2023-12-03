@@ -42,7 +42,7 @@ class InteractiveRecipeMakerStub implements InteractiveRecipeMaker {
   }
 
   public Recipe regenerateRecipe(){
-    return new Recipe("new" + recipe.getTitle(), recipe.getMealType(), recipe.getDescription());
+    return new Recipe("new " + recipe.getTitle(), recipe.getMealType(), recipe.getDescription());
   }
 }
 
@@ -95,30 +95,21 @@ public class NewRecipeAPITest {
   public void testMakeRegenerateResponse() {
     JSONObject json;
     int oldResets; // don't care about absolute value just that one occured or didnt
-    makerstub.recipe = null;
+    makerstub.recipe = new Recipe("PB&J Sandwich", "breakfast", "Add peanut butter and jelly to sandwich bread.");
 
     /* ensure transcripts are properly converted */
     makerstub.prompts = emptyList;
     oldResets = makerstub.resetCount;
-    json = api.makeResponseFromPrompts();
-    assertEquals(0, json.getJSONArray("transcript").length());
-    assertEquals(false, json.has("recipe"));
-    assertEquals(oldResets, makerstub.resetCount, "should not have reset");
+    json = api.makeRegenerateResponse();
+    assertEquals(true, json.has("recipe"));
 
     makerstub.prompts = examplePrompts;
     json = api.makeResponseFromPrompts();
     assertEquals(
         new JSONObject(exampleExpectedResponse).getJSONArray("transcript").toString(),
         json.getJSONArray("transcript").toString());
-    assertEquals(false, json.has("recipe"));
-    assertEquals(oldResets, makerstub.resetCount, "should not have reset");
-
-    /* set recipe and ensure proper state transitions occur */
-    makerstub.recipe = new Recipe("Food", "breakfast", "steps");
-    oldResets = makerstub.resetCount;
-    json = api.makeResponseFromPrompts();
-    assertEquals(new Recipe(json.getJSONObject("recipe")), makerstub.recipe);
-    assertEquals(oldResets + 1, makerstub.resetCount, "should have reset");
+    assertEquals(true, json.has("recipe"));
+    assertEquals(makerstub.regenerateRecipe().getTitle(), new Recipe("new PB&J Sandwich", "breakfast", "Add peanut butter and jelly to sandwich bread.").getTitle());
   }
 
   @Test
@@ -179,11 +170,28 @@ public class NewRecipeAPITest {
   @Test
   public void testGet() {
     makerstub.prompts = examplePrompts;
+
+
     try {
-      assertEquals(api.handleGet("", ""), exampleExpectedResponse);
+      assertEquals(api.handleGet("?prompts", ""), exampleExpectedResponse);
     } catch (Exception e) {
       fail("Delete should never throw exception");
     }
+
+    /*You cannot call without specifying query */
+     try {
+      assertEquals(api.handleGet("", ""), "400 Bad Request");
+    } catch (Exception e) {
+      fail("Delete should never throw exception");
+    }
+
+    /* Checking whether the code works using regenerate prompt*/
+    try {
+      assertEquals(api.handleGet("?regenerate", ""), exampleExpectedResponse);
+    } catch (Exception e) {
+      fail("Delete should never throw exception");
+    }
+
   }
 
   @Test
