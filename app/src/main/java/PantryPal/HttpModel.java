@@ -34,23 +34,55 @@ class HttpRequestModel implements HttpModel {
     this.urlString = "http://" + ip + ":" + port + "/" + path;
   }
 
+  // public boolean tryConnect(String method, String query, String request) {
+  //   try {
+  //     URL url = new URI(urlString).toURL();
+  //     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+  //     conn.setRequestMethod(method);
+  //     conn.setDoOutput(true);
+  //     if (method.equals("POST") || method.equals("PUT")) {
+  //       OutputStreamWriter out = new OutputStreamWriter(conn.getOutputStream());
+  //       out.write(request);
+  //       out.flush();
+  //       out.close();
+  //     }
+  //     System.out.println("Request Method successful: " + method);
+  //     return true;
+  //   } catch (Exception ex) {
+  //     ex.printStackTrace();
+  //     System.out.println("Request Method failed: " + method);
+  //     return false;
+  //   }
+  // }
   public boolean tryConnect(String method, String query, String request) {
+    // Implement your HTTP request logic here and return the response
+    if (request != null) {
+      System.out.println("Request :" + request);
+    }
     try {
+      if (query != null) {
+        urlString += "?" + query;
+      }
       URL url = new URI(urlString).toURL();
       HttpURLConnection conn = (HttpURLConnection) url.openConnection();
       conn.setRequestMethod(method);
       conn.setDoOutput(true);
+
       if (method.equals("POST") || method.equals("PUT")) {
         OutputStreamWriter out = new OutputStreamWriter(conn.getOutputStream());
         out.write(request);
         out.flush();
         out.close();
       }
-      System.out.println("Request Method successful: " + method);
+
+      BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+      String response = in.readLine();
+      in.close();
+      System.out.println("Response :" + response);
+      // return response;
       return true;
     } catch (Exception ex) {
       ex.printStackTrace();
-      System.out.println("Request Method failed: " + method);
       return false;
     }
   }

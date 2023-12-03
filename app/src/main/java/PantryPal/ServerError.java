@@ -21,40 +21,45 @@ public class ServerError {
   }
 
   public void showError() {
-    Platform.runLater(
-        () -> {
-          Alert alert = new Alert(Alert.AlertType.ERROR);
-          alert.setTitle("Server Error");
-          alert.setHeaderText(null);
-          alert.setContentText("Server is temporarily unavailable, please check later");
+    Platform.runLater(() -> {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Server Error");
+        alert.setHeaderText(null);
+        alert.setContentText("Server is temporarily unavailable, please check later");
 
-          // Remove the default buttons
-          alert.getButtonTypes().clear();
+        // Remove the default buttons
+        alert.getButtonTypes().clear();
 
-          // "Refresh" button
-          ButtonType refreshButtonType = new ButtonType("Refresh", ButtonBar.ButtonData.OTHER);
-          alert.getButtonTypes().add(refreshButtonType);
+        // "Refresh" button
+        ButtonType refreshButtonType = new ButtonType("Refresh", ButtonBar.ButtonData.OTHER);
+        alert.getButtonTypes().add(refreshButtonType);
 
-          Optional<ButtonType> result = alert.showAndWait();
+        // Display the alert and wait for the user to click a button
+        Optional<ButtonType> result = alert.showAndWait();
 
-          // Handle the Refresh button action
-          if (result.isPresent() && result.get() == refreshButtonType) {
+        // Handle the Refresh button action
+        if (result.isPresent() && result.get() == refreshButtonType) {
             boolean serverResponse = serverRequest(account);
-            if (serverResponse) {
-              alert.close(); // Close the alert only if serverResponse is true
-            } else {
-              // keep the alert open by showing it again if serverResponse is false
-              showError();
+            System.err.println("Server request " + (serverResponse ? "succeeded" : "failed"));
+            if (!serverResponse) {
+                // If the server response is false, show the error again
+                showError();
             }
-          }
-        });
-  }
+            else{
+                System.out.print("Server is back online");
+            }
+        }
+    });
+}
+
 
   public boolean mockFailedServerRequest(Account account) {
     return false;
   }
 
   public boolean serverRequest(Account account) {
+
     return authorizationModel.ifConnected(account);
+
   }
 }
