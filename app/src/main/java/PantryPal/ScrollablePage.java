@@ -44,18 +44,18 @@ class Footer extends HBox {
     button.setOnAction(callback);
   }
 
-  public void addDropDown(List<String> options, EventHandler<ActionEvent> callback) {
-    ChoiceBox dropDown = new ChoiceBox<>();
-    for (String option: options) {
-      dropDown.getItems().add(option);
-    }
-    this.getChildren().add(dropDown);
-
-  }
-
   // Overloaded method that takes a pre-configured button
   public void addButton(Button button) {
     this.getChildren().add(button); // Assuming 'this' is a type of Pane
+  }
+
+  public void addDropDown(List<String> options, String def, EventHandler<ActionEvent> callback) {
+    ChoiceBox<String> dropDown = new ChoiceBox<>();
+    for (String option: options) {
+      dropDown.getItems().add(option);
+    }
+    dropDown.setValue(def);
+    this.getChildren().add(dropDown);
   }
 
   Footer() {

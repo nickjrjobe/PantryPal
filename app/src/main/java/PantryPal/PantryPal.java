@@ -104,16 +104,25 @@ class AppController implements HomeTracker {
 
   public RecipeListPage makeRecipeListPage() {
     List<String> mealTypes = new ArrayList<String>();
-    Collections.addAll(mealTypes, "Breakfast", "Lunch", "Dinner");
+    Collections.addAll(mealTypes, "No filters", "Breakfast", "Lunch", "Dinner");
+    List<String> sorts = new ArrayList<String>();
+    Collections.addAll(sorts, "A-Z", "Z-A", "Oldest", "Newest");
     RecipeListPage recipeList = new RecipeListPage(getRecipeListEntries());
     recipeList.footer.addButton(
         "New Recipe",
         e -> {
           pt.swapToPage(makeNewRecipeController().getPage());
         });
-    // TODO add logic to dropdown selection
+    // TODO add logic to dropdown selections
     recipeList.footer.addDropDown(
       mealTypes,
+      "No filters",
+      e -> {
+
+      });
+    recipeList.footer.addDropDown(
+      sorts,
+      "Newest",
       e -> {
 
       });
