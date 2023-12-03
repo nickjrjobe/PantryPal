@@ -3,6 +3,10 @@ package server;
 import java.util.ArrayList;
 import java.util.List;
 
+import java.util.Observable;
+import javafx.event.*;
+import javafx.scene.layout.*;
+import javafx.scene.text.*;
 import utils.Recipe;
 
 /** Uses a state machine approach to pass control between methods when creating new recipe */
@@ -13,6 +17,11 @@ public class NewRecipeCreator implements InteractiveRecipeMaker {
   public List<String> prompts;
   private Recipe recipe;
   String ingredients;
+
+  public void update(Observable o, Object whisperData) {
+    System.err.println("NewRecipeCreator updated");
+    readResponse((String) whisperData);
+  }
 
   NewRecipeCreator(RecipeCreator recipeCreator) {
     this.recipeCreator = recipeCreator;

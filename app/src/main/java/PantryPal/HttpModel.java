@@ -4,6 +4,7 @@ package PantryPal;
 
 import java.io.*;
 import java.io.BufferedReader;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
@@ -17,6 +18,8 @@ interface HttpModel {
   public void setPath(String path);
 
   public String performRequest(String method, String query, String request);
+
+  public String performRawRequest(String method, InputStream in);
 }
 
 class HttpRequestModel implements HttpModel {
@@ -30,6 +33,33 @@ class HttpRequestModel implements HttpModel {
 
   public void setPath(String path) {
     this.urlString = "http://" + ip + ":" + port + "/" + path;
+  }
+
+  public String performRawRequest(String method, InputStream in) {
+    // Implement your HTTP request logic here and return the response
+    try {
+      if (!method.equals("POST") && !method.equals("PUT")) {
+        throw new IllegalArgumentException("must call with post or put");
+      }
+      URL url = new URI(urlString).toURL();
+      HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+      conn.setRequestMethod(method);
+      conn.setDoOutput(true);
+      OutputStream out = conn.getOutputStream();
+
+      in.transferTo(out);
+      out.flush();
+      out.close();
+
+      BufferedReader fromServer = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+      String response = fromServer.readLine();
+      fromServer.close();
+      System.out.println("Response :" + response);
+      return response;
+    } catch (Exception ex) {
+      ex.printStackTrace();
+      return "Error: " + ex.getMessage();
+    }
   }
 
   public String performRequest(String method, String query, String request) {
