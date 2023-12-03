@@ -2,21 +2,18 @@ package server;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Observable;
-
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import utils.Recipe;
 
 class InteractiveRecipeMakerStub implements InteractiveRecipeMaker {
   Recipe recipe = null;
-  Recipe regenRecipe = null;
   int resetCount = 0;
   List<String> prompts = new ArrayList<String>();
   String response;
@@ -44,10 +41,8 @@ class InteractiveRecipeMakerStub implements InteractiveRecipeMaker {
     requestObserved = (String) data;
   }
 
-  // TODO
-  public Recipe regenerateRecipe() {
-    return new Recipe("new" + recipe.getTitle(), recipe.getMealType(), 
-      recipe.getDescription());
+  public Recipe regenerateRecipe(){
+    return new Recipe("new" + recipe.getTitle(), recipe.getMealType(), recipe.getDescription());
   }
 }
 
@@ -68,6 +63,36 @@ public class NewRecipeAPITest {
 
   @Test
   public void testMakeResponseFromPrompts() {
+    JSONObject json;
+    int oldResets; // don't care about absolute value just that one occured or didnt
+    makerstub.recipe = null;
+
+    /* ensure transcripts are properly converted */
+    makerstub.prompts = emptyList;
+    oldResets = makerstub.resetCount;
+    json = api.makeResponseFromPrompts();
+    assertEquals(0, json.getJSONArray("transcript").length());
+    assertEquals(false, json.has("recipe"));
+    assertEquals(oldResets, makerstub.resetCount, "should not have reset");
+
+    makerstub.prompts = examplePrompts;
+    json = api.makeResponseFromPrompts();
+    assertEquals(
+        new JSONObject(exampleExpectedResponse).getJSONArray("transcript").toString(),
+        json.getJSONArray("transcript").toString());
+    assertEquals(false, json.has("recipe"));
+    assertEquals(oldResets, makerstub.resetCount, "should not have reset");
+
+    /* set recipe and ensure proper state transitions occur */
+    makerstub.recipe = new Recipe("Food", "breakfast", "steps");
+    oldResets = makerstub.resetCount;
+    json = api.makeResponseFromPrompts();
+    assertEquals(new Recipe(json.getJSONObject("recipe")), makerstub.recipe);
+    assertEquals(oldResets + 1, makerstub.resetCount, "should have reset");
+  }
+  
+  @Test
+  public void testMakeRegenerateResponse() {
     JSONObject json;
     int oldResets; // don't care about absolute value just that one occured or didnt
     makerstub.recipe = null;
