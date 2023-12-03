@@ -99,6 +99,7 @@ class NewRecipeAPI extends HttpAPI {
     return response;
   }
 
+  //to be tested
   /** get current prompts */
   String handleGet(String query, String request) throws IOException {
     String response = "400 Bad Request";
