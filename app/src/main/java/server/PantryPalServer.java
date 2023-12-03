@@ -25,6 +25,7 @@ public class PantryPalServer {
     HttpServer server = HttpServer.create(new InetSocketAddress(SERVER_HOSTNAME, SERVER_PORT), 0);
 
     HashMap<String, WhisperSubject> perUserWhisperSubject = new HashMap<>();
+    HashMap<String, ImageManager> perUserImageManager = new HashMap<>();
     // setup APIS
     HttpContext WhisperContext =
         server.createContext(
@@ -33,11 +34,13 @@ public class PantryPalServer {
 
     HttpContext recipeListUsersContext =
         server.createContext("/recipes", new UserHandler(new RecipeListAPIFactory()));
+    HttpContext imageContext =
+        server.createContext("/image", new UserHandler(new ImageAPIFactory(perUserImageManager)));
 
     HttpContext detailedRecipeContext =
         server.createContext("/recipe", new UserHandler(new DetailedRecipeAPIFactory()));
     HttpContext ShareContext =
-        server.createContext("/share", new UserHandler(new ShareAPIFactory()));
+        server.createContext("/share", new UserHandler(new ShareAPIFactory(perUserImageManager)));
 
     HttpContext authorizationContext =
         server.createContext("/authorization", new AuthorizationAPI(accountData));
