@@ -12,3 +12,6 @@ app/build/
 
 # Ignore linter files
 build/tmp/
+
+# Ignore a VSCode file
+.vscode/settings.json

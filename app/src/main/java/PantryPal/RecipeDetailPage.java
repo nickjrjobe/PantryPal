@@ -4,6 +4,8 @@ import java.io.*;
 import javafx.event.*;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.text.*;
 import javafx.scene.text.TextAlignment;
@@ -99,6 +101,8 @@ class RecipeDetailUI extends VBox {
   protected Label titleField;
   protected TextArea descriptionField;
   protected Label mealTypeField;
+  protected ImageView imageView;
+  protected DalleBot dalleBot;
   RecipeDetailModel recipeDetailModel;
 
   public void format() {
@@ -120,6 +124,28 @@ class RecipeDetailUI extends VBox {
     mealTypeField.setStyle("-fx-background-color: #dae5ea; -fx-border-width: 0;");
     mealTypeField.setTextAlignment(TextAlignment.CENTER);
     mealTypeField.setText(recipe.getMealType());
+
+    /* format recipe image */
+    try {
+      String imagePath = dalleBot.getImagePath(recipe.getTitle());
+      Image image = new Image(new FileInputStream(imagePath));
+      imageView.setImage(image);
+      imageView.setFitWidth(200); // Set preferred width
+      imageView.setFitHeight(200); // Set preferred height
+      imageView.setPreserveRatio(true);
+    } catch (FileNotFoundException e) {
+      try {
+        String imagePath = dalleBot.generateImage(recipe.getTitle());
+        Image image = new Image(new FileInputStream(imagePath));
+        imageView.setImage(image);
+        imageView.setFitWidth(200); // Set preferred width
+        imageView.setFitHeight(200); // Set preferred height
+        imageView.setPreserveRatio(true);
+      } catch (IOException ex) {
+        System.err.println("Image file generation failed: " + e.getMessage());
+      }
+      // Optionally set a placeholder image or handle the error
+    }
   }
 
   RecipeDetailUI(Recipe recipe, RecipeDetailModel recipeDetailModel) {
@@ -133,11 +159,15 @@ class RecipeDetailUI extends VBox {
     descriptionField.setWrapText(true);
     mealTypeField = new Label();
     mealTypeField.setText(recipe.getMealType());
+    imageView = new ImageView();
+
+    dalleBot = new DalleBot();
 
     this.format();
     this.getChildren().add(titleField);
     this.getChildren().add(descriptionField);
     this.getChildren().add(mealTypeField);
+    this.getChildren().add(imageView);
   }
 
   public void save() {
