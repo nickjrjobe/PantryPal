@@ -27,9 +27,19 @@ class AppController implements HomeTracker {
   }
 
   public ScrollablePage getHome() {
-    // US 11: Check if autologin exists and if so autoswap to home page
+    checkForAutoLogin(CREDENTIALS);
+    // Check if account exists
+    if (account == null) {
+      return makeLoginPage();
+    } else {
+      return makeRecipeListPage();
+    }
+  }
+
+  /** Checks if autologin exists, then sets up account */
+  public void checkForAutoLogin(String credentials_file_path) {
     try {
-      File file = new File(CREDENTIALS);
+      File file = new File(credentials_file_path);
       FileReader fr = new FileReader(file);
       BufferedReader br = new BufferedReader(fr);
       String username = br.readLine();
@@ -40,12 +50,6 @@ class AppController implements HomeTracker {
       account = new Account(username, password);
     } catch (IOException ex) {
       System.out.println("Error reading from file");
-    }
-    // Check if account exists
-    if (account == null) {
-      return makeLoginPage();
-    } else {
-      return makeRecipeListPage();
     }
   }
 
@@ -113,21 +117,9 @@ class AppController implements HomeTracker {
 
           if (loggedIn) {
             this.account = accountLoginUI.getAccount();
-            // Check if loginValid && autoLogin selected
+            // US11 - Save credentials to file
             if (accountLoginUI.isAutoLoginSelected()) {
-              // Save credentials to file DontLookHere.txt
-              // Next time when opening app, we will check for this file
-              try {
-                File file = new File(CREDENTIALS);
-                FileWriter fr = new FileWriter(file, false);
-                BufferedWriter br = new BufferedWriter(fr);
-                br.write(account.getUsername() + "\n");
-                br.write(account.getPassword());
-                br.close();
-                fr.close();
-              } catch (IOException ex) {
-                System.out.println("Error writing to file");
-              }
+              saveAutoLoginDetails(account, CREDENTIALS);
             }
             pt.swapToPage(makeRecipeListPage()); // Swap to recipe list page
           }
@@ -139,6 +131,21 @@ class AppController implements HomeTracker {
           pt.swapToPage(makeAccountCreatePage());
         });
     return accountLoginPage;
+  }
+
+  public void saveAutoLoginDetails(Account account, String credentials_file_path) {
+    // Saves given account credentials to specified file
+    try {
+      File file = new File(credentials_file_path);
+      FileWriter fr = new FileWriter(file, false);
+      BufferedWriter br = new BufferedWriter(fr);
+      br.write(account.getUsername() + "\n");
+      br.write(account.getPassword());
+      br.close();
+      fr.close();
+    } catch (IOException ex) {
+      System.out.println("Error writing to file");
+    }
   }
 
   public RecipeListPage makeRecipeListPage() {
