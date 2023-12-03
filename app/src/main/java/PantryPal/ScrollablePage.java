@@ -2,16 +2,22 @@
 
 package PantryPal;
 
-import java.io.*;
-import javafx.event.*;
+import java.util.List;
+
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.layout.*;
-import javafx.scene.text.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
+import javafx.scene.text.Text;
 
 /** Generic footer UI element to be used on different UI pages. Supports buttons */
 class Footer extends HBox {
@@ -36,6 +42,15 @@ class Footer extends HBox {
     button.setStyle(buttonStyle);
     this.getChildren().add(button);
     button.setOnAction(callback);
+  }
+
+  public void addDropDown(List<String> options, EventHandler<ActionEvent> callback) {
+    ChoiceBox dropDown = new ChoiceBox<>();
+    for (String option: options) {
+      dropDown.getItems().add(option);
+    }
+    this.getChildren().add(dropDown);
+
   }
 
   // Overloaded method that takes a pre-configured button
