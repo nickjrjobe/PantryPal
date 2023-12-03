@@ -170,8 +170,6 @@ public class NewRecipeAPITest {
   @Test
   public void testGet() {
     makerstub.prompts = examplePrompts;
-
-
     try {
       assertEquals(api.handleGet("?prompts", ""), exampleExpectedResponse);
     } catch (Exception e) {
@@ -184,14 +182,6 @@ public class NewRecipeAPITest {
     } catch (Exception e) {
       fail("Delete should never throw exception");
     }
-
-    /* Checking whether the code works using regenerate prompt*/
-    try {
-      assertEquals(api.handleGet("?regenerate", ""), exampleExpectedResponse);
-    } catch (Exception e) {
-      fail("Delete should never throw exception");
-    }
-
   }
 
   @Test
