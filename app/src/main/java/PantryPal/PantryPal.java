@@ -15,6 +15,7 @@ import utils.Recipe;
 
 interface HomeTracker {
   public ScrollablePage getHome();
+
   public ScrollablePage getError();
 }
 
@@ -25,11 +26,13 @@ class AppController implements HomeTracker {
   public AppController(PageTracker pt) {
     this.pt = pt;
   }
+
   public ScrollablePage getError() {
     return makeErrorPage();
   }
+
   public ScrollablePage getHome() {
-    
+
     if (account == null) {
       return makeLoginPage();
     } else {
@@ -51,9 +54,9 @@ class AppController implements HomeTracker {
   }
 
   public boolean validateAccount(
-    AccountLoginUI accountLoginUI, AuthorizationModel authorizationModel) {
+      AccountLoginUI accountLoginUI, AuthorizationModel authorizationModel) {
     Account account = accountLoginUI.getAccount();
-    if(!authorizationModel.tryConnect()){
+    if (!authorizationModel.tryConnect()) {
       ServerErrorPage serverErrorPage = makeErrorPage();
       pt.swapToPage(serverErrorPage);
       return false;
@@ -69,25 +72,25 @@ class AppController implements HomeTracker {
     }
     return true;
   }
+
   public ServerErrorPage makeErrorPage() {
-      ServerErrorUI serverErrorUI = new ServerErrorUI();
-      ServerErrorPage serverErrorPage = new ServerErrorPage(serverErrorUI);
+    ServerErrorUI serverErrorUI = new ServerErrorUI();
+    ServerErrorPage serverErrorPage = new ServerErrorPage(serverErrorUI);
 
-      serverErrorPage.footer.addButton(
-          "Refresh",
-          e -> {
-              if (serverErrorUI.tryConnect()) {
-                  System.err.println("Server is on");
-                  pt.goHome();
-              } else {
-                  System.err.println("Server still down");
-                  pt.goError();
-              }
-          });
+    serverErrorPage.footer.addButton(
+        "Refresh",
+        e -> {
+          if (serverErrorUI.tryConnect()) {
+            System.err.println("Server is on");
+            pt.goHome();
+          } else {
+            System.err.println("Server still down");
+            pt.goError();
+          }
+        });
 
-      return serverErrorPage;
+    return serverErrorPage;
   }
-
 
   public AccountCreatePage makeAccountCreatePage() {
     AccountCreateUI accountCreateUI = new AccountCreateUI();
@@ -215,6 +218,7 @@ class PageTracker {
   void goHome() {
     swapToPage(homeTracker.getHome());
   }
+
   void goError() {
     swapToPage(homeTracker.getError());
   }

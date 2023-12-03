@@ -34,34 +34,33 @@ class HttpRequestModel implements HttpModel {
     this.urlString = "http://" + ip + ":" + port + "/" + path;
   }
 
-
   public boolean tryConnect() {
     try {
-        URL url = new URL(urlString);
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setRequestMethod("GET");
-        conn.connect(); // Open a connection to the server
+      URL url = new URL(urlString);
+      HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+      conn.setRequestMethod("GET");
+      conn.connect(); // Open a connection to the server
 
-        int responseCode = conn.getResponseCode();
-        // Check if the response code indicates a successful connection
-        if (responseCode == HttpURLConnection.HTTP_OK || responseCode == HttpURLConnection.HTTP_NOT_FOUND) {
-            // The server is reachable, even if the specific page/resource is not found
-            return true;
-        } else {
-            // Server returned an error response code
-            return false;
-        }
-    } catch (IOException ex) {
-        // An IOException is thrown if there is a network error or the server is unreachable
-        System.err.println("Error: " + ex.getMessage());
-        // System.err.println(\"Error: \" + ex.getMessage());
-        if (ex.getMessage().contains("Connection refused: connect")) {
-          System.err.println("Server Problem!");
-        }
+      int responseCode = conn.getResponseCode();
+      // Check if the response code indicates a successful connection
+      if (responseCode == HttpURLConnection.HTTP_OK
+          || responseCode == HttpURLConnection.HTTP_NOT_FOUND) {
+        // The server is reachable, even if the specific page/resource is not found
+        return true;
+      } else {
+        // Server returned an error response code
         return false;
+      }
+    } catch (IOException ex) {
+      // An IOException is thrown if there is a network error or the server is unreachable
+      System.err.println("Error: " + ex.getMessage());
+      // System.err.println(\"Error: \" + ex.getMessage());
+      if (ex.getMessage().contains("Connection refused: connect")) {
+        System.err.println("Server Problem!");
+      }
+      return false;
     }
-}
-
+  }
 
   public String performRequest(String method, String query, String request) {
     // Implement your HTTP request logic here and return the response

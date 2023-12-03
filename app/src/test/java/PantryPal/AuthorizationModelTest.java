@@ -30,6 +30,6 @@ public class AuthorizationModelTest {
 
   @Test
   public void testTryConnect() {
-    assertEquals(false, recipeListModel.ifConnected(new Account("", "")));
+    assertEquals(false, recipeListModel.tryConnect());
   }
 }
