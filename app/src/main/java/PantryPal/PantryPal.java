@@ -21,9 +21,11 @@ interface HomeTracker {
 class AppController implements HomeTracker {
   private Account account;
   private PageTracker pt;
+  private LinkMaker linkMaker;
 
-  public AppController(PageTracker pt) {
+  public AppController(PageTracker pt, LinkMaker linkMaker) {
     this.pt = pt;
+    this.linkMaker = linkMaker;
   }
 
   public ScrollablePage getHome() {
@@ -105,6 +107,17 @@ class AppController implements HomeTracker {
     return accountLoginPage;
   }
 
+  public SharePage makeSharePage(String title) {
+    String link = linkMaker.makeLink(title, account);
+    SharePage sharePage = new SharePage(link);
+    sharePage.footer.addButton(
+        "exit",
+        e -> {
+          pt.swapToPage(makeRecipeDetailsPage(title));
+        });
+    return sharePage;
+  }
+
   public RecipeListPage makeRecipeListPage() {
     RecipeListPage recipeList = new RecipeListPage(getRecipeListEntries());
     recipeList.footer.addButton(
@@ -139,11 +152,19 @@ class AppController implements HomeTracker {
 
   public RecipeDetailPage makeRecipeDetailsPage(String title) {
     RecipeDetailModel rc = new RecipeDetailModel(new HttpRequestModel(), account);
-    RecipeDetailPage drp = new RecipeDetailPage(new RecipeDetailUI(rc.read(title), rc));
+    RecipeDetailPage drp =
+        new RecipeDetailPage(
+            new RecipeDetailUI(
+                rc.read(title), rc, new ImageModel(new HttpRequestModel(), account)));
     drp.footer.addButton(
         "home",
         e -> {
           pt.swapToPage(makeRecipeListPage());
+        });
+    drp.footer.addButton(
+        "share",
+        e -> {
+          pt.swapToPage(makeSharePage(title));
         });
     return drp;
   }
@@ -197,7 +218,7 @@ public class PantryPal extends Application {
   @Override
   public void start(Stage primaryStage) throws Exception {
     PageTracker pt = new PageTracker(primaryStage);
-    AppController appController = new AppController(pt);
+    AppController appController = new AppController(pt, new ShareLinkMaker());
     pt.setHomeTracker(appController);
     pt.goHome();
   }

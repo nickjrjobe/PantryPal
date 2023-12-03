@@ -161,7 +161,7 @@ class NewRecipeController {
   void done(Recipe recipe) {
     NewRecipeDetailPage drp =
         new NewRecipeDetailPage(
-            new RecipeDetailUI(recipe, new RecipeDetailModel(new HttpRequestModel(), account)));
+            new RecipeDetailUI(recipe, rc, new ImageModel(new HttpRequestModel(), account)));
     drp.footer.addButton(
         "home",
         e -> {
