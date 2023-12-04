@@ -185,7 +185,7 @@ public class NewRecipeAPITest {
     try {
       assertEquals(api.handleGet("", ""), "400 Bad Request");
     } catch (Exception e) {
-      fail("Delete should never throw exception");
+      fail("Get should never throw exception");
     }
   }
 
