@@ -91,6 +91,11 @@ class AppController implements HomeTracker {
 
     return serverErrorPage;
   }
+  
+  public void logout() {
+    this.account = null;
+    pt.swapToPage(makeLoginPage());
+  }
 
   public AccountCreatePage makeAccountCreatePage() {
     AccountCreateUI accountCreateUI = new AccountCreateUI();
@@ -155,6 +160,11 @@ class AppController implements HomeTracker {
         "New Recipe",
         e -> {
           pt.swapToPage(makeNewRecipeController().getPage());
+        });
+    recipeList.footer.addButton(
+        "logout",
+        e -> {
+          logout();
         });
     return recipeList;
   }
