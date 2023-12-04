@@ -3,7 +3,7 @@ package server;
 import org.json.JSONObject;
 import utils.Recipe;
 
-/** Interface of object which stores data for Recipes */
+/** Interface which defines behavior for storing data for multiple Recipes */
 public interface RecipeData {
   public JSONObject toJSON();
 

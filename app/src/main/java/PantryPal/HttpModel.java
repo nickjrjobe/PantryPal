@@ -62,6 +62,14 @@ class HttpRequestModel implements HttpModel {
     }
   }
 
+  /**
+   * Perform an HTTP request
+   *
+   * @param method the HTTP method to use
+   * @param query the query string to use
+   * @param request the request body to use
+   * @return the response from the server
+   */
   public String performRequest(String method, String query, String request) {
     // Implement your HTTP request logic here and return the response
     if (request != null) {
@@ -76,7 +84,7 @@ class HttpRequestModel implements HttpModel {
       conn.setRequestMethod(method);
       conn.setDoOutput(true);
 
-      if (method.equals("POST") || method.equals("PUT")) {
+      if (request != null && (method.equals("POST") || method.equals("PUT"))) {
         OutputStreamWriter out = new OutputStreamWriter(conn.getOutputStream());
         out.write(request);
         out.flush();

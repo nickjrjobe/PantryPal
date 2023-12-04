@@ -19,6 +19,11 @@ public class RecipeListModel {
     httpModel.setPath("recipes/" + account.getUsername() + "/");
   }
 
+  /**
+   * Get a list of recipes from the server
+   *
+   * @return
+   */
   public List<Recipe> getRecipeList() {
     String response = httpModel.performRequest("GET", null, null);
     try {
@@ -29,17 +34,35 @@ public class RecipeListModel {
     }
   }
 
+  /**
+   * Get a list of recipes from the server filtered by meal type
+   *
+   * @param mealtype
+   * @return
+   */
   public List<Recipe> getMealTypeRecipeList(String mealtype) {
     if (mealtype == "No Filter") {
       return getRecipeList();
     }
     httpModel.performRequest("POST", mealtype, null);
     List<Recipe> recipeList = getRecipeList();
+    // Display filtered recipes list
+    System.out.println("Filtered Recipes: ");
+    for (Recipe recipe : recipeList) {
+      System.out.println("    " + recipe.getTitle());
+    }
+    // Delete filter
     httpModel.performRequest("DELETE", null, null);
     return recipeList;
   }
 
-  /** convert JSON response into List of strings */
+  /**
+   * Process the response from the server
+   *
+   * @param response the response from the server
+   * @return
+   * @throws IllegalArgumentException
+   */
   public List<Recipe> processResponse(String response) throws IllegalArgumentException {
     try {
       JSONObject json = new JSONObject(response);
