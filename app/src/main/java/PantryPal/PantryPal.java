@@ -24,10 +24,12 @@ class AppController implements HomeTracker {
   private Account account;
   private PageTracker pt;
   private LinkMaker linkMaker;
+  private static final String CREDENTIALS = "Secure_Credentials.txt";
 
   public AppController(PageTracker pt, LinkMaker linkMaker) {
     this.pt = pt;
     this.linkMaker = linkMaker;
+    this.account = checkForAutoLogin(CREDENTIALS);
   }
 
   public ScrollablePage getError() {
@@ -35,11 +37,46 @@ class AppController implements HomeTracker {
   }
 
   public ScrollablePage getHome() {
-
+    // Check if account exists
     if (account == null) {
       return makeLoginPage();
     } else {
       return makeRecipeListPage();
+    }
+  }
+
+  /** Checks if autologin exists, then sets up account */
+  public static Account checkForAutoLogin(String credentials_file_path) {
+    try {
+      File file = new File(credentials_file_path);
+      FileReader fr = new FileReader(file);
+      BufferedReader br = new BufferedReader(fr);
+      String username = br.readLine();
+      String password = br.readLine();
+      br.close();
+      fr.close();
+      // Set the text fields of the UI
+      Account account = new Account(username, password);
+      return account;
+    } catch (IOException ex) {
+      System.out.println("Error reading from file");
+      return null;
+    }
+  }
+
+  public static boolean checkIfAutoLoginExists(String credentials_file_path) {
+    try {
+      File file = new File(credentials_file_path);
+      FileReader fr = new FileReader(file);
+      BufferedReader br = new BufferedReader(fr);
+      String username = br.readLine();
+      String password = br.readLine();
+      br.close();
+      fr.close();
+      return true;
+    } catch (IOException ex) {
+      System.out.println("Error reading from file");
+      return false;
     }
   }
 
@@ -56,6 +93,13 @@ class AppController implements HomeTracker {
     return true;
   }
 
+  /**
+   * Validates the account and sets the error text if the account is invalid
+   *
+   * @param accountLoginUI the UI to validate
+   * @param authorizationModel the model to validate against
+   * @return true if the account is valid, false otherwise
+   */
   public boolean validateAccount(
       AccountLoginUI accountLoginUI, AuthorizationModel authorizationModel) {
     Account account = accountLoginUI.getAccount();
@@ -117,7 +161,6 @@ class AppController implements HomeTracker {
   public AccountLoginPage makeLoginPage() {
     AccountLoginUI accountLoginUI = new AccountLoginUI();
     AccountLoginPage accountLoginPage = new AccountLoginPage(accountLoginUI);
-    // TODO check if autologin exists and if so autoswap to home page
 
     accountLoginPage.footer.addButton(
         "Login",
@@ -130,8 +173,7 @@ class AppController implements HomeTracker {
 
           if (loggedIn) {
             this.account = accountLoginUI.getAccount();
-            // TODO check if loginValid && autoLogin selected and if so enable autologin US11
-            pt.swapToPage(makeRecipeListPage()); // Swap to recipe list page
+            login(accountLoginUI);
           }
         });
 
@@ -141,6 +183,28 @@ class AppController implements HomeTracker {
           pt.swapToPage(makeAccountCreatePage());
         });
     return accountLoginPage;
+  }
+
+  public void login(AccountLoginUI accountLoginUI) {
+    if (accountLoginUI.isAutoLoginSelected()) {
+      saveAutoLoginDetails(account, CREDENTIALS);
+    }
+    pt.swapToPage(makeRecipeListPage()); // Swap to recipe list page
+  }
+
+  public void saveAutoLoginDetails(Account account, String credentials_file_path) {
+    // Saves given account credentials to specified file
+    try {
+      File file = new File(credentials_file_path);
+      FileWriter fr = new FileWriter(file, false);
+      BufferedWriter br = new BufferedWriter(fr);
+      br.write(account.getUsername() + "\n");
+      br.write(account.getPassword());
+      br.close();
+      fr.close();
+    } catch (IOException ex) {
+      System.out.println("Error writing to file");
+    }
   }
 
   public SharePage makeSharePage(String title) {
@@ -161,11 +225,13 @@ class AppController implements HomeTracker {
         e -> {
           pt.swapToPage(makeNewRecipeController().getPage());
         });
-    recipeList.footer.addButton(
-        "logout",
-        e -> {
-          logout();
-        });
+    if (checkIfAutoLoginExists(CREDENTIALS) == false) {
+      recipeList.footer.addButton(
+          "logout",
+          e -> {
+            logout();
+          });
+    }
     return recipeList;
   }
 
