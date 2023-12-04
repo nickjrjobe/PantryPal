@@ -27,10 +27,10 @@ class AppController implements HomeTracker {
   public AppController(PageTracker pt, LinkMaker linkMaker) {
     this.pt = pt;
     this.linkMaker = linkMaker;
+    this.account = checkForAutoLogin(CREDENTIALS);
   }
 
   public ScrollablePage getHome() {
-    this.account = checkForAutoLogin(CREDENTIALS);
     // Check if account exists
     if (account == null) {
       return makeLoginPage();
@@ -122,11 +122,7 @@ class AppController implements HomeTracker {
 
           if (loggedIn) {
             this.account = accountLoginUI.getAccount();
-            // US11 - Save credentials to file
-            if (accountLoginUI.isAutoLoginSelected()) {
-              saveAutoLoginDetails(account, CREDENTIALS);
-            }
-            pt.swapToPage(makeRecipeListPage()); // Swap to recipe list page
+            login(accountLoginUI);
           }
         });
 
@@ -138,6 +134,12 @@ class AppController implements HomeTracker {
     return accountLoginPage;
   }
 
+  public void login(AccountLoginUI accountLoginUI){
+    if (accountLoginUI.isAutoLoginSelected()) {
+      saveAutoLoginDetails(account, CREDENTIALS);
+    }
+    pt.swapToPage(makeRecipeListPage()); // Swap to recipe list page
+  }
   public void saveAutoLoginDetails(Account account, String credentials_file_path) {
     // Saves given account credentials to specified file
     try {
