@@ -18,8 +18,6 @@ import javafx.scene.text.*;
 public interface HttpModel {
   void setPath(String path);
 
-
-  
   // Methods for Observer pattern
   void registerObserver(ServerObserver observer);
 
@@ -28,11 +26,10 @@ public interface HttpModel {
   void notifyServerStatus(boolean connected);
 
   boolean tryConnect();
-  
+
   public String performRequest(String method, String query, String request);
 
   public String performRawRequest(String method, InputStream in);
-
 }
 
 class HttpRequestModel implements HttpModel {
@@ -91,6 +88,7 @@ class HttpRequestModel implements HttpModel {
       return false;
     }
   }
+
   public String performRawRequest(String method, InputStream in) {
     // Implement your HTTP request logic here and return the response
     try {
@@ -115,7 +113,6 @@ class HttpRequestModel implements HttpModel {
     } catch (Exception ex) {
       ex.printStackTrace();
       return "Error: " + ex.getMessage();
-
     }
   }
 

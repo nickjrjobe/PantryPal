@@ -165,8 +165,7 @@ class NewRecipeController {
     HttpRequestModel httpModel = new HttpRequestModel();
     httpModel.registerObserver(pt);
     NewRecipeDetailPage drp =
-        new NewRecipeDetailPage(
-            new RecipeDetailUI(recipe, rc, new ImageModel(httpModel, account)));
+        new NewRecipeDetailPage(new RecipeDetailUI(recipe, rc, new ImageModel(httpModel, account)));
     drp.footer.addButton(
         "home",
         e -> {

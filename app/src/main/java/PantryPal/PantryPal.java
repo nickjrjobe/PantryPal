@@ -194,8 +194,7 @@ class AppController implements HomeTracker {
     httpModelDrp.registerObserver(pt);
     RecipeDetailPage drp =
         new RecipeDetailPage(
-            new RecipeDetailUI(
-                rc.read(title), rc, new ImageModel(httpModelDrp, account)));
+            new RecipeDetailUI(rc.read(title), rc, new ImageModel(httpModelDrp, account)));
     drp.footer.addButton(
         "home",
         e -> {
@@ -215,7 +214,7 @@ class AppController implements HomeTracker {
     HttpRequestModel httpModelNr = new HttpRequestModel();
     httpModelNr.registerObserver(pt);
     NewRecipeModel newRecipeModel = new NewRecipeModel(httpModelNr, account);
-    
+
     HttpRequestModel httpModelVtt = new HttpRequestModel();
     httpModelVtt.registerObserver(pt);
     VoiceToText voiceToText = new WhisperModel(httpModelVtt, account);
