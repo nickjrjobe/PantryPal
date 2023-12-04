@@ -54,6 +54,7 @@ class AccountLoginUI extends VBox {
   }
 
   void setErrorText(String text) {
+    System.err.println("error label text: " + text);
     errorLabel.setText(text);
   }
 }

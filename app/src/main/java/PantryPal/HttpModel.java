@@ -82,8 +82,7 @@ class HttpRequestModel implements HttpModel {
         return true;
       }
     } catch (IOException ex) {
-      // An IOException is thrown if there is a network error or the server is unreachable
-      System.err.println("Error: " + ex.getMessage());
+      // only called when refresh error page, so just handle connection refused error
       notifyServerStatus(false);
       return false;
     }
@@ -108,7 +107,7 @@ class HttpRequestModel implements HttpModel {
       BufferedReader fromServer = new BufferedReader(new InputStreamReader(conn.getInputStream()));
       String response = fromServer.readLine();
       fromServer.close();
-      System.out.println("Response :" + response);
+      System.out.println("performRawRequest Response :" + response);
       return response;
     } catch (Exception ex) {
       ex.printStackTrace();
@@ -143,7 +142,11 @@ class HttpRequestModel implements HttpModel {
       System.out.println("Response :" + response);
       return response;
     } catch (Exception ex) {
-      tryConnect();
+      if (ex.getMessage().contains("Connection refused: connect")) {
+        notifyServerStatus(false);
+        System.err.println("Connection refused: connect");
+      }
+      ex.printStackTrace();
       return "Error: " + ex.getMessage();
     }
   }
