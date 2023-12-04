@@ -79,7 +79,8 @@ class HttpRequestModel implements HttpModel {
         return true;
       } else {
         // Other errors with server available
-        return true;
+        notifyServerStatus(false);
+        return false;
       }
     } catch (IOException ex) {
       // only called when refresh error page, so just handle connection refused error
@@ -108,6 +109,9 @@ class HttpRequestModel implements HttpModel {
       String response = fromServer.readLine();
       fromServer.close();
       System.out.println("performRawRequest Response :" + response);
+      if (response.contains("Connection refused")) {
+        notifyServerStatus(false);
+      }
       return response;
     } catch (Exception ex) {
       ex.printStackTrace();
@@ -117,15 +121,14 @@ class HttpRequestModel implements HttpModel {
 
   public String performRequest(String method, String query, String request) {
     // Implement your HTTP request logic here and return the response
-    String requestURL = urlString;
     if (request != null) {
       System.out.println("Request :" + request);
     }
     try {
       if (query != null) {
-        requestURL += "?" + query;
+        urlString += "?" + query;
       }
-      URL url = new URI(requestURL).toURL();
+      URL url = new URI(urlString).toURL();
       HttpURLConnection conn = (HttpURLConnection) url.openConnection();
       conn.setRequestMethod(method);
       conn.setDoOutput(true);
@@ -141,9 +144,12 @@ class HttpRequestModel implements HttpModel {
       String response = in.readLine();
       in.close();
       System.out.println("Response :" + response);
+      if (response.contains("Connection refused")) {
+        notifyServerStatus(false);
+      }
       return response;
     } catch (Exception ex) {
-      if (ex.getMessage().contains("Connection refused: connect")) {
+      if (ex.getMessage().contains("Connection refused")) {
         notifyServerStatus(false);
       }
       ex.printStackTrace();
