@@ -78,8 +78,8 @@ class HttpRequestModel implements HttpModel {
         notifyServerStatus(true);
         return true;
       } else {
-        // Server returned an error response code
-        return false;
+        // Other errors with server available
+        return true;
       }
     } catch (IOException ex) {
       // An IOException is thrown if there is a network error or the server is unreachable
