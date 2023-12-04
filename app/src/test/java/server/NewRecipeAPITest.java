@@ -178,7 +178,7 @@ public class NewRecipeAPITest {
     try {
       assertEquals(api.handleGet("?prompts", ""), exampleExpectedResponse);
     } catch (Exception e) {
-      fail("Delete should never throw exception");
+      fail("Get should never throw exception");
     }
 
     /*You cannot call without specifying query */
