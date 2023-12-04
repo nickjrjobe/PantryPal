@@ -54,7 +54,11 @@ public class NewRecipeAPITest {
   String invalidJson = "this/is-definitely.not;json";
   String validJson = "{\"response\":\"breakfast\"}";
   String exampleExpectedResponse = "{\"transcript\":[\"fee\",\"fi\",\"fo\",\"fum\"]}";
-  String rExampleResponse =  "{\"recipe\":{\"mealtype\":\"breakfast\"," + "\"description\":\"Add peanut butter and jelly to sandwich bread.\"," + "\"title\":\"PB&J Sandwich\"}}";
+  String rExampleResponse =
+      "{\"recipe\":{\"mealtype\":\"breakfast\","
+          + "\"description\":\"Add peanut butter and jelly to sandwich bread.\","
+          + "\"title\":\"PB&J Sandwich\"}}";
+
   @BeforeEach
   public void setup() {
     makerstub = new InteractiveRecipeMakerStub();
@@ -175,10 +179,12 @@ public class NewRecipeAPITest {
       fail("Get should never throw exception");
     }
     /*Calling get method using regenrate method */
-    try{
-      makerstub.recipe = new Recipe("PB&J Sandwich", "breakfast", "Add peanut butter and jelly to sandwich bread.");
+    try {
+      makerstub.recipe =
+          new Recipe(
+              "PB&J Sandwich", "breakfast", "Add peanut butter and jelly to sandwich bread.");
       assertEquals(api.handleGet("?regenerate", ""), rExampleResponse);
-    } catch (Exception ex){
+    } catch (Exception ex) {
       fail("Get should never throw exception");
     }
 

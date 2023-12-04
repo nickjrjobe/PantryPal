@@ -183,16 +183,17 @@ class NewRecipeController {
     newRecipeModel.reset();
     pt.goHome();
   }
-  void regenerateRecipe(){
+
+  void regenerateRecipe() {
     try {
-            Recipe newRecipe = newRecipeModel.regenerate();
-            /* create an identical page for new recipe by recalling method */
-            done(newRecipe);
-          } catch (IOException ex) {
-            System.err.println(
-                "New recipe response from server malformed, error " + ex.getMessage());
-          }
+      Recipe newRecipe = newRecipeModel.regenerate();
+      /* create an identical page for new recipe by recalling method */
+      done(newRecipe);
+    } catch (IOException ex) {
+      System.err.println("New recipe response from server malformed, error " + ex.getMessage());
+    }
   }
+
   void regenerate() {
     TranscriptResults results;
     try {
