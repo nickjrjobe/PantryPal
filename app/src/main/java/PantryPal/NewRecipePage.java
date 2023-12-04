@@ -159,9 +159,11 @@ class NewRecipeController {
   /** exit state machine to look at new recipe */
   void done(Recipe recipe) {
     newRecipeModel.reset();
+    HttpRequestModel httpModel = new HttpRequestModel();
+    httpModel.registerObserver(pt);
     NewRecipeDetailPage drp =
         new NewRecipeDetailPage(
-            new RecipeDetailUI(recipe, new RecipeDetailModel(new HttpRequestModel(), account)));
+            new RecipeDetailUI(recipe, new RecipeDetailModel(httpModel, account)));
     drp.footer.addButton(
         "home",
         e -> {

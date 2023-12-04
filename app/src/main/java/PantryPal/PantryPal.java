@@ -98,8 +98,9 @@ class AppController implements HomeTracker {
     accountCreatePage.footer.addButton(
         "Create Account",
         e -> {
-          boolean madeAccount =
-              makeAccount(accountCreateUI, new AccountModel(new HttpRequestModel()));
+          HttpRequestModel httpModel = new HttpRequestModel();
+          httpModel.registerObserver(pt);
+          boolean madeAccount = makeAccount(accountCreateUI, new AccountModel(httpModel));
           if (madeAccount) {
             pt.swapToPage(makeLoginPage());
           }
@@ -118,8 +119,9 @@ class AppController implements HomeTracker {
         e -> {
           Account account =
               new Account(accountLoginUI.getUserNameText(), accountLoginUI.getPasswordText());
-          boolean loggedIn =
-              validateAccount(accountLoginUI, new AuthorizationModel(new HttpRequestModel()));
+          HttpRequestModel httpModel = new HttpRequestModel();
+          httpModel.registerObserver(pt);
+          boolean loggedIn = validateAccount(accountLoginUI, new AuthorizationModel(httpModel));
 
           if (loggedIn) {
             this.account = accountLoginUI.getAccount();
@@ -147,7 +149,9 @@ class AppController implements HomeTracker {
   }
 
   public List<RecipeEntryUI> getRecipeListEntries() {
-    RecipeListModel model = new RecipeListModel(new HttpRequestModel(), account);
+    HttpRequestModel httpModel = new HttpRequestModel();
+    httpModel.registerObserver(pt);
+    RecipeListModel model = new RecipeListModel(httpModel, account);
     ArrayList<RecipeEntryUI> entries = new ArrayList<>();
     ArrayList<Recipe> recipes = new ArrayList<>();
 
@@ -169,7 +173,9 @@ class AppController implements HomeTracker {
   }
 
   public RecipeDetailPage makeRecipeDetailsPage(String title) {
-    RecipeDetailModel rc = new RecipeDetailModel(new HttpRequestModel(), account);
+    HttpRequestModel httpModel = new HttpRequestModel();
+    httpModel.registerObserver(pt);
+    RecipeDetailModel rc = new RecipeDetailModel(httpModel, account);
     RecipeDetailPage drp = new RecipeDetailPage(new RecipeDetailUI(rc.read(title), rc));
     drp.footer.addButton(
         "home",
@@ -181,16 +187,22 @@ class AppController implements HomeTracker {
 
   public NewRecipeController makeNewRecipeController() {
     NewRecipePage newRecipePage = new NewRecipePage(new NewRecipeUI());
-    NewRecipeModel newRecipeModel = new NewRecipeModel(new HttpRequestModel(), account);
+    HttpRequestModel httpModel = new HttpRequestModel();
+    httpModel.registerObserver(pt);
+    NewRecipeModel newRecipeModel = new NewRecipeModel(httpModel, account);
     VoiceToText voiceToText = new WhisperBot();
     return new NewRecipeController(newRecipePage, newRecipeModel, pt, voiceToText, account);
   }
 }
 
+interface ServerObserver {
+  void updateServer(boolean connected);
+}
+
 /*
  * Object which handles which Page is currently displayed
  */
-class PageTracker {
+class PageTracker implements ServerObserver {
   private Stage primaryStage;
   private HomeTracker homeTracker;
 
@@ -202,6 +214,12 @@ class PageTracker {
 
   void setHomeTracker(HomeTracker tracker) {
     this.homeTracker = tracker;
+  }
+
+  @Override
+  public void updateServer(boolean connected) {
+    if (connected) this.goHome();
+    else this.goError();
   }
 
   /**

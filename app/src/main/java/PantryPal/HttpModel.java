@@ -9,22 +9,31 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
+import java.util.*;
 import javafx.event.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.*;
 
-interface HttpModel {
-  public void setPath(String path);
+public interface HttpModel {
+  void setPath(String path);
 
-  public boolean tryConnect();
+  boolean tryConnect();
 
-  public String performRequest(String method, String query, String request);
+  String performRequest(String method, String query, String request);
+
+  // Methods for Observer pattern
+  void registerObserver(ServerObserver observer);
+
+  void removeObserver(ServerObserver observer);
+
+  void notifyServerStatus(boolean connected);
 }
 
 class HttpRequestModel implements HttpModel {
   private static final String port = "8100";
   private static final String ip = "localhost";
   private String urlString;
+  private List<ServerObserver> observers = new ArrayList<>();
 
   HttpRequestModel() {
     setPath(""); // default path, should avoid using
@@ -32,6 +41,23 @@ class HttpRequestModel implements HttpModel {
 
   public void setPath(String path) {
     this.urlString = "http://" + ip + ":" + port + "/" + path;
+  }
+
+  @Override
+  public void registerObserver(ServerObserver observer) {
+    observers.add(observer);
+  }
+
+  @Override
+  public void removeObserver(ServerObserver observer) {
+    observers.remove(observer);
+  }
+
+  @Override
+  public void notifyServerStatus(boolean connected) {
+    for (ServerObserver observer : observers) {
+      observer.updateServer(connected);
+    }
   }
 
   public boolean tryConnect() {
@@ -46,6 +72,7 @@ class HttpRequestModel implements HttpModel {
       if (responseCode == HttpURLConnection.HTTP_OK
           || responseCode == HttpURLConnection.HTTP_NOT_FOUND) {
         // The server is reachable, even if the specific page/resource is not found
+        notifyServerStatus(true);
         return true;
       } else {
         // Server returned an error response code
@@ -54,10 +81,7 @@ class HttpRequestModel implements HttpModel {
     } catch (IOException ex) {
       // An IOException is thrown if there is a network error or the server is unreachable
       System.err.println("Error: " + ex.getMessage());
-      // System.err.println(\"Error: \" + ex.getMessage());
-      if (ex.getMessage().contains("Connection refused: connect")) {
-        System.err.println("Server Problem!");
-      }
+      notifyServerStatus(false);
       return false;
     }
   }
@@ -89,7 +113,8 @@ class HttpRequestModel implements HttpModel {
       System.out.println("Response :" + response);
       return response;
     } catch (Exception ex) {
-      ex.printStackTrace();
+      tryConnect();
+      // ex.printStackTrace();
       return "Error: " + ex.getMessage();
     }
   }
