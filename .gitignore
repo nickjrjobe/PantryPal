@@ -18,3 +18,7 @@ build/tmp/
 
 # Login Credentials
 app/Secure_Credentials.txt
+
+# Ignore programmer specific config.json
+config.json
+

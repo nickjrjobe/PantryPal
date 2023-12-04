@@ -1,6 +1,5 @@
 package server;
 
-import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
@@ -16,6 +15,7 @@ public class NewRecipeCreator implements InteractiveRecipeMaker {
   RecipeCreator recipeCreator;
   public List<String> prompts;
   private Recipe recipe;
+  String ingredients;
 
   public void update(Observable o, Object whisperData) {
     System.err.println("NewRecipeCreator updated");
@@ -110,7 +110,22 @@ public class NewRecipeCreator implements InteractiveRecipeMaker {
   /*Hands the ingredients to chat gpt and creates a recipe object using text response from chatgpt*/
   public void handleIngredients(String response) {
     prompts.add(response);
+    this.ingredients = response;
     String recipeResponse = recipeCreator.makeRecipe(mealType, response);
     recipe = interpretRecipeResponse(recipeResponse);
+  }
+
+  public String getIngredients() {
+    return this.ingredients;
+  }
+
+  public String getMealType() {
+    return this.mealType;
+  }
+
+  public Recipe regenerateRecipe() {
+    String recipeResponse = recipeCreator.makeRecipe(mealType, ingredients);
+    recipe = interpretRecipeResponse(recipeResponse);
+    return recipe;
   }
 }

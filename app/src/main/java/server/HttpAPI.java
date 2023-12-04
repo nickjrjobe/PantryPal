@@ -38,6 +38,7 @@ class RawHttpAPI implements HttpHandler {
       } else if (method.equals("PUT")) {
         response = handlePut(query, body);
       } else {
+
         throw new Exception("Not Valid Request Method");
       }
     } catch (Exception e) {
@@ -63,11 +64,11 @@ class RawHttpAPI implements HttpHandler {
     try {
       postData = scanner.nextLine();
     } catch (Exception e) {
-      System.out.println("request was empty");
+      System.err.println("request was empty");
       scanner.close();
       return null;
     }
-    System.out.println("request: " + postData);
+    System.err.println("request: " + postData);
     scanner.close();
     return postData;
   }
