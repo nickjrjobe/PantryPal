@@ -1,6 +1,7 @@
 package utils;
 
 import java.io.*;
+import java.time.Instant;
 import javafx.event.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.*;
@@ -49,14 +50,8 @@ public class Recipe {
     this.title = title;
     this.mealType = mealType;
     this.description = description;
-    this.creationTimestamp = -1;
-  }
-
-  public Recipe(String title, String mealType, String description, int creationTimestamp) {
-    this.title = title;
-    this.mealType = mealType;
-    this.description = description;
-    this.creationTimestamp = creationTimestamp;
+    /*TODO this is possibly lossy */
+    this.creationTimestamp = (int) Instant.now().getEpochSecond();
   }
 
   public JSONObject toJSON() {
@@ -68,12 +63,22 @@ public class Recipe {
   }
 
   public Recipe(JSONObject j) throws IllegalArgumentException {
+    int time;
     System.out.println("object: " + j.toString());
     try {
       this.title = j.getString("title");
       this.mealType = j.getString("mealtype");
       this.description = j.getString("description");
-      this.creationTimestamp = j.getInt("creationTimestamp");
+      try {
+        time = j.getInt("creationTimestamp");
+      } catch (Exception e) {
+        System.err.println(
+            "WARN: importing old style recipe \""
+                + this.title
+                + "\"without timestamp, reccomend resaving");
+        time = (int) Instant.now().getEpochSecond();
+      }
+      this.creationTimestamp = time;
     } catch (Exception e) {
       throw new IllegalArgumentException("JSON Object did not have required fields");
     }

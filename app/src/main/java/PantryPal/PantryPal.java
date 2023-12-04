@@ -189,6 +189,19 @@ class AppController implements HomeTracker {
     return entries;
   }
 
+  public void sortRecipesInPlace(List<Recipe> recipes, String sortSelection) {
+    // Apply sorting
+    if (sortSelection.equals("A-Z")) {
+      recipes.sort((a, b) -> a.getTitle().compareTo(b.getTitle()));
+    } else if (sortSelection.equals("Z-A")) {
+      recipes.sort((a, b) -> b.getTitle().compareTo(a.getTitle()));
+    } else if (sortSelection.equals("Oldest")) {
+      recipes.sort((a, b) -> Integer.compare(a.getCreationTimestamp(), b.getCreationTimestamp()));
+    } else if (sortSelection.equals("Newest")) {
+      recipes.sort((a, b) -> Integer.compare(b.getCreationTimestamp(), a.getCreationTimestamp()));
+    }
+  }
+
   public List<RecipeEntryUI> getRecipeListEntries(String filterSelection, String sortSelection) {
     RecipeListModel model = new RecipeListModel(new HttpRequestModel(), account);
     List<Recipe> recipes;
@@ -204,15 +217,7 @@ class AppController implements HomeTracker {
       System.out.println("    " + recipe.getTitle());
     }
     // Apply sorting
-    if (sortSelection.equals("A-Z")) {
-      recipes.sort((a, b) -> a.getTitle().compareTo(b.getTitle()));
-    } else if (sortSelection.equals("Z-A")) {
-      recipes.sort((a, b) -> b.getTitle().compareTo(a.getTitle()));
-    } else if (sortSelection.equals("Oldest")) {
-      recipes.sort((a, b) -> Integer.compare(a.getCreationTimestamp(), b.getCreationTimestamp()));
-    } else if (sortSelection.equals("Newest")) {
-      recipes.sort((a, b) -> Integer.compare(b.getCreationTimestamp(), a.getCreationTimestamp()));
-    }
+    sortRecipesInPlace(recipes, sortSelection);
     // Convert to UI list for the UI
     return convertRecipeListToUIList(recipes);
   }
