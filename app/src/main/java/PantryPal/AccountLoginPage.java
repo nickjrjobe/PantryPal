@@ -68,9 +68,6 @@ public class AccountLoginPage extends ScrollablePage {
   AccountLoginPage(AccountLoginUI accountLoginUI) {
     super("Login", accountLoginUI);
     this.accountLoginUI = accountLoginUI;
-
-    // this.footer.addButton("Login", e -> handleLoginButtonAction());
-    // this.footer.addButton("Create Account", e -> handleCreateAccountButtonAction());
   }
 
   public String getAccount() {

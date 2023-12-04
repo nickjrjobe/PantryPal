@@ -2,6 +2,7 @@
 
 package PantryPal;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -16,25 +17,69 @@ import utils.VoiceToText;
 
 interface HomeTracker {
   public ScrollablePage getHome();
+
+  public ScrollablePage getError();
 }
 
 class AppController implements HomeTracker {
   private Account account;
   private PageTracker pt;
   private LinkMaker linkMaker;
-  private String filterSelection;
+  private String filterSelection; // TODO can we delete these
   private String sortSelection;
+  private static final String CREDENTIALS = "Secure_Credentials.txt";
 
   public AppController(PageTracker pt, LinkMaker linkMaker) {
     this.pt = pt;
     this.linkMaker = linkMaker;
+    this.account = checkForAutoLogin(CREDENTIALS);
+  }
+
+  public ScrollablePage getError() {
+    return makeErrorPage();
   }
 
   public ScrollablePage getHome() {
+    // Check if account exists
     if (account == null) {
       return makeLoginPage();
     } else {
       return makeRecipeListPage();
+    }
+  }
+
+  /** Checks if autologin exists, then sets up account */
+  public static Account checkForAutoLogin(String credentials_file_path) {
+    try {
+      File file = new File(credentials_file_path);
+      FileReader fr = new FileReader(file);
+      BufferedReader br = new BufferedReader(fr);
+      String username = br.readLine();
+      String password = br.readLine();
+      br.close();
+      fr.close();
+      // Set the text fields of the UI
+      Account account = new Account(username, password);
+      return account;
+    } catch (IOException ex) {
+      System.out.println("Error reading from file");
+      return null;
+    }
+  }
+
+  public static boolean checkIfAutoLoginExists(String credentials_file_path) {
+    try {
+      File file = new File(credentials_file_path);
+      FileReader fr = new FileReader(file);
+      BufferedReader br = new BufferedReader(fr);
+      String username = br.readLine();
+      String password = br.readLine();
+      br.close();
+      fr.close();
+      return true;
+    } catch (IOException ex) {
+      System.out.println("Error reading from file");
+      return false;
     }
   }
 
@@ -51,18 +96,52 @@ class AppController implements HomeTracker {
     return true;
   }
 
+  /**
+   * Validates the account and sets the error text if the account is invalid
+   *
+   * @param accountLoginUI the UI to validate
+   * @param authorizationModel the model to validate against
+   * @return true if the account is valid, false otherwise
+   */
   public boolean validateAccount(
       AccountLoginUI accountLoginUI, AuthorizationModel authorizationModel) {
     Account account = accountLoginUI.getAccount();
+
     if (!Account.isValidUsername(account.getUsername())) {
       accountLoginUI.setErrorText("Please enter a valid username");
+      System.err.println("Empty username");
       return false;
     }
     if (!authorizationModel.authenticate(account)) {
       accountLoginUI.setErrorText("Invalid username/password");
+      System.err.println("Invalid username/password");
       return false;
     }
     return true;
+  }
+
+  public ServerErrorPage makeErrorPage() {
+    ServerErrorUI serverErrorUI = new ServerErrorUI();
+    ServerErrorPage serverErrorPage = new ServerErrorPage(serverErrorUI);
+
+    serverErrorPage.footer.addButton(
+        "Refresh",
+        e -> {
+          if (serverErrorUI.tryConnect()) {
+            System.err.println("Server is on");
+            pt.goHome();
+          } else {
+            System.err.println("Server still down");
+            pt.goError();
+          }
+        });
+
+    return serverErrorPage;
+  }
+
+  public void logout() {
+    this.account = null;
+    pt.swapToPage(makeLoginPage());
   }
 
   public AccountCreatePage makeAccountCreatePage() {
@@ -71,8 +150,9 @@ class AppController implements HomeTracker {
     accountCreatePage.footer.addButton(
         "Create Account",
         e -> {
-          boolean madeAccount =
-              makeAccount(accountCreateUI, new AccountModel(new HttpRequestModel()));
+          HttpRequestModel httpModel = new HttpRequestModel();
+          httpModel.registerObserver(pt);
+          boolean madeAccount = makeAccount(accountCreateUI, new AccountModel(httpModel));
           if (madeAccount) {
             pt.swapToPage(makeLoginPage());
           }
@@ -84,20 +164,19 @@ class AppController implements HomeTracker {
   public AccountLoginPage makeLoginPage() {
     AccountLoginUI accountLoginUI = new AccountLoginUI();
     AccountLoginPage accountLoginPage = new AccountLoginPage(accountLoginUI);
-    // TODO check if autologin exists and if so autoswap to home page
 
     accountLoginPage.footer.addButton(
         "Login",
         e -> {
           Account account =
               new Account(accountLoginUI.getUserNameText(), accountLoginUI.getPasswordText());
-          boolean loggedIn =
-              validateAccount(accountLoginUI, new AuthorizationModel(new HttpRequestModel()));
+          HttpRequestModel httpModel = new HttpRequestModel();
+          httpModel.registerObserver(pt);
+          boolean loggedIn = validateAccount(accountLoginUI, new AuthorizationModel(httpModel));
 
           if (loggedIn) {
             this.account = accountLoginUI.getAccount();
-            // TODO check if loginValid && autoLogin selected and if so enable autologin US11
-            pt.swapToPage(makeRecipeListPage()); // Swap to recipe list page
+            login(accountLoginUI);
           }
         });
 
@@ -107,6 +186,28 @@ class AppController implements HomeTracker {
           pt.swapToPage(makeAccountCreatePage());
         });
     return accountLoginPage;
+  }
+
+  public void login(AccountLoginUI accountLoginUI) {
+    if (accountLoginUI.isAutoLoginSelected()) {
+      saveAutoLoginDetails(account, CREDENTIALS);
+    }
+    pt.swapToPage(makeRecipeListPage()); // Swap to recipe list page
+  }
+
+  public void saveAutoLoginDetails(Account account, String credentials_file_path) {
+    // Saves given account credentials to specified file
+    try {
+      File file = new File(credentials_file_path);
+      FileWriter fr = new FileWriter(file, false);
+      BufferedWriter br = new BufferedWriter(fr);
+      br.write(account.getUsername() + "\n");
+      br.write(account.getPassword());
+      br.close();
+      fr.close();
+    } catch (IOException ex) {
+      System.out.println("Error writing to file");
+    }
   }
 
   public SharePage makeSharePage(String title) {
@@ -145,6 +246,13 @@ class AppController implements HomeTracker {
         e -> {
           pt.swapToPage(makeNewRecipeController().getPage());
         });
+    if (checkIfAutoLoginExists(CREDENTIALS) == false) {
+      recipeList.footer.addButton(
+          "logout",
+          e -> {
+            logout();
+          });
+    }
 
     // Filter Dropdown, click sends to this same page with updated filters
     EventHandler<ActionEvent> filterEventHandler =
@@ -231,11 +339,14 @@ class AppController implements HomeTracker {
   }
 
   public RecipeDetailPage makeRecipeDetailsPage(String title) {
-    RecipeDetailModel rc = new RecipeDetailModel(new HttpRequestModel(), account);
+    HttpRequestModel httpModelRc = new HttpRequestModel();
+    httpModelRc.registerObserver(pt);
+    RecipeDetailModel rc = new RecipeDetailModel(httpModelRc, account);
+    HttpRequestModel httpModelDrp = new HttpRequestModel();
+    httpModelDrp.registerObserver(pt);
     RecipeDetailPage drp =
         new RecipeDetailPage(
-            new RecipeDetailUI(
-                rc.read(title), rc, new ImageModel(new HttpRequestModel(), account)));
+            new RecipeDetailUI(rc.read(title), rc, new ImageModel(httpModelDrp, account)));
     drp.footer.addButton(
         "home",
         e -> {
@@ -251,16 +362,26 @@ class AppController implements HomeTracker {
 
   public NewRecipeController makeNewRecipeController() {
     NewRecipePage newRecipePage = new NewRecipePage(new NewRecipeUI());
-    NewRecipeModel newRecipeModel = new NewRecipeModel(new HttpRequestModel(), account);
-    VoiceToText voiceToText = new WhisperModel(new HttpRequestModel(), account);
+
+    HttpRequestModel httpModelNr = new HttpRequestModel();
+    httpModelNr.registerObserver(pt);
+    NewRecipeModel newRecipeModel = new NewRecipeModel(httpModelNr, account);
+
+    HttpRequestModel httpModelVtt = new HttpRequestModel();
+    httpModelVtt.registerObserver(pt);
+    VoiceToText voiceToText = new WhisperModel(httpModelVtt, account);
     return new NewRecipeController(newRecipePage, newRecipeModel, pt, voiceToText, account);
   }
+}
+
+interface ServerObserver {
+  void updateServer(boolean connected);
 }
 
 /*
  * Object which handles which Page is currently displayed
  */
-class PageTracker {
+class PageTracker implements ServerObserver {
   private Stage primaryStage;
   private HomeTracker homeTracker;
 
@@ -272,6 +393,12 @@ class PageTracker {
 
   void setHomeTracker(HomeTracker tracker) {
     this.homeTracker = tracker;
+  }
+
+  @Override
+  public void updateServer(boolean connected) {
+    if (connected) this.goHome();
+    else this.goError();
   }
 
   /**
@@ -287,6 +414,10 @@ class PageTracker {
 
   void goHome() {
     swapToPage(homeTracker.getHome());
+  }
+
+  void goError() {
+    swapToPage(homeTracker.getError());
   }
 }
 

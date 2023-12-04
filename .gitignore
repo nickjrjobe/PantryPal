@@ -15,3 +15,10 @@ build/tmp/
 
 # Ignore a VSCode file
 .vscode/settings.json
+
+# Login Credentials
+app/Secure_Credentials.txt
+
+# Ignore programmer specific config.json
+config.json
+
