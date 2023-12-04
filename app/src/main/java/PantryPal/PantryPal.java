@@ -152,7 +152,7 @@ class AppController implements HomeTracker {
       System.out.println("Error writing to file");
     }
   }
-  
+
   public SharePage makeSharePage(String title) {
     String link = linkMaker.makeLink(title, account);
     SharePage sharePage = new SharePage(link);
