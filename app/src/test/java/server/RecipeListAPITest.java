@@ -69,10 +69,11 @@ public class RecipeListAPITest {
           "get failed for empty data,empty list");
 
       /* test null data */
-      assertEquals(data.toJSON().toString(), api.handleGet(null, null), "get failed for null data");
+      assertEquals(
+          data.toJSON().toString(), api.handleGet(null, (String) null), "get failed for null data");
       assertEquals(
           data2.toJSON().toString(),
-          api2.handleGet(null, null),
+          api2.handleGet(null, (String) null),
           "get failed for null data, empty list");
 
       /* test valid data */

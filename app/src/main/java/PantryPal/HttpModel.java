@@ -4,6 +4,7 @@ package PantryPal;
 
 import java.io.*;
 import java.io.BufferedReader;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
@@ -17,16 +18,21 @@ import javafx.scene.text.*;
 public interface HttpModel {
   void setPath(String path);
 
-  boolean tryConnect();
 
-  String performRequest(String method, String query, String request);
-
+  
   // Methods for Observer pattern
   void registerObserver(ServerObserver observer);
 
   void removeObserver(ServerObserver observer);
 
   void notifyServerStatus(boolean connected);
+
+  boolean tryConnect();
+  
+  public String performRequest(String method, String query, String request);
+
+  public String performRawRequest(String method, InputStream in);
+
 }
 
 class HttpRequestModel implements HttpModel {
@@ -83,6 +89,32 @@ class HttpRequestModel implements HttpModel {
       System.err.println("Error: " + ex.getMessage());
       notifyServerStatus(false);
       return false;
+
+  public String performRawRequest(String method, InputStream in) {
+    // Implement your HTTP request logic here and return the response
+    try {
+      if (!method.equals("POST") && !method.equals("PUT")) {
+        throw new IllegalArgumentException("must call with post or put");
+      }
+      URL url = new URI(urlString).toURL();
+      HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+      conn.setRequestMethod(method);
+      conn.setDoOutput(true);
+      OutputStream out = conn.getOutputStream();
+
+      in.transferTo(out);
+      out.flush();
+      out.close();
+
+      BufferedReader fromServer = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+      String response = fromServer.readLine();
+      fromServer.close();
+      System.out.println("Response :" + response);
+      return response;
+    } catch (Exception ex) {
+      ex.printStackTrace();
+      return "Error: " + ex.getMessage();
+
     }
   }
 

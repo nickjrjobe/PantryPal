@@ -12,6 +12,7 @@ import javafx.scene.text.*;
 import javafx.stage.Stage;
 import utils.Account;
 import utils.Recipe;
+import utils.VoiceToText;
 
 interface HomeTracker {
   public ScrollablePage getHome();
@@ -22,9 +23,11 @@ interface HomeTracker {
 class AppController implements HomeTracker {
   private Account account;
   private PageTracker pt;
+  private LinkMaker linkMaker;
 
-  public AppController(PageTracker pt) {
+  public AppController(PageTracker pt, LinkMaker linkMaker) {
     this.pt = pt;
+    this.linkMaker = linkMaker;
   }
 
   public ScrollablePage getError() {
@@ -138,6 +141,17 @@ class AppController implements HomeTracker {
     return accountLoginPage;
   }
 
+  public SharePage makeSharePage(String title) {
+    String link = linkMaker.makeLink(title, account);
+    SharePage sharePage = new SharePage(link);
+    sharePage.footer.addButton(
+        "exit",
+        e -> {
+          pt.swapToPage(makeRecipeDetailsPage(title));
+        });
+    return sharePage;
+  }
+
   public RecipeListPage makeRecipeListPage() {
     RecipeListPage recipeList = new RecipeListPage(getRecipeListEntries());
     recipeList.footer.addButton(
@@ -173,24 +187,38 @@ class AppController implements HomeTracker {
   }
 
   public RecipeDetailPage makeRecipeDetailsPage(String title) {
-    HttpRequestModel httpModel = new HttpRequestModel();
-    httpModel.registerObserver(pt);
-    RecipeDetailModel rc = new RecipeDetailModel(httpModel, account);
-    RecipeDetailPage drp = new RecipeDetailPage(new RecipeDetailUI(rc.read(title), rc));
+    HttpRequestModel httpModelRc = new HttpRequestModel();
+    httpModelRc.registerObserver(pt);
+    RecipeDetailModel rc = new RecipeDetailModel(httpModelRc, account);
+    HttpRequestModel httpModelDrp = new HttpRequestModel();
+    httpModelDrp.registerObserver(pt);
+    RecipeDetailPage drp =
+        new RecipeDetailPage(
+            new RecipeDetailUI(
+                rc.read(title), rc, new ImageModel(httpModelDrp, account)));
     drp.footer.addButton(
         "home",
         e -> {
           pt.swapToPage(makeRecipeListPage());
+        });
+    drp.footer.addButton(
+        "share",
+        e -> {
+          pt.swapToPage(makeSharePage(title));
         });
     return drp;
   }
 
   public NewRecipeController makeNewRecipeController() {
     NewRecipePage newRecipePage = new NewRecipePage(new NewRecipeUI());
-    HttpRequestModel httpModel = new HttpRequestModel();
-    httpModel.registerObserver(pt);
-    NewRecipeModel newRecipeModel = new NewRecipeModel(httpModel, account);
-    VoiceToText voiceToText = new WhisperBot();
+
+    HttpRequestModel httpModelNr = new HttpRequestModel();
+    httpModelNr.registerObserver(pt);
+    NewRecipeModel newRecipeModel = new NewRecipeModel(httpModelNr, account);
+    
+    HttpRequestModel httpModelVtt = new HttpRequestModel();
+    httpModelVtt.registerObserver(pt);
+    VoiceToText voiceToText = new WhisperModel(httpModelVtt, account);
     return new NewRecipeController(newRecipePage, newRecipeModel, pt, voiceToText, account);
   }
 }
@@ -250,7 +278,7 @@ public class PantryPal extends Application {
   @Override
   public void start(Stage primaryStage) throws Exception {
     PageTracker pt = new PageTracker(primaryStage);
-    AppController appController = new AppController(pt);
+    AppController appController = new AppController(pt, new ShareLinkMaker());
     pt.setHomeTracker(appController);
     pt.goHome();
   }

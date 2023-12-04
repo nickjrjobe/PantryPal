@@ -10,6 +10,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import utils.Account;
 import utils.Recipe;
+import utils.VoiceToText;
 
 /** Immutable class to store results from sending a transcript to NewRecipeAPI */
 class TranscriptResults {
@@ -130,7 +131,8 @@ class NewRecipeController {
     String transcript = voiceToText.getTranscript();
     TranscriptResults results;
     try {
-      results = newRecipeModel.sendTranscript(transcript);
+      // results = newRecipeModel.sendTranscript(transcript);
+      results = newRecipeModel.getInitialTranscript();
     } catch (Exception e) {
       System.err.println("error: " + e.getMessage());
       results = new TranscriptResults();
@@ -158,12 +160,13 @@ class NewRecipeController {
 
   /** exit state machine to look at new recipe */
   void done(Recipe recipe) {
+    RecipeDetailModel rc = new RecipeDetailModel(new HttpRequestModel(), account);
     newRecipeModel.reset();
     HttpRequestModel httpModel = new HttpRequestModel();
     httpModel.registerObserver(pt);
     NewRecipeDetailPage drp =
         new NewRecipeDetailPage(
-            new RecipeDetailUI(recipe, new RecipeDetailModel(httpModel, account)));
+            new RecipeDetailUI(recipe, rc, new ImageModel(httpModel, account)));
     drp.footer.addButton(
         "home",
         e -> {
