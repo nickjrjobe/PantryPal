@@ -40,6 +40,10 @@ class InteractiveRecipeMakerStub implements InteractiveRecipeMaker {
   public void update(Observable o, Object data) {
     requestObserved = (String) data;
   }
+
+  public Recipe regenerateRecipe() {
+    return new Recipe("new " + recipe.getTitle(), recipe.getMealType(), recipe.getDescription());
+  }
 }
 
 public class NewRecipeAPITest {
@@ -50,6 +54,10 @@ public class NewRecipeAPITest {
   String invalidJson = "this/is-definitely.not;json";
   String validJson = "{\"response\":\"breakfast\"}";
   String exampleExpectedResponse = "{\"transcript\":[\"fee\",\"fi\",\"fo\",\"fum\"]}";
+  String rExampleResponse =
+      "{\"recipe\":{\"mealtype\":\"breakfast\","
+          + "\"description\":\"Add peanut butter and jelly to sandwich bread.\","
+          + "\"title\":\"PB&J Sandwich\"}}";
 
   @BeforeEach
   public void setup() {
@@ -85,6 +93,25 @@ public class NewRecipeAPITest {
     json = api.makeResponseFromPrompts();
     assertEquals(new Recipe(json.getJSONObject("recipe")), makerstub.recipe);
     assertEquals(oldResets + 1, makerstub.resetCount, "should have reset");
+  }
+
+  @Test
+  public void testMakeRegenerateResponse() {
+    JSONObject json;
+    makerstub.recipe =
+        new Recipe("PB&J Sandwich", "breakfast", "Add peanut butter and jelly to sandwich bread.");
+
+    /* ensure transcripts are properly converted */
+    json = api.makeRegenerateResponse();
+    assertEquals(true, json.has("recipe"));
+
+    json = api.makeResponseFromPrompts();
+    assertEquals(true, json.has("recipe"));
+    assertEquals(
+        makerstub.regenerateRecipe().getTitle(),
+        new Recipe(
+                "new PB&J Sandwich", "breakfast", "Add peanut butter and jelly to sandwich bread.")
+            .getTitle());
   }
 
   @Test
@@ -145,10 +172,27 @@ public class NewRecipeAPITest {
   @Test
   public void testGet() {
     makerstub.prompts = examplePrompts;
+    /*Calling get method using query method */
     try {
-      assertEquals(api.handleGet("", ""), exampleExpectedResponse);
+      assertEquals(api.handleGet("?prompts", ""), exampleExpectedResponse);
     } catch (Exception e) {
-      fail("Delete should never throw exception");
+      fail("Get should never throw exception");
+    }
+    /*Calling get method using regenrate method */
+    try {
+      makerstub.recipe =
+          new Recipe(
+              "PB&J Sandwich", "breakfast", "Add peanut butter and jelly to sandwich bread.");
+      assertEquals(api.handleGet("?regenerate", ""), rExampleResponse);
+    } catch (Exception ex) {
+      fail("Get should never throw exception");
+    }
+
+    /*You cannot call without specifying query */
+    try {
+      assertEquals(api.handleGet("", ""), "400 Bad Request");
+    } catch (Exception e) {
+      fail("Get should never throw exception");
     }
   }
 

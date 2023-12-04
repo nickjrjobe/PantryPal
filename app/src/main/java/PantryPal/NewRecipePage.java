@@ -1,11 +1,10 @@
 package PantryPal;
 
-import java.io.*;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import javafx.event.*;
 import javafx.scene.control.Label;
-import javafx.scene.layout.*;
+import javafx.scene.layout.VBox;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import utils.Account;
@@ -169,7 +168,13 @@ class NewRecipeController {
     drp.footer.addButton(
         "home",
         e -> {
+          newRecipeModel.reset();
           pt.goHome();
+        });
+    drp.footer.addButton(
+        "regenerate",
+        e -> {
+          regenerateRecipe();
         });
     pt.swapToPage(drp);
   }
@@ -178,6 +183,27 @@ class NewRecipeController {
   void exit() {
     newRecipeModel.reset();
     pt.goHome();
+  }
+
+  void regenerateRecipe() {
+    try {
+      Recipe newRecipe = newRecipeModel.regenerate();
+      /* create an identical page for new recipe by recalling method */
+      done(newRecipe);
+    } catch (IOException ex) {
+      System.err.println("New recipe response from server malformed, error " + ex.getMessage());
+    }
+  }
+
+  void regenerate() {
+    TranscriptResults results;
+    try {
+      results = newRecipeModel.getInitialTranscript();
+    } catch (Exception e) {
+      System.err.println("error: " + e.getMessage());
+      results = new TranscriptResults();
+    }
+    newRecipePage.setPrompts(results.prompts);
   }
 }
 

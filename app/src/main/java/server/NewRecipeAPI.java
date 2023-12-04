@@ -20,6 +20,9 @@ interface InteractiveRecipeMaker extends Observer {
 
   /** provide user-created prompt for processing */
   public void readResponse(String response);
+
+  /** regenerates recipe if valid */
+  public Recipe regenerateRecipe();
 }
 
 class NewRecipeAPIFactory implements HttpUserAPIFactory {
@@ -60,6 +63,17 @@ class NewRecipeAPI extends HttpAPI {
       json.put("recipe", creator.getRecipe().toJSON());
       creator.reset();
     }
+
+    return json;
+  }
+
+  public JSONObject makeRegenerateResponse() {
+    JSONObject json = new JSONObject();
+    /* if recipe is valid include it in response, then reset */
+    if (creator.regenerateRecipe() != null) {
+      json.put("recipe", creator.getRecipe().toJSON());
+      creator.reset();
+    }
     return json;
   }
 
@@ -97,7 +111,13 @@ class NewRecipeAPI extends HttpAPI {
 
   /** get current prompts */
   String handleGet(String query, String request) throws IOException {
-    String response = makeResponseFromPrompts().toString();
+    String response = "400 Bad Request";
+    System.err.println("Query: " + query);
+    if (query.equals("?prompts")) {
+      response = makeResponseFromPrompts().toString();
+    } else if (query.equals("?regenerate")) {
+      response = makeRegenerateResponse().toString();
+    }
     return response;
   }
 }
