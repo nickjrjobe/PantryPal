@@ -3,56 +3,12 @@ package server;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.*;
-import java.util.HashMap;
-import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import utils.Recipe;
 
-class MockRecipeData implements RecipeData {
-  public JSONObject representation = new JSONObject();
-  public HashMap<String, Recipe> data = new HashMap<>();
-  String filter = "";
-
-  public JSONObject toJSON() {
-    return representation;
-  }
-
-  public Recipe put(String key, Recipe value) {
-    return data.put(key, value);
-  }
-
-  public Recipe get(String key) {
-    return data.get(key);
-  }
-
-  public Recipe remove(String key) {
-    return data.remove(key);
-  }
-
-  public void filterByMealType(String mealtype) {
-    this.filter = mealtype;
-  }
-
-  public void clearFilters() {
-    this.filter = "";
-  }
-}
-
 public class RecipeListAPITest {
-  MockRecipeData data = new MockRecipeData();
-  RecipeListAPI dut = new RecipeListAPI(data);
+  RecipeListAPI dut = new RecipeListAPI(new SaveableRecipeData());
   String exceptionMessage = "Request type not supported";
-
-  @Test
-  public void testDelete() {
-    data.filter = "NonEmptyFilter";
-    try {
-      assertEquals("200 OK", dut.handleDelete("", ""));
-    } catch (Exception e) {
-      fail("delete should not throw exception");
-    }
-    assertEquals("", data.filter);
-  }
 
   @Test
   public void testPut() {
@@ -67,33 +23,43 @@ public class RecipeListAPITest {
   }
 
   @Test
-  public void testPost() {
+  public void testDelete() {
+    boolean exceptionHappened = false;
     try {
-      assertEquals("200 OK", dut.handlePost("breakfast", ""));
-      assertEquals("breakfast", data.filter);
-      assertEquals("200 OK", dut.handlePost("lunch", ""));
-      assertEquals("lunch", data.filter);
-      assertEquals("200 OK", dut.handlePost("dinner", ""));
-      assertEquals("dinner", data.filter);
-      assertEquals("400 Bad Request", dut.handlePost("thanksgiving", ""));
+      dut.handleDelete("", "");
     } catch (IOException e) {
-      fail("post should not throw exception");
+      exceptionHappened = true;
+      assertEquals(exceptionMessage, e.getMessage());
     }
+    assertEquals(true, exceptionHappened);
+  }
+
+  @Test
+  public void testPost() {
+    boolean exceptionHappened = false;
+    try {
+      dut.handlePost("", "");
+    } catch (IOException e) {
+      exceptionHappened = true;
+      assertEquals(exceptionMessage, e.getMessage());
+    }
+    assertEquals(true, exceptionHappened);
   }
 
   @Test
   public void testGet() {
     try {
       // Setup data
-      MockRecipeData data = new MockRecipeData();
-      MockRecipeData data2 = new MockRecipeData();
+      SaveableRecipeData data = new SaveableRecipeData();
+      SaveableRecipeData data2 = new SaveableRecipeData();
+      SaveableRecipeDataTest.deleteRecipeDataFile();
       RecipeListAPI api = new RecipeListAPI(data);
+      SaveableRecipeDataTest.deleteRecipeDataFile();
       RecipeListAPI api2 = new RecipeListAPI(data2);
+      SaveableRecipeDataTest.deleteRecipeDataFile();
       data.put("Scrambled eggs", new Recipe("Scrambled eggs", "breakfast", "eggs"));
       data.put(
           "Mac and cheese", new Recipe("Mac and cheese", "dinner", "step 1. mac\nstep 2.cheese"));
-      data.representation.put("Scrambled eggs", data.get("Scrambled eggs"));
-      data.representation.put("Mac and cheese", data.get("Mac and cheese"));
 
       /* test empty data */
       assertEquals(data.toJSON().toString(), api.handleGet("", ""), "get failed for empty data");
