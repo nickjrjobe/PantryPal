@@ -16,7 +16,7 @@ class ServerErrorUI extends VBox {
     HttpModel httpModel = new HttpRequestModel();
     System.out.println("try connect");
     boolean connected = httpModel.tryConnect();
-    System.out.println("connected?" + connected);
+    System.out.println("Connection Status: " + connected);
     return connected;
   }
 }
