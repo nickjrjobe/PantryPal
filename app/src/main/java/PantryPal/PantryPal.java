@@ -64,6 +64,22 @@ class AppController implements HomeTracker {
     }
   }
 
+  public boolean checkIfAutoLoginExists(String credentials_file_path){
+     try {
+      File file = new File(credentials_file_path);
+      FileReader fr = new FileReader(file);
+      BufferedReader br = new BufferedReader(fr);
+      String username = br.readLine();
+      String password = br.readLine();
+      br.close();
+      fr.close();
+      return true;
+    } catch (IOException ex) {
+      System.out.println("Error reading from file");
+      return false;
+    }
+  }
+
   public boolean makeAccount(AccountCreateUI accountCreateUI, AccountModel accountModel) {
     Account account = accountCreateUI.getAccount();
     if (!Account.isValidUsername(account.getUsername())) {
@@ -208,11 +224,13 @@ class AppController implements HomeTracker {
         e -> {
           pt.swapToPage(makeNewRecipeController().getPage());
         });
-    recipeList.footer.addButton(
+    if (checkIfAutoLoginExists(CREDENTIALS) == false){
+      recipeList.footer.addButton(
         "logout",
         e -> {
           logout();
         });
+    }
     return recipeList;
   }
 
