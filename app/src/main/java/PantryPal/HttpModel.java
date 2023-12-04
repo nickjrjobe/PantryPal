@@ -144,7 +144,6 @@ class HttpRequestModel implements HttpModel {
     } catch (Exception ex) {
       if (ex.getMessage().contains("Connection refused: connect")) {
         notifyServerStatus(false);
-        System.err.println("Connection refused: connect");
       }
       ex.printStackTrace();
       return "Error: " + ex.getMessage();
