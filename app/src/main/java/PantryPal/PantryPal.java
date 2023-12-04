@@ -4,9 +4,10 @@ package PantryPal;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.control.ChoiceBox;
 import javafx.stage.Stage;
 import utils.Account;
@@ -120,25 +121,49 @@ class AppController implements HomeTracker {
   }
 
   public RecipeListPage makeRecipeListPage() {
-    return makeRecipeListPage("No Filters");
+    return makeRecipeListPage("No Filters", "Newest");
   }
 
-  public RecipeListPage makeRecipeListPage(String filterSelection) {
+  public RecipeListPage makeRecipeListPage(
+      final String filterSelection, final String sortSelection) {
     List<String> mealTypes = Arrays.asList("No Filters", "Breakfast", "Lunch", "Dinner");
     List<String> sorts = Arrays.asList("A-Z", "Z-A", "Oldest", "Newest");
-    RecipeListPage recipeList = new RecipeListPage(getRecipeListEntries(filterSelection));
+    RecipeListPage recipeList =
+        new RecipeListPage(getRecipeListEntries(filterSelection, sortSelection));
+    // New Recipe Button
     recipeList.footer.addButton(
         "New Recipe",
         e -> {
           pt.swapToPage(makeNewRecipeController().getPage());
         });
-    // TODO add logic to dropdown selections
-    recipeList.footer.addDropDown(mealTypes, filterSelection, e -> {
-      ChoiceBox<String> source = (ChoiceBox<String>) e.getSource();
-      pt.swapToPage(makeRecipeListPage(source.getValue()));
-    });
-    recipeList.footer.addDropDown(sorts, "Newest", e -> {});
 
+    // Filter Dropdown
+    EventHandler<ActionEvent> filterEventHandler =
+        new EventHandler<ActionEvent>() {
+          public void handle(ActionEvent e) {
+            // Get the new specified filter
+            ChoiceBox<String> combo_box = (ChoiceBox<String>) e.getSource();
+            String filterSelection = combo_box.getValue();
+            System.out.println("Filter: " + filterSelection + " selected");
+            // Swap to the new page with the new filter
+            pt.swapToPage(makeRecipeListPage(filterSelection, sortSelection));
+          }
+        };
+    recipeList.footer.addDropDown(mealTypes, filterSelection, filterEventHandler);
+
+    // Sort Dropdown
+    EventHandler<ActionEvent> sortEventHandler =
+        new EventHandler<ActionEvent>() {
+          public void handle(ActionEvent e) {
+            // Get the specified sorting mode
+            ChoiceBox<String> combo_box = (ChoiceBox<String>) e.getSource();
+            String sortSelection = combo_box.getValue();
+            System.out.println("Sorting mode: " + sortSelection + " selected");
+            // Swap to the new page with the new sorting mode
+            pt.swapToPage(makeRecipeListPage(filterSelection, sortSelection));
+          }
+        };
+    recipeList.footer.addDropDown(sorts, sortSelection, sortEventHandler);
     return recipeList;
   }
 
@@ -154,16 +179,31 @@ class AppController implements HomeTracker {
     return entries;
   }
 
-  public List<RecipeEntryUI> getRecipeListEntries(String filterSelection) {
+  public List<RecipeEntryUI> getRecipeListEntries(String filterSelection, String sortSelection) {
     RecipeListModel model = new RecipeListModel(new HttpRequestModel(), account);
-    ArrayList<RecipeEntryUI> entries = new ArrayList<>();
     List<Recipe> recipes;
-    /* apply filter if requested */
+    // Get filtered recipes
     if (filterSelection.equals("No Filters")) {
       recipes = model.getRecipeList();
     } else {
       recipes = model.getMealTypeRecipeList(filterSelection.toLowerCase());
     }
+    // Debugging
+    System.out.println("Recipe list length: " + recipes.size());
+    for (Recipe recipe : recipes) {
+      System.out.println("    " + recipe.getTitle());
+    }
+    // Apply sorting
+    if (sortSelection.equals("A-Z")) {
+      recipes.sort((a, b) -> a.getTitle().compareTo(b.getTitle()));
+    } else if (sortSelection.equals("Z-A")) {
+      recipes.sort((a, b) -> b.getTitle().compareTo(a.getTitle()));
+    } else if (sortSelection.equals("Oldest")) {
+      recipes.sort((a, b) -> Integer.compare(a.getCreationTimestamp(), b.getCreationTimestamp()));
+    } else if (sortSelection.equals("Newest")) {
+      recipes.sort((a, b) -> Integer.compare(b.getCreationTimestamp(), a.getCreationTimestamp()));
+    }
+    // Convert to UI list for the UI
     return convertRecipeListToUIList(recipes);
   }
 

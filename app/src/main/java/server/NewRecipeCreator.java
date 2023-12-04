@@ -104,7 +104,10 @@ public class NewRecipeCreator implements InteractiveRecipeMaker {
     for (int i = titleLineIndex + 1; i < responseLines.length; i++) {
       instructions += responseLines[i] + "\n";
     }
-    return new Recipe(responseLines[titleLineIndex].trim(), mealType, instructions.trim());
+    // Get creation time
+    int creationTimestamp = (int) (System.currentTimeMillis() / 1000);
+    return new Recipe(
+        responseLines[titleLineIndex].trim(), mealType, instructions.trim(), creationTimestamp);
   }
 
   /*Hands the ingredients to chat gpt and creates a recipe object using text response from chatgpt*/

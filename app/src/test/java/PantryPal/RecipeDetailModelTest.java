@@ -30,6 +30,7 @@ public class RecipeDetailModelTest {
     String title = "testTitle";
     String mealType = "testMealType";
     String description = "testDescription";
+    int creationTimestamp = 123456789;
     String mockResponse =
         "{\"title\":\""
             + title
@@ -37,7 +38,9 @@ public class RecipeDetailModelTest {
             + mealType
             + "\",\"description\":\""
             + description
-            + "\"}";
+            + "\",\"creationTimestamp\":"
+            + creationTimestamp
+            + "}";
     httpModel.setMockResponse(mockResponse);
 
     // Verify the output
@@ -45,6 +48,7 @@ public class RecipeDetailModelTest {
     assertEquals(recipe.getTitle(), title);
     assertEquals(recipe.getMealType(), mealType);
     assertEquals(recipe.getDescription(), description);
+    assertEquals(recipe.getCreationTimestamp(), creationTimestamp);
   }
 
   @Test

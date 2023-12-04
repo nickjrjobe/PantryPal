@@ -40,14 +40,19 @@ public class RecipeListModelTest {
   @Test
   public void testProcessResponse() {
     String response =
-        "{\"recipe\":{\"title\":\"test recipe\","
+        "{\"recipe\":"
+            + "{\"title\":\"test recipe\","
             + "\"mealtype\":\"test meal type\","
-            + "\"description\":\"test description\"}}";
+            + "\"description\":\"test description\","
+            + "\"creationTimestamp\":-1"
+            + "}}";
+
     // Test the method
     List<Recipe> result = recipeListModel.processResponse(response);
     Recipe recipe = result.get(0);
     assertEquals(recipe.getTitle(), "test recipe");
     assertEquals(recipe.getMealType(), "test meal type");
     assertEquals(recipe.getDescription(), "test description");
+    assertEquals(recipe.getCreationTimestamp(), -1);
   }
 }

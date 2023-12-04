@@ -11,6 +11,7 @@ public class Recipe {
   private final String title;
   private final String mealType;
   private final String description;
+  private final int creationTimestamp;
 
   /** convert title to URI friendly string */
   public static String sanitizeTitle(String title) {
@@ -48,13 +49,22 @@ public class Recipe {
     this.title = title;
     this.mealType = mealType;
     this.description = description;
+    this.creationTimestamp = -1;
+  }
+
+  public Recipe(String title, String mealType, String description, int creationTimestamp) {
+    this.title = title;
+    this.mealType = mealType;
+    this.description = description;
+    this.creationTimestamp = creationTimestamp;
   }
 
   public JSONObject toJSON() {
     return new JSONObject()
         .put("title", title)
         .put("mealtype", mealType)
-        .put("description", description);
+        .put("description", description)
+        .put("creationTimestamp", creationTimestamp);
   }
 
   public Recipe(JSONObject j) throws IllegalArgumentException {
@@ -63,6 +73,7 @@ public class Recipe {
       this.title = j.getString("title");
       this.mealType = j.getString("mealtype");
       this.description = j.getString("description");
+      this.creationTimestamp = j.getInt("creationTimestamp");
     } catch (Exception e) {
       throw new IllegalArgumentException("JSON Object did not have required fields");
     }
@@ -70,5 +81,9 @@ public class Recipe {
 
   Recipe() {
     this("default title", "breakfast", "default description");
+  }
+
+  public int getCreationTimestamp() {
+    return this.creationTimestamp;
   }
 }

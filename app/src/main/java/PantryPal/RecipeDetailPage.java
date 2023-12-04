@@ -161,7 +161,11 @@ class RecipeDetailUI extends VBox {
 
   public void save() {
     recipeDetailModel.update(
-        new Recipe(titleField.getText(), mealTypeField.getText(), descriptionField.getText()));
+        new Recipe(
+            titleField.getText(),
+            mealTypeField.getText(),
+            descriptionField.getText(),
+            this.recipe.getCreationTimestamp()));
   }
 
   public void delete() {
