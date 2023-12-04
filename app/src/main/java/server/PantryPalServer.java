@@ -18,7 +18,7 @@ public class PantryPalServer {
   public static void main(String[] args) throws IOException {
     ThreadPoolExecutor threadPoolExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(10);
     // create a map to store data
-    AccountData accountData = new AccountDB(new JSONDB("accounts", "username"));
+    AccountData accountData = new AccountDB(new MongoJSONDB("accounts", "username"));
     RecipeCreator creator = new ChatGPTBot();
 
     // create a server

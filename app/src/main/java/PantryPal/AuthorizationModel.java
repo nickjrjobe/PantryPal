@@ -17,6 +17,11 @@ public class AuthorizationModel {
     httpModel.setPath("authorization");
   }
 
+  public boolean tryConnect() {
+    boolean connected = httpModel.tryConnect();
+    return connected;
+  }
+
   public boolean authenticate(Account account) {
     String res = httpModel.performRequest("POST", null, account.toJSON().toString());
     if (res.equals("200 OK")) {

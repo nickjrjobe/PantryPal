@@ -56,7 +56,7 @@ class ShareAPIFactory implements HttpUserAPIFactory {
       perUserImageManager.put(username, manager);
     }
     return new ShareAPI(
-        new UserRecipeDB(new JSONDB("recipes", "title"), username),
+        new UserRecipeDB(new MongoJSONDB("recipes", "title"), username),
         new ShareRecipePageMaker(manager));
   }
 }
