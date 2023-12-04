@@ -57,20 +57,20 @@ class AppController implements HomeTracker {
   }
 
   public boolean validateAccount(
-    AccountLoginUI accountLoginUI, AuthorizationModel authorizationModel) {
-      Account account = accountLoginUI.getAccount();
+      AccountLoginUI accountLoginUI, AuthorizationModel authorizationModel) {
+    Account account = accountLoginUI.getAccount();
 
-      if (!Account.isValidUsername(account.getUsername())) {
-        accountLoginUI.setErrorText("Please enter a valid username");
-        System.err.println("Empty username");
-        return false;
-      }
-      if (!authorizationModel.authenticate(account)) {
-        accountLoginUI.setErrorText("Invalid username/password");
-        System.err.println("Invalid username/password");
-        return false;
-      }
-      return true;
+    if (!Account.isValidUsername(account.getUsername())) {
+      accountLoginUI.setErrorText("Please enter a valid username");
+      System.err.println("Empty username");
+      return false;
+    }
+    if (!authorizationModel.authenticate(account)) {
+      accountLoginUI.setErrorText("Invalid username/password");
+      System.err.println("Invalid username/password");
+      return false;
+    }
+    return true;
   }
 
   public ServerErrorPage makeErrorPage() {
