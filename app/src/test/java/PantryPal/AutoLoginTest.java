@@ -36,4 +36,19 @@ public class AutoLoginTest {
     Account account = AppController.checkForAutoLogin("src/test/nonexistent_file.txt");
     assertNull(account);
   }
+
+  @Test
+  public void testCheckIfAutoLoginExists() {
+    String credentialsFilePath = "src/test/temp_credentials.txt";
+    try {
+      FileWriter fw = new FileWriter(credentialsFilePath);
+      fw.write("testusername\n");
+      fw.write("testpassword\n");
+      fw.close();
+    } catch (IOException ex) {
+      ex.printStackTrace();
+    }
+    assertEquals(true, AppController.checkIfAutoLoginExists(credentialsFilePath));
+    assertEquals(false, AppController.checkIfAutoLoginExists("src/test/nonexistent_file.txt"));
+  }
 }

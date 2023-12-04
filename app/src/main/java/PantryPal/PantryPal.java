@@ -64,8 +64,8 @@ class AppController implements HomeTracker {
     }
   }
 
-  public boolean checkIfAutoLoginExists(String credentials_file_path){
-     try {
+  public static boolean checkIfAutoLoginExists(String credentials_file_path) {
+    try {
       File file = new File(credentials_file_path);
       FileReader fr = new FileReader(file);
       BufferedReader br = new BufferedReader(fr);
@@ -185,12 +185,13 @@ class AppController implements HomeTracker {
     return accountLoginPage;
   }
 
-  public void login(AccountLoginUI accountLoginUI){
+  public void login(AccountLoginUI accountLoginUI) {
     if (accountLoginUI.isAutoLoginSelected()) {
       saveAutoLoginDetails(account, CREDENTIALS);
     }
     pt.swapToPage(makeRecipeListPage()); // Swap to recipe list page
   }
+
   public void saveAutoLoginDetails(Account account, String credentials_file_path) {
     // Saves given account credentials to specified file
     try {
@@ -224,12 +225,12 @@ class AppController implements HomeTracker {
         e -> {
           pt.swapToPage(makeNewRecipeController().getPage());
         });
-    if (checkIfAutoLoginExists(CREDENTIALS) == false){
+    if (checkIfAutoLoginExists(CREDENTIALS) == false) {
       recipeList.footer.addButton(
-        "logout",
-        e -> {
-          logout();
-        });
+          "logout",
+          e -> {
+            logout();
+          });
     }
     return recipeList;
   }
