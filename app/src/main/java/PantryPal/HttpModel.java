@@ -89,7 +89,8 @@ class HttpRequestModel implements HttpModel {
       System.err.println("Error: " + ex.getMessage());
       notifyServerStatus(false);
       return false;
-
+    }
+  }
   public String performRawRequest(String method, InputStream in) {
     // Implement your HTTP request logic here and return the response
     try {
