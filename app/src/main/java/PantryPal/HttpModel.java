@@ -144,7 +144,6 @@ class HttpRequestModel implements HttpModel {
       return response;
     } catch (Exception ex) {
       tryConnect();
-      // ex.printStackTrace();
       return "Error: " + ex.getMessage();
     }
   }
