@@ -3,6 +3,7 @@
 package PantryPal;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import javafx.application.Application;
@@ -119,24 +120,23 @@ class AppController implements HomeTracker {
   }
 
   public RecipeListPage makeRecipeListPage() {
-    List<String> mealTypes = new ArrayList<String>();
-    Collections.addAll(mealTypes, "No filters", "Breakfast", "Lunch", "Dinner");
-    List<String> sorts = new ArrayList<String>();
-    Collections.addAll(sorts, "A-Z", "Z-A", "Oldest", "Newest");
-    RecipeListPage recipeList = new RecipeListPage(getRecipeListEntries());
+    return makeRecipeListPage("No Filters");
+  }
+
+  public RecipeListPage makeRecipeListPage(String filterSelection) {
+    List<String> mealTypes = Arrays.asList("No Filters", "Breakfast", "Lunch", "Dinner");
+    List<String> sorts = Arrays.asList("A-Z", "Z-A", "Oldest", "Newest");
+    RecipeListPage recipeList = new RecipeListPage(getRecipeListEntries(filterSelection));
     recipeList.footer.addButton(
         "New Recipe",
         e -> {
           pt.swapToPage(makeNewRecipeController().getPage());
         });
     // TODO add logic to dropdown selections
-    recipeList.footer.addDropDown(
-        mealTypes,
-        "No filters",
-        e -> {
-          ChoiceBox<String> source = (ChoiceBox<String>) e.getSource();
-          filterSelection = source.getValue();
-        });
+    recipeList.footer.addDropDown(mealTypes, filterSelection, e -> {
+      ChoiceBox<String> source = (ChoiceBox<String>) e.getSource();
+      pt.swapToPage(makeRecipeListPage(source.getValue()));
+    });
     recipeList.footer.addDropDown(sorts, "Newest", e -> {});
 
     return recipeList;
@@ -146,16 +146,25 @@ class AppController implements HomeTracker {
     return dropDown.getSelectionModel().getSelectedItem().toString();
   }
 
-  public List<RecipeEntryUI> getRecipeListEntries() {
-    RecipeListModel model = new RecipeListModel(new HttpRequestModel(), account);
+  public List<RecipeEntryUI> convertRecipeListToUIList(List<Recipe> recipes) {
     ArrayList<RecipeEntryUI> entries = new ArrayList<>();
-    List<Recipe> recipes = model.getMealTypeRecipeList(filterSelection);
-
-    for (Recipe recipe : model.getRecipeList()) {
+    for (Recipe recipe : recipes) {
       entries.add(makeRecipeEntryUI(recipe));
     }
-
     return entries;
+  }
+
+  public List<RecipeEntryUI> getRecipeListEntries(String filterSelection) {
+    RecipeListModel model = new RecipeListModel(new HttpRequestModel(), account);
+    ArrayList<RecipeEntryUI> entries = new ArrayList<>();
+    List<Recipe> recipes;
+    /* apply filter if requested */
+    if (filterSelection.equals("No Filters")) {
+      recipes = model.getRecipeList();
+    } else {
+      recipes = model.getMealTypeRecipeList(filterSelection.toLowerCase());
+    }
+    return convertRecipeListToUIList(recipes);
   }
 
   public RecipeEntryUI makeRecipeEntryUI(Recipe recipe) {
