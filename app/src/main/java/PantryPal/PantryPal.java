@@ -207,17 +207,15 @@ class AppController implements HomeTracker {
     List<Recipe> recipes;
     // Get filtered recipes
     if (filterSelection.equals("No Filters")) {
-      recipes = model.getRecipeList();
+      recipes = model.getRecipeList(sortSelection);
     } else {
-      recipes = model.getMealTypeRecipeList(filterSelection.toLowerCase());
+      recipes = model.getMealTypeRecipeList(filterSelection.toLowerCase(), sortSelection);
     }
     // Debugging
     System.out.println("Recipe list length: " + recipes.size());
     for (Recipe recipe : recipes) {
       System.out.println("    " + recipe.getTitle());
     }
-    // Apply sorting
-    sortRecipesInPlace(recipes, sortSelection);
     // Convert to UI list for the UI
     return convertRecipeListToUIList(recipes);
   }

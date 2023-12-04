@@ -4,6 +4,7 @@ import com.sun.net.httpserver.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
+import utils.RecipeListFactory;
 
 class RecipeListAPIFactory implements HttpUserAPIFactory {
   public HttpAPI makeAPI(String username) {
@@ -32,7 +33,8 @@ class RecipeListAPI extends HttpAPI {
    * @return a JSON formatted string of a list of recipes
    */
   String handleGet(String query, String request) throws IOException {
-    return data.toJSON().toString();
+    query = query.substring(query.indexOf("?") + 1); // Removes the ? from the query
+    return (new RecipeListFactory(data.toJSON())).sort(query).buildJSON().toString();
   }
 
   /**

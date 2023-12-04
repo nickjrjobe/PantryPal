@@ -31,7 +31,7 @@ public class RecipeListModelTest {
     httpModel.setMockResponse(response);
 
     // Test the method
-    List<Recipe> result = recipeListModel.getRecipeList();
+    List<Recipe> result = recipeListModel.getRecipeList("A-Z");
     for (int i = 0; i < result.size(); i++) {
       assertEquals("title" + (i + 1), result.get(i));
     }

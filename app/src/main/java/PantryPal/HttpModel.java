@@ -76,10 +76,11 @@ class HttpRequestModel implements HttpModel {
       System.out.println("Request :" + request);
     }
     try {
+      String requestUrlString = urlString;
       if (query != null) {
-        urlString += "?" + query;
+        requestUrlString += "?" + query;
       }
-      URL url = new URI(urlString).toURL();
+      URL url = new URI(requestUrlString).toURL();
       HttpURLConnection conn = (HttpURLConnection) url.openConnection();
       conn.setRequestMethod(method);
       conn.setDoOutput(true);
