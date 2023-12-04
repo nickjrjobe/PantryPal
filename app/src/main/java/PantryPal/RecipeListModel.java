@@ -2,14 +2,12 @@
 
 package PantryPal;
 
-import java.io.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import javafx.event.*;
-import javafx.scene.layout.*;
-import javafx.scene.text.*;
+
 import org.json.JSONObject;
+
 import utils.Account;
 import utils.Recipe;
 
@@ -34,6 +32,9 @@ public class RecipeListModel {
   }
 
   public List<Recipe> getMealTypeRecipeList(String mealtype) {
+    if (mealtype == "No Filter") {
+      return getRecipeList();
+    }
     httpModel.performRequest("POST", mealtype, null);
     List<Recipe> recipeList = getRecipeList();
     httpModel.performRequest("DELETE", null, null);

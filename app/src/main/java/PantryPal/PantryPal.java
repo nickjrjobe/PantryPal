@@ -154,7 +154,7 @@ class AppController implements HomeTracker {
   public List<RecipeEntryUI> getRecipeListEntries() {
     RecipeListModel model = new RecipeListModel(new HttpRequestModel(), account);
     ArrayList<RecipeEntryUI> entries = new ArrayList<>();
-    ArrayList<Recipe> recipes = model.getMealTypeRecipeList();
+    List<Recipe> recipes = model.getMealTypeRecipeList(filterSelection);
 
     for (Recipe recipe : model.getRecipeList()) {
       entries.add(makeRecipeEntryUI(recipe));
