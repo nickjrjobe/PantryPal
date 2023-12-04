@@ -91,7 +91,7 @@ class AppController implements HomeTracker {
 
     return serverErrorPage;
   }
-  
+
   public void logout() {
     this.account = null;
     pt.swapToPage(makeLoginPage());
