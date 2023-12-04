@@ -124,10 +124,8 @@ public class NewRecipeCreator implements InteractiveRecipeMaker {
   }
 
   public Recipe regenerateRecipe() {
-    if (mealType != null && ingredients != null) {
-      String recipeResponse = recipeCreator.makeRecipe(mealType, ingredients);
-      recipe = interpretRecipeResponse(recipeResponse);
-    }
+    String recipeResponse = recipeCreator.makeRecipe(mealType, ingredients);
+    recipe = interpretRecipeResponse(recipeResponse);
     return recipe;
   }
 }

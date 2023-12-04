@@ -173,14 +173,7 @@ class NewRecipeController {
     drp.footer.addButton(
         "regenerate",
         e -> {
-          try {
-            Recipe newRecipe = newRecipeModel.regenerate();
-            /* create an identical page for new recipe by recalling method */
-            done(newRecipe);
-          } catch (IOException ex) {
-            System.err.println(
-                "New recipe response from server malformed, error " + ex.getMessage());
-          }
+          regenerateRecipe();
         });
     pt.swapToPage(drp);
   }
@@ -190,7 +183,16 @@ class NewRecipeController {
     newRecipeModel.reset();
     pt.goHome();
   }
-
+  void regenerateRecipe(){
+    try {
+            Recipe newRecipe = newRecipeModel.regenerate();
+            /* create an identical page for new recipe by recalling method */
+            done(newRecipe);
+          } catch (IOException ex) {
+            System.err.println(
+                "New recipe response from server malformed, error " + ex.getMessage());
+          }
+  }
   void regenerate() {
     TranscriptResults results;
     try {

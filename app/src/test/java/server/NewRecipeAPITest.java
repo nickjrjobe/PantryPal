@@ -54,7 +54,7 @@ public class NewRecipeAPITest {
   String invalidJson = "this/is-definitely.not;json";
   String validJson = "{\"response\":\"breakfast\"}";
   String exampleExpectedResponse = "{\"transcript\":[\"fee\",\"fi\",\"fo\",\"fum\"]}";
-
+  String rExampleResponse =  "{\"recipe\":{\"mealtype\":\"breakfast\"," + "\"description\":\"Add peanut butter and jelly to sandwich bread.\"," + "\"title\":\"PB&J Sandwich\"}}";
   @BeforeEach
   public void setup() {
     makerstub = new InteractiveRecipeMakerStub();
@@ -94,21 +94,14 @@ public class NewRecipeAPITest {
   @Test
   public void testMakeRegenerateResponse() {
     JSONObject json;
-    int oldResets; // don't care about absolute value just that one occured or didnt
     makerstub.recipe =
         new Recipe("PB&J Sandwich", "breakfast", "Add peanut butter and jelly to sandwich bread.");
 
     /* ensure transcripts are properly converted */
-    makerstub.prompts = emptyList;
-    oldResets = makerstub.resetCount;
     json = api.makeRegenerateResponse();
     assertEquals(true, json.has("recipe"));
 
-    makerstub.prompts = examplePrompts;
     json = api.makeResponseFromPrompts();
-    assertEquals(
-        new JSONObject(exampleExpectedResponse).getJSONArray("transcript").toString(),
-        json.getJSONArray("transcript").toString());
     assertEquals(true, json.has("recipe"));
     assertEquals(
         makerstub.regenerateRecipe().getTitle(),
@@ -175,9 +168,17 @@ public class NewRecipeAPITest {
   @Test
   public void testGet() {
     makerstub.prompts = examplePrompts;
+    /*Calling get method using query method */
     try {
       assertEquals(api.handleGet("?prompts", ""), exampleExpectedResponse);
     } catch (Exception e) {
+      fail("Get should never throw exception");
+    }
+    /*Calling get method using regenrate method */
+    try{
+      makerstub.recipe = new Recipe("PB&J Sandwich", "breakfast", "Add peanut butter and jelly to sandwich bread.");
+      assertEquals(api.handleGet("?regenerate", ""), rExampleResponse);
+    } catch (Exception ex){
       fail("Get should never throw exception");
     }
 
