@@ -3,7 +3,6 @@
 package PantryPal;
 
 import java.util.List;
-
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -46,7 +45,7 @@ class Footer extends HBox {
 
   public void addDropDown(List<String> options, EventHandler<ActionEvent> callback) {
     ChoiceBox dropDown = new ChoiceBox<>();
-    for (String option: options) {
+    for (String option : options) {
       dropDown.getItems().add(option);
     }
     this.getChildren().add(dropDown);
@@ -59,7 +58,7 @@ class Footer extends HBox {
 
   public void addDropDown(List<String> options, String def, EventHandler<ActionEvent> callback) {
     ChoiceBox<String> dropDown = new ChoiceBox<>();
-    for (String option: options) {
+    for (String option : options) {
       dropDown.getItems().add(option);
     }
     dropDown.setValue(def);

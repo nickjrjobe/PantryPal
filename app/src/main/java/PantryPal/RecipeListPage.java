@@ -3,7 +3,6 @@
 package PantryPal;
 
 import java.util.List;
-
 import javafx.scene.layout.VBox;
 
 /** UI element which displays IMMUTABLE list of recipes */
@@ -24,6 +23,7 @@ class RecipeListUI extends VBox {
 public class RecipeListPage extends ScrollablePage {
   private String filter;
   private String sort;
+
   RecipeListPage(List<RecipeEntryUI> entries) {
     super("Recipe List", new RecipeListUI(entries));
     this.filter = "No filter";
@@ -37,5 +37,4 @@ public class RecipeListPage extends ScrollablePage {
   public void updateSort(String sort) {
     this.sort = sort;
   }
-
 }

@@ -5,7 +5,6 @@ package PantryPal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
 import javafx.application.Application;
 import javafx.scene.control.ChoiceBox;
 import javafx.stage.Stage;
@@ -132,18 +131,14 @@ class AppController implements HomeTracker {
         });
     // TODO add logic to dropdown selections
     recipeList.footer.addDropDown(
-      mealTypes,
-      "No filters",
-      e -> {
-        ChoiceBox<String> source = (ChoiceBox<String>) e.getSource();
-        filterSelection = source.getValue();
-      });
-    recipeList.footer.addDropDown(
-      sorts,
-      "Newest",
-      e -> {
+        mealTypes,
+        "No filters",
+        e -> {
+          ChoiceBox<String> source = (ChoiceBox<String>) e.getSource();
+          filterSelection = source.getValue();
+        });
+    recipeList.footer.addDropDown(sorts, "Newest", e -> {});
 
-      });
     return recipeList;
   }
 
