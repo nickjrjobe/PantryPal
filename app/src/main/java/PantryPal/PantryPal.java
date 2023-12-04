@@ -78,7 +78,6 @@ class AppController implements HomeTracker {
       fr.close();
       return true;
     } catch (IOException ex) {
-      System.out.println("Error reading from file");
       return false;
     }
   }
