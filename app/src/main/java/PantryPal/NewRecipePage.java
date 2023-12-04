@@ -175,6 +175,7 @@ class NewRecipeController {
         e -> {
           try {
             Recipe newRecipe = newRecipeModel.regenerate();
+            /* create an identical page for new recipe by recalling method */
             done(newRecipe);
           } catch (IOException ex) {
             System.err.println(
