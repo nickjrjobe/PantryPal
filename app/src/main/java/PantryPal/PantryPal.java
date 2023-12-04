@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.List;
 
 import javafx.application.Application;
+import javafx.scene.control.ChoiceBox;
 import javafx.stage.Stage;
 import utils.Account;
 import utils.Recipe;
@@ -20,6 +21,8 @@ class AppController implements HomeTracker {
   private Account account;
   private PageTracker pt;
   private LinkMaker linkMaker;
+  private String filterSelection;
+  private String sortSelection;
 
   public AppController(PageTracker pt, LinkMaker linkMaker) {
     this.pt = pt;
@@ -132,7 +135,8 @@ class AppController implements HomeTracker {
       mealTypes,
       "No filters",
       e -> {
-
+        ChoiceBox<String> source = (ChoiceBox<String>) e.getSource();
+        filterSelection = source.getValue();
       });
     recipeList.footer.addDropDown(
       sorts,
@@ -143,10 +147,14 @@ class AppController implements HomeTracker {
     return recipeList;
   }
 
+  public String getChoiceBoxSelection(ChoiceBox dropDown) {
+    return dropDown.getSelectionModel().getSelectedItem().toString();
+  }
+
   public List<RecipeEntryUI> getRecipeListEntries() {
     RecipeListModel model = new RecipeListModel(new HttpRequestModel(), account);
     ArrayList<RecipeEntryUI> entries = new ArrayList<>();
-    ArrayList<Recipe> recipes = new ArrayList<>();
+    ArrayList<Recipe> recipes = model.getMealTypeRecipeList();
 
     for (Recipe recipe : model.getRecipeList()) {
       entries.add(makeRecipeEntryUI(recipe));

@@ -2,11 +2,9 @@
 
 package PantryPal;
 
-import java.io.*;
 import java.util.List;
-import javafx.event.*;
-import javafx.scene.layout.*;
-import javafx.scene.text.*;
+
+import javafx.scene.layout.VBox;
 
 /** UI element which displays IMMUTABLE list of recipes */
 class RecipeListUI extends VBox {
@@ -24,7 +22,20 @@ class RecipeListUI extends VBox {
 
 /** UI Page containing recipe list, and accompanying header and footer */
 public class RecipeListPage extends ScrollablePage {
+  private String filter;
+  private String sort;
   RecipeListPage(List<RecipeEntryUI> entries) {
     super("Recipe List", new RecipeListUI(entries));
+    this.filter = "No filter";
+    this.sort = "Newest";
   }
+
+  public void updateFilter(String mealType) {
+    this.filter = mealType;
+  }
+
+  public void updateSort(String sort) {
+    this.sort = sort;
+  }
+
 }
