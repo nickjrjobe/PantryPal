@@ -224,6 +224,7 @@ class AppController implements HomeTracker {
 
   /**
    * Make a RecipeListPage with the specified filter and sorting mode
+   *
    * @param filterSelection the filter to use
    * @param sortSelection the sorting mode to use
    * @return the RecipeListPage
@@ -234,7 +235,8 @@ class AppController implements HomeTracker {
     List<String> mealTypes = Arrays.asList("No Filters", "breakfast", "lunch", "dinner");
     List<String> sorts = Arrays.asList("A-Z", "Z-A", "Oldest", "Newest");
     // Fetch the list of recipes using the options
-    RecipeListPage recipeList = new RecipeListPage(getRecipeListEntries(filterSelection, sortSelection));
+    RecipeListPage recipeList =
+        new RecipeListPage(getRecipeListEntries(filterSelection, sortSelection));
     // New Recipe Button, click sends to new recipe page
     recipeList.footer.addButton(
         "New Recipe",
@@ -261,7 +263,6 @@ class AppController implements HomeTracker {
           }
         };
     recipeList.footer.addDropDown(mealTypes, filterSelection, filterEventHandler);
-
 
     // Sort Dropdown, click sends to this same page with updated sorting mode
     EventHandler<ActionEvent> sortEventHandler =
