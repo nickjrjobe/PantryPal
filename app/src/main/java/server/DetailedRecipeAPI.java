@@ -35,6 +35,7 @@ class DetailedRecipeAPI extends HttpAPI {
 
   /** Create a new recipe */
   String handlePost(String query, String request) throws IOException {
+    query = query.substring(query.indexOf("?") + 1);
     /* interpret request as json */
     JSONObject json = getJSONRequest(request);
     Recipe recipe;
@@ -58,6 +59,7 @@ class DetailedRecipeAPI extends HttpAPI {
 
   /** Delete recipe */
   String handleDelete(String query, String request) throws IOException {
+    query = query.substring(query.indexOf("?") + 1);
     String response = "404 Not Found";
     if (query != null) {
       String value = query.substring(query.indexOf("=") + 1);
