@@ -25,7 +25,6 @@ class AppController implements HomeTracker {
   private Account account;
   private PageTracker pt;
   private LinkMaker linkMaker;
-  private String filterSelection; // TODO can we delete these
   private String sortSelection;
   private static final String CREDENTIALS = "Secure_Credentials.txt";
 
@@ -221,24 +220,22 @@ class AppController implements HomeTracker {
   }
 
   public RecipeListPage makeRecipeListPage() {
-    return makeRecipeListPage("No Filters", "Newest");
+    return makeRecipeListPage("Newest");
   }
 
   /**
    * Make a RecipeListPage with the specified filter and sorting mode
    *
-   * @param filterSelection the filter to use
    * @param sortSelection the sorting mode to use
    * @return the RecipeListPage
    */
-  public RecipeListPage makeRecipeListPage(
-      final String filterSelection, final String sortSelection) {
+  public RecipeListPage makeRecipeListPage(final String sortSelection) {
     // Define the filter and sorting options
     List<String> mealTypes = Arrays.asList("No Filters", "breakfast", "lunch", "dinner");
     List<String> sorts = Arrays.asList("A-Z", "Z-A", "Oldest", "Newest");
     // Fetch the list of recipes using the options
     RecipeListPage recipeList =
-        new RecipeListPage(getRecipeListEntries(filterSelection, sortSelection));
+        new RecipeListPage(getRecipeListEntries(sortSelection));
     // New Recipe Button, click sends to new recipe page
     recipeList.footer.addButton(
         "New Recipe",
@@ -253,20 +250,6 @@ class AppController implements HomeTracker {
           });
     }
 
-    // Filter Dropdown, click sends to this same page with updated filters
-    EventHandler<ActionEvent> filterEventHandler =
-        new EventHandler<ActionEvent>() {
-          public void handle(ActionEvent e) {
-            // Get the new specified filter
-            ChoiceBox<String> combo_box = (ChoiceBox<String>) e.getSource();
-            String filterSelection = combo_box.getValue();
-            System.out.println("Filter: " + filterSelection + " selected");
-            // Swap to the new page with the new filter
-            pt.swapToPage(makeRecipeListPage(filterSelection, sortSelection));
-          }
-        };
-    recipeList.footer.addDropDown(mealTypes, filterSelection, filterEventHandler);
-
     // Sort Dropdown, click sends to this same page with updated sorting mode
     EventHandler<ActionEvent> sortEventHandler =
         new EventHandler<ActionEvent>() {
@@ -276,7 +259,7 @@ class AppController implements HomeTracker {
             String sortSelection = combo_box.getValue();
             System.out.println("Sorting mode: " + sortSelection + " selected");
             // Swap to the new page with the new sorting mode
-            pt.swapToPage(makeRecipeListPage(filterSelection, sortSelection));
+            pt.swapToPage(makeRecipeListPage(sortSelection));
           }
         };
     recipeList.footer.addDropDown(sorts, sortSelection, sortEventHandler);
@@ -309,15 +292,11 @@ class AppController implements HomeTracker {
     }
   }
 
-  public List<RecipeEntryUI> getRecipeListEntries(String filterSelection, String sortSelection) {
+  public List<RecipeEntryUI> getRecipeListEntries(String sortSelection) {
     RecipeListModel model = new RecipeListModel(new HttpRequestModel(), account);
     List<Recipe> recipes;
-    // Get filtered recipes
-    if (filterSelection.equals("No Filters")) {
-      recipes = model.getRecipeList(sortSelection);
-    } else {
-      recipes = model.getMealTypeRecipeList(filterSelection.toLowerCase(), sortSelection);
-    }
+    // Get sorted list of recipes
+    recipes = model.getRecipeList(sortSelection);
     // Debugging
     System.out.println("Recipe list length: " + recipes.size());
     for (Recipe recipe : recipes) {
