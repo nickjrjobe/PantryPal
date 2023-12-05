@@ -2,11 +2,8 @@
 
 package PantryPal;
 
-import java.io.*;
 import java.util.List;
-import javafx.event.*;
-import javafx.scene.layout.*;
-import javafx.scene.text.*;
+import javafx.scene.layout.VBox;
 
 /** UI element which displays IMMUTABLE list of recipes */
 class RecipeListUI extends VBox {

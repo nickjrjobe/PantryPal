@@ -119,21 +119,30 @@ class HttpRequestModel implements HttpModel {
     }
   }
 
+  /**
+   * Perform an HTTP request
+   *
+   * @param method the HTTP method to use
+   * @param query the query string to use
+   * @param request the request body to use
+   * @return the response from the server
+   */
   public String performRequest(String method, String query, String request) {
     // Implement your HTTP request logic here and return the response
     if (request != null) {
       System.out.println("Request :" + request);
     }
     try {
+      String requestUrlString = urlString;
       if (query != null) {
-        urlString += "?" + query;
+        requestUrlString += "?" + query;
       }
-      URL url = new URI(urlString).toURL();
+      URL url = new URI(requestUrlString).toURL();
       HttpURLConnection conn = (HttpURLConnection) url.openConnection();
       conn.setRequestMethod(method);
       conn.setDoOutput(true);
 
-      if (method.equals("POST") || method.equals("PUT")) {
+      if (request != null && (method.equals("POST") || method.equals("PUT"))) {
         OutputStreamWriter out = new OutputStreamWriter(conn.getOutputStream());
         out.write(request);
         out.flush();

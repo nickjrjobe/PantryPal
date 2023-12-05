@@ -31,7 +31,7 @@ public class RecipeListModelTest {
     httpModel.setMockResponse(response);
 
     // Test the method
-    List<Recipe> result = recipeListModel.getRecipeList();
+    List<Recipe> result = recipeListModel.getRecipeList("A-Z");
     for (int i = 0; i < result.size(); i++) {
       assertEquals("title" + (i + 1), result.get(i));
     }
@@ -40,14 +40,19 @@ public class RecipeListModelTest {
   @Test
   public void testProcessResponse() {
     String response =
-        "{\"recipe\":{\"title\":\"test recipe\","
+        "{\"recipes\":["
+            + "{\"title\":\"test recipe\","
             + "\"mealtype\":\"test meal type\","
-            + "\"description\":\"test description\"}}";
+            + "\"description\":\"test description\","
+            + "\"creationTimestamp\":-1"
+            + "}]}";
+
     // Test the method
     List<Recipe> result = recipeListModel.processResponse(response);
     Recipe recipe = result.get(0);
     assertEquals(recipe.getTitle(), "test recipe");
     assertEquals(recipe.getMealType(), "test meal type");
     assertEquals(recipe.getDescription(), "test description");
+    assertEquals(recipe.getCreationTimestamp(), -1);
   }
 }

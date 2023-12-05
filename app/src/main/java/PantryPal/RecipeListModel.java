@@ -2,16 +2,12 @@
 
 package PantryPal;
 
-import java.io.*;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import javafx.event.*;
-import javafx.scene.layout.*;
-import javafx.scene.text.*;
 import org.json.JSONObject;
 import utils.Account;
 import utils.Recipe;
+import utils.RecipeListFactory;
 
 /** Communication model for making API requests to get Recipe List. */
 public class RecipeListModel {
@@ -23,8 +19,13 @@ public class RecipeListModel {
     httpModel.setPath("recipes/" + account.getUsername() + "/");
   }
 
-  public List<Recipe> getRecipeList() {
-    String response = httpModel.performRequest("GET", null, null);
+  /**
+   * Get a list of recipes from the server
+   *
+   * @return
+   */
+  public List<Recipe> getRecipeList(String sortSelection) {
+    String response = httpModel.performRequest("GET", sortSelection, null);
     try {
       return processResponse(response);
     } catch (Exception e) {
@@ -33,24 +34,39 @@ public class RecipeListModel {
     }
   }
 
-  public List<Recipe> getMealTypeRecipeList(String mealtype) {
+  /**
+   * Get a list of recipes from the server filtered by meal type
+   *
+   * @param mealtype
+   * @return
+   */
+  public List<Recipe> getMealTypeRecipeList(String mealtype, String sortSelection) {
+    if (mealtype == "No Filter") {
+      return getRecipeList(sortSelection);
+    }
+    // Add filter
     httpModel.performRequest("POST", mealtype, null);
-    List<Recipe> recipeList = getRecipeList();
+    List<Recipe> recipeList = getRecipeList(sortSelection);
+    // Display filtered recipes list
+    System.out.println("Filtered Recipes: ");
+    for (Recipe recipe : recipeList) {
+      System.out.println("    " + recipe.getTitle());
+    }
+    // Delete filter
     httpModel.performRequest("DELETE", null, null);
     return recipeList;
   }
 
-  /** convert JSON response into List of strings */
+  /**
+   * Process the response from the server
+   *
+   * @param response the response from the server
+   * @return
+   * @throws IllegalArgumentException
+   */
   public List<Recipe> processResponse(String response) throws IllegalArgumentException {
     try {
-      JSONObject json = new JSONObject(response);
-      List<Recipe> recipes = new ArrayList<Recipe>();
-      Iterator<String> iRecipes = json.keys();
-      while (iRecipes.hasNext()) {
-        String title = iRecipes.next();
-        recipes.add(new Recipe(json.getJSONObject(title)));
-      }
-      return recipes;
+      return (new RecipeListFactory(new JSONObject(response).getJSONArray("recipes"))).buildList();
     } catch (Exception ex) {
       throw new IllegalArgumentException("response: \"" + response + "\" was invalid");
     }

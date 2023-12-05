@@ -3,6 +3,7 @@ package server;
 import org.json.JSONObject;
 import utils.Recipe;
 
+/** Class for storing and accessing data for multiple Recipes for a specific user */
 public class UserRecipeDB implements RecipeData {
   private JSONDB db;
   private String user;
@@ -13,10 +14,12 @@ public class UserRecipeDB implements RecipeData {
     clearFilters();
   }
 
+  /** Adds the given string as a filter for mealtypes */
   public void filterByMealType(String mealtype) {
     db.addFilter("mealtype", mealtype);
   }
 
+  /** Removes all existing filters */
   public void clearFilters() {
     db.clearFilters();
     db.addFilter("username", user);
@@ -40,6 +43,7 @@ public class UserRecipeDB implements RecipeData {
     return get(key);
   }
 
+  /** Get a specific recipe, given a title */
   public Recipe get(String key) {
     JSONObject j = db.read(key);
     Recipe r;
@@ -51,6 +55,7 @@ public class UserRecipeDB implements RecipeData {
     }
   }
 
+  /** Remove a specific recipe, given a title */
   public Recipe remove(String key) {
     JSONObject j = db.remove(key);
     if (j == null) {

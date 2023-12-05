@@ -104,6 +104,7 @@ public class NewRecipeCreator implements InteractiveRecipeMaker {
     for (int i = titleLineIndex + 1; i < responseLines.length; i++) {
       instructions += responseLines[i] + "\n";
     }
+    // Get creation time
     return new Recipe(responseLines[titleLineIndex].trim(), mealType, instructions.trim());
   }
 

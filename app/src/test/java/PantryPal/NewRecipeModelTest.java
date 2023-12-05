@@ -27,7 +27,8 @@ public class NewRecipeModelTest {
     httpModel.setMockResponse(
         "{\"transcript\":[\"test prompt\"],\"recipe\":{\"title\":\"test recipe\","
             + "\"mealtype\":\"test meal type\","
-            + "\"description\":\"test description\"}}");
+            + "\"description\":\"test description\","
+            + "\"creationTimestamp\":-1}}");
 
     // Call the method
     try {
@@ -44,6 +45,7 @@ public class NewRecipeModelTest {
     assertEquals("test recipe", recipe.getTitle());
     assertEquals("test meal type", recipe.getMealType());
     assertEquals("test description", recipe.getDescription());
+    assertEquals(-1, recipe.getCreationTimestamp());
 
     // Verify transcript details
     assertEquals(1, transcriptResults.prompts.size());
@@ -58,7 +60,8 @@ public class NewRecipeModelTest {
     httpModel.setMockResponse(
         "{\"transcript\":[\"test prompt\"],\"recipe\":{\"title\":\"test recipe\","
             + "\"mealtype\":\"test meal type\","
-            + "\"description\":\"test description\"}}");
+            + "\"description\":\"test description\","
+            + "\"creationTimestamp\":-1}}");
 
     // Call the method
     try {
@@ -75,6 +78,7 @@ public class NewRecipeModelTest {
     assertEquals("test recipe", recipe.getTitle());
     assertEquals("test meal type", recipe.getMealType());
     assertEquals("test description", recipe.getDescription());
+    assertEquals(-1, recipe.getCreationTimestamp());
 
     // Verify transcript details
     assertEquals(1, transcriptResults.prompts.size());
