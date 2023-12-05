@@ -297,10 +297,6 @@ class AppController implements HomeTracker {
     // Get sorted list of recipes
     recipes = model.getRecipeList(sortSelection);
     // Debugging
-    System.out.println("Recipe list length: " + recipes.size());
-    for (Recipe recipe : recipes) {
-      System.out.println("    " + recipe.getTitle());
-    }
     // Convert to UI list for the UI
     return convertRecipeListToUIList(recipes);
   }
