@@ -98,7 +98,6 @@ class MongoJSONDB implements JSONDB {
   /** Add a filter to the database Keeps the existing filter, but adds a new one */
   public void addFilter(String key, String val) {
     this.filter = and(this.filter, eq(key, val));
-    System.out.println("DEBIG FILTER: " + this.filter.toString());
   }
 
   public void clear() {
