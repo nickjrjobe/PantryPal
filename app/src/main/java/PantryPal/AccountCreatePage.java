@@ -70,7 +70,6 @@ public class AccountCreatePage extends ScrollablePage {
       return isValidInput;
     }
     if (account.equals("existingUser")) {
-      // TODO: change the condition  -> check if account already exists
       accountCreateUI.setErrorText("Username already exists");
       return isValidInput;
     }

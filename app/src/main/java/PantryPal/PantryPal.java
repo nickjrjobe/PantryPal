@@ -139,6 +139,10 @@ class AppController implements HomeTracker {
   public void logout() {
     this.account = null;
     pt.swapToPage(makeLoginPage());
+    if (checkIfAutoLoginExists(CREDENTIALS) == true) {
+      File file = new File(CREDENTIALS);
+      file.delete();
+    }
   }
 
   public AccountCreatePage makeAccountCreatePage() {
@@ -243,13 +247,11 @@ class AppController implements HomeTracker {
         e -> {
           pt.swapToPage(makeNewRecipeController().getPage());
         });
-    if (checkIfAutoLoginExists(CREDENTIALS) == false) {
-      recipeList.footer.addButton(
-          "logout",
-          e -> {
-            logout();
-          });
-    }
+    recipeList.footer.addButton(
+        "logout",
+        e -> {
+          logout();
+        });
     // Filter Dropdown, click sends to this same page with updated filters
     EventHandler<ActionEvent> filterEventHandler =
         new EventHandler<ActionEvent>() {
@@ -307,7 +309,9 @@ class AppController implements HomeTracker {
   }
 
   public List<RecipeEntryUI> getRecipeListEntries(String filterSelection, String sortSelection) {
-    RecipeListModel model = new RecipeListModel(new HttpRequestModel(), account);
+    HttpRequestModel httpModel = new HttpRequestModel();
+    httpModel.registerObserver(pt);
+    RecipeListModel model = new RecipeListModel(httpModel, account);
     List<Recipe> recipes;
     // Get filtered and sorted recipes
     if (filterSelection.equals("No Filters")) {
@@ -422,7 +426,13 @@ public class PantryPal extends Application {
     PageTracker pt = new PageTracker(primaryStage);
     AppController appController = new AppController(pt, new ShareLinkMaker());
     pt.setHomeTracker(appController);
-    pt.goHome();
+    // Check if server is on
+    HttpModel httpModel = new HttpRequestModel();
+    if (!httpModel.tryConnect()) {
+      pt.goError();
+    } else {
+      pt.goHome();
+    }
   }
 
   public static void main(String[] args) {
