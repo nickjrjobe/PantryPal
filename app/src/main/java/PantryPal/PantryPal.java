@@ -141,6 +141,10 @@ class AppController implements HomeTracker {
   public void logout() {
     this.account = null;
     pt.swapToPage(makeLoginPage());
+    if (checkIfAutoLoginExists(CREDENTIALS) == true) {
+      File file = new File(CREDENTIALS);
+      file.delete();
+    }
   }
 
   public AccountCreatePage makeAccountCreatePage() {
@@ -245,13 +249,11 @@ class AppController implements HomeTracker {
         e -> {
           pt.swapToPage(makeNewRecipeController().getPage());
         });
-    if (checkIfAutoLoginExists(CREDENTIALS) == false) {
-      recipeList.footer.addButton(
-          "logout",
-          e -> {
-            logout();
-          });
-    }
+    recipeList.footer.addButton(
+        "logout",
+        e -> {
+          logout();
+        });
 
     // Filter Dropdown, click sends to this same page with updated filters
     EventHandler<ActionEvent> filterEventHandler =
