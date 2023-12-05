@@ -88,15 +88,23 @@ public class RecipeListAPITest {
       // Setup data
       MockRecipeData data = new MockRecipeData();
       MockRecipeData data2 = new MockRecipeData();
+      MockRecipeData data3 = new MockRecipeData();
       RecipeListAPI api = new RecipeListAPI(data);
       RecipeListAPI api2 = new RecipeListAPI(data2);
+      RecipeListAPI api3 = new RecipeListAPI(data3);
       data.put("Scrambled eggs", new Recipe("Scrambled eggs", "breakfast", "eggs"));
       data.put(
           "Mac and cheese", new Recipe("Mac and cheese", "dinner", "step 1. mac\nstep 2.cheese"));
+      data3.put(
+          "Mac and cheese", new Recipe("Mac and cheese", "dinner", "step 1. mac\nstep 2.cheese"));
+      data3.put("Scrambled eggs", new Recipe("Scrambled eggs", "breakfast", "eggs"));
       data.representation.put("Scrambled eggs", data.get("Scrambled eggs").toJSON());
       data.representation.put("Mac and cheese", data.get("Mac and cheese").toJSON());
+      data3.representation.put("Mac and cheese", data3.get("Mac and cheese").toJSON());
+      data3.representation.put("Scrambled eggs", data3.get("Scrambled eggs").toJSON());
       JSONObject jsonArray = (new RecipeListFactory(data.toJSON()).buildJSON());
       JSONObject jsonArray2 = (new RecipeListFactory(data2.toJSON()).buildJSON());
+      JSONObject jsonArray3 = (new RecipeListFactory(data3.toJSON()).buildJSON());
       /* test empty data */
       assertEquals(
           jsonArray.toString(), api.handleGet("Newest", ""), "get failed for default data");
@@ -112,6 +120,10 @@ public class RecipeListAPITest {
           "400 Bad Request",
           api2.handleGet(null, (String) null),
           "get failed for null data, empty list");
+
+      /* Test sorting method: Oldest */
+      assertEquals(
+          jsonArray3.toString(), api3.handleGet("Oldest", ""), "get failed for Oldest sorting");
 
       /* test valid data */
       assertEquals(

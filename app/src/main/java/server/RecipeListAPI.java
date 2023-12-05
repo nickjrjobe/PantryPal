@@ -12,7 +12,10 @@ class RecipeListAPIFactory implements HttpUserAPIFactory {
   }
 }
 
-/** API for getting a list of recipes from the database. Visible on the /<Username>/recipes/ endpoint. */
+/**
+ * API for getting a list of recipes from the database. Visible on the /<Username>/recipes/
+ * endpoint.
+ */
 class RecipeListAPI extends HttpAPI {
   private RecipeData data;
 

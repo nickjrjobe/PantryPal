@@ -20,7 +20,6 @@ public class RecipeListFactory {
       recipes.sort((a, b) -> a.getTitle().compareTo(b.getTitle()));
     } else if (sortSelection.equals("Z-A")) {
       recipes.sort((a, b) -> b.getTitle().compareTo(a.getTitle()));
-      dump();
     } else if (sortSelection.equals("Oldest")) {
       recipes.sort((a, b) -> Integer.compare(a.getCreationTimestamp(), b.getCreationTimestamp()));
     } else if (sortSelection.equals("Newest")) {
@@ -30,12 +29,6 @@ public class RecipeListFactory {
     }
     System.err.println("sorted by " + sortSelection);
     return this;
-  }
-
-  public void dump() {
-    for (Recipe recipe : recipes) {
-      System.err.println(recipe.getTitle());
-    }
   }
 
   /**
