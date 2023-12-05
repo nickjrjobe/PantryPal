@@ -51,9 +51,12 @@ public class RecipeListFactory {
       Iterator<String> iRecipes = json.keys();
       while (iRecipes.hasNext()) {
         String title = iRecipes.next();
-        recipes.add(new Recipe(json.getJSONObject(title)));
+        JSONObject recipe = json.getJSONObject(title);
+        Recipe r = new Recipe(recipe);
+        recipes.add(r);
       }
     } catch (Exception ex) {
+      System.out.println("ERROR: " + ex.getMessage());
       throw new IllegalArgumentException("json was invalid");
     }
   }

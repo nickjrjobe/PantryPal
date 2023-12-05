@@ -42,7 +42,7 @@ class InteractiveRecipeMakerStub implements InteractiveRecipeMaker {
   }
 
   public Recipe regenerateRecipe() {
-    return new Recipe("new " + recipe.getTitle(), recipe.getMealType(), recipe.getDescription());
+    return new Recipe("new " + recipe.getTitle(), recipe.getMealType(), recipe.getDescription(), 0);
   }
 }
 
@@ -55,7 +55,7 @@ public class NewRecipeAPITest {
   String validJson = "{\"response\":\"breakfast\"}";
   String exampleExpectedResponse = "{\"transcript\":[\"fee\",\"fi\",\"fo\",\"fum\"]}";
   String rExampleResponse =
-      "{\"recipe\":{\"mealtype\":\"breakfast\","
+      "{\"recipe\":{\"creationTimestamp\":0,\"mealtype\":\"breakfast\","
           + "\"description\":\"Add peanut butter and jelly to sandwich bread.\","
           + "\"title\":\"PB&J Sandwich\"}}";
 
@@ -182,7 +182,7 @@ public class NewRecipeAPITest {
     try {
       makerstub.recipe =
           new Recipe(
-              "PB&J Sandwich", "breakfast", "Add peanut butter and jelly to sandwich bread.");
+              "PB&J Sandwich", "breakfast", "Add peanut butter and jelly to sandwich bread.", 0);
       assertEquals(api.handleGet("?regenerate", ""), rExampleResponse);
     } catch (Exception ex) {
       fail("Get should never throw exception");

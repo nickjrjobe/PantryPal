@@ -61,7 +61,6 @@ public class Recipe {
     this.creationTimestamp = creationTimestamp;
   }
 
-
   public JSONObject toJSON() {
     return new JSONObject()
         .put("title", title)

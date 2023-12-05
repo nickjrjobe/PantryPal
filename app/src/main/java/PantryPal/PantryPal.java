@@ -234,8 +234,7 @@ class AppController implements HomeTracker {
     List<String> mealTypes = Arrays.asList("No Filters", "breakfast", "lunch", "dinner");
     List<String> sorts = Arrays.asList("A-Z", "Z-A", "Oldest", "Newest");
     // Fetch the list of recipes using the options
-    RecipeListPage recipeList =
-        new RecipeListPage(getRecipeListEntries(sortSelection));
+    RecipeListPage recipeList = new RecipeListPage(getRecipeListEntries(sortSelection));
     // New Recipe Button, click sends to new recipe page
     recipeList.footer.addButton(
         "New Recipe",
