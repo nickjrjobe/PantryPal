@@ -29,6 +29,7 @@ public class RecipeListModel {
     try {
       return processResponse(response);
     } catch (Exception e) {
+      httpModel.tryConnect();
       System.err.println("HTTP request failed with error " + e.getMessage());
       return new ArrayList<Recipe>();
     }

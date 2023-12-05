@@ -159,7 +159,9 @@ class NewRecipeController {
 
   /** exit state machine to look at new recipe */
   void done(Recipe recipe) {
-    RecipeDetailModel rc = new RecipeDetailModel(new HttpRequestModel(), account);
+    HttpRequestModel httpModelRc = new HttpRequestModel();
+    httpModelRc.registerObserver(pt);
+    RecipeDetailModel rc = new RecipeDetailModel(httpModelRc, account);
     newRecipeModel.reset();
     HttpRequestModel httpModel = new HttpRequestModel();
     httpModel.registerObserver(pt);

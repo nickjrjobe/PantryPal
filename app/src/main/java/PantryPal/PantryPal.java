@@ -310,7 +310,9 @@ class AppController implements HomeTracker {
   }
 
   public List<RecipeEntryUI> getRecipeListEntries(String filterSelection, String sortSelection) {
-    RecipeListModel model = new RecipeListModel(new HttpRequestModel(), account);
+    HttpRequestModel httpModel = new HttpRequestModel();
+    httpModel.registerObserver(pt);
+    RecipeListModel model = new RecipeListModel(httpModel, account);
     List<Recipe> recipes;
     // Get filtered recipes
     if (filterSelection.equals("No Filters")) {
@@ -430,7 +432,13 @@ public class PantryPal extends Application {
     PageTracker pt = new PageTracker(primaryStage);
     AppController appController = new AppController(pt, new ShareLinkMaker());
     pt.setHomeTracker(appController);
-    pt.goHome();
+    // Check if server is on
+    HttpModel httpModel = new HttpRequestModel();
+    if (!httpModel.tryConnect()) {
+      pt.goError();
+    } else {
+      pt.goHome();
+    }
   }
 
   public static void main(String[] args) {
