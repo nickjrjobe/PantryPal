@@ -59,7 +59,7 @@ class Footer extends HBox {
   }
 
   /**
-   * Add a choice selection button to footer
+   * Add a choice selection button to footer with default
    *
    * @param options List of options to display in the drop down
    * @param def default option to display

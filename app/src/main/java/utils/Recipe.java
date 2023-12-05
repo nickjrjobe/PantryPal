@@ -54,6 +54,13 @@ public class Recipe {
     this.creationTimestamp = (int) Instant.now().getEpochSecond();
   }
 
+  public Recipe(String title, String mealType, String description, int creationTimestamp) {
+    this.title = title;
+    this.mealType = mealType;
+    this.description = description;
+    this.creationTimestamp = creationTimestamp;
+  }
+
   public JSONObject toJSON() {
     return new JSONObject()
         .put("title", title)

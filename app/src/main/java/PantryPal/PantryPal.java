@@ -25,8 +25,6 @@ class AppController implements HomeTracker {
   private Account account;
   private PageTracker pt;
   private LinkMaker linkMaker;
-  private String filterSelection; // TODO can we delete these
-  private String sortSelection;
   private static final String CREDENTIALS = "Secure_Credentials.txt";
 
   public AppController(PageTracker pt, LinkMaker linkMaker) {
@@ -254,7 +252,6 @@ class AppController implements HomeTracker {
         e -> {
           logout();
         });
-
     // Filter Dropdown, click sends to this same page with updated filters
     EventHandler<ActionEvent> filterEventHandler =
         new EventHandler<ActionEvent>() {
@@ -316,16 +313,11 @@ class AppController implements HomeTracker {
     httpModel.registerObserver(pt);
     RecipeListModel model = new RecipeListModel(httpModel, account);
     List<Recipe> recipes;
-    // Get filtered recipes
+    // Get filtered and sorted recipes
     if (filterSelection.equals("No Filters")) {
       recipes = model.getRecipeList(sortSelection);
     } else {
       recipes = model.getMealTypeRecipeList(filterSelection.toLowerCase(), sortSelection);
-    }
-    // Debugging
-    System.out.println("Recipe list length: " + recipes.size());
-    for (Recipe recipe : recipes) {
-      System.out.println("    " + recipe.getTitle());
     }
     // Convert to UI list for the UI
     return convertRecipeListToUIList(recipes);

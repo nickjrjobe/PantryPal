@@ -12,7 +12,10 @@ class RecipeListAPIFactory implements HttpUserAPIFactory {
   }
 }
 
-/** API for getting a list of recipes from the database. Visible on the /recipes/ endpoint. */
+/**
+ * API for getting a list of recipes from the database. Visible on the /<Username>/recipes/
+ * endpoint.
+ */
 class RecipeListAPI extends HttpAPI {
   private RecipeData data;
 
@@ -33,6 +36,9 @@ class RecipeListAPI extends HttpAPI {
    * @return a JSON formatted string of a list of recipes
    */
   String handleGet(String query, String request) throws IOException {
+    if (query == null) {
+      return "400 Bad Request";
+    }
     query = query.substring(query.indexOf("?") + 1); // Removes the ? from the query
     return (new RecipeListFactory(data.toJSON())).sort(query).buildJSON().toString();
   }
@@ -45,6 +51,9 @@ class RecipeListAPI extends HttpAPI {
    * @return a 200 OK response if successful, 400 Bad Request otherwise
    */
   String handlePost(String query, String request) throws IOException {
+    if (query == null) {
+      return "400 Bad Request";
+    }
     query = query.substring(query.indexOf("?") + 1); // Removes the ? from the query
     String result = "200 OK";
     if (query.equals("breakfast")) {
