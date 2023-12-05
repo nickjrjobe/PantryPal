@@ -44,6 +44,7 @@ public class RecipeListModel {
     if (mealtype == "No Filter") {
       return getRecipeList(sortSelection);
     }
+    // Add filter
     httpModel.performRequest("POST", mealtype, null);
     List<Recipe> recipeList = getRecipeList(sortSelection);
     // Display filtered recipes list
