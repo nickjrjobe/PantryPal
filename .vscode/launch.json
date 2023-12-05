@@ -2,6 +2,13 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "type": "java",
+            "name": "PantryPal",
+            "request": "launch",
+            "mainClass": "PantryPal.PantryPal",
+            "projectName": "app"
+        },
+        {
             "name": "Run Server",
             "command": "./gradlew runServer",
             "request": "launch",
@@ -12,13 +19,13 @@
             "command": "./gradlew run",
             "request": "launch",
             "type": "node-terminal"
-        }, 
+        },
         {
             "name": "Run Test",
             "command": "./gradlew test",
             "request": "launch",
             "type": "node-terminal"
-        }, 
+        },
         {
             "name": "Format Code",
             "command": "./gradlew format",
