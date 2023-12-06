@@ -8,6 +8,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.layout.*;
 import javafx.scene.text.*;
 import utils.Account;
+import utils.ConfigReader;
 import utils.Recipe;
 
 interface LinkMaker {
@@ -15,11 +16,16 @@ interface LinkMaker {
 }
 
 class ShareLinkMaker implements LinkMaker {
-  public static final String BASEURL = "http://localhost";
+  public String baseurl = "http://localhost";
   public static final String PORT = "8100";
 
+  ShareLinkMaker() {
+    ConfigReader configReader = new ConfigReader();
+    this.baseurl = "http://" + configReader.getRemoteServerIP();
+  }
+
   public String makeLink(String title, Account account) {
-    return ShareLinkMaker.BASEURL
+    return this.baseurl
         + ":"
         + ShareLinkMaker.PORT
         + "/share/"
