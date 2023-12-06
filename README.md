@@ -1,4 +1,6 @@
 # cse-110-project-team-40
+REPO LINK [https://github.com/ucsd-cse110-fa23/cse-110-project-team-40](https://github.com/ucsd-cse110-fa23/cse-110-project-team-40)
+https://github.com/ucsd-cse110-fa23/cse-110-project-team-40
 
 ## What has moved
 - All root-level files are contained in `app`, like `config.json`, `output.wav`, etc
@@ -34,6 +36,9 @@
     - Create an API key
     - Copy the key into app/config.json - OpenAiApiKey
 6. Do not commit your modified app/config.json to Github
+7. (if running client locally) Set `"RemoteServerIP":` in config.json to the server which you would like to connect to
+8. (if running Server locally) Set `"HostName":` in config.json to your current ip
+
 
 ## How to run
 - Run the GUI app `./gradlew run`
@@ -53,6 +58,8 @@
   "OpenAiApiKey": "sk-abcdefghijklmnopqrstuvwxyz",
   "MongoDBDatabase": "cluster0",
   "MongoDBURI":"mongodb+srv://username:securepass@cluster0.something7.mongodb.net/"
+  "RemoteServerIP": "222.222.22.221",
+  "HostName": "222.222.22.223"
 }
 ```
 
