@@ -2,6 +2,7 @@ package utils;
 
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.Inet4Address;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
@@ -10,6 +11,8 @@ public class ConfigReader {
   private String openAiApiKey = "";
   private String mongoDBURI = "";
   private String mongoDBDatabase = "";
+  private String hostName = "";
+  private String remoteServerIP = "";
 
   /** Initializes a new instance of the ConfigReader class and reads the configuration. */
   public ConfigReader() {
@@ -44,9 +47,25 @@ public class ConfigReader {
       } catch (Exception e) {
         System.err.println("Warn: MongoDBURI not provided in config.json");
       }
-
+      try {
+        this.hostName = jsonObject.getString("HostName");
+      } catch (Exception e) {
+      }
+      if (hostName == "") {
+        resolveHostName();
+      }
+      try {
+        this.remoteServerIP = jsonObject.getString("RemoteServerIP");
+        if (remoteServerIP == null) {
+          System.err.println("Warn: RemoteServerIP not provided in config.json");
+        }
+      } catch (Exception e) {
+        System.err.println("Warn: RemoteServerIP not provided in config.json");
+      }
       // Close the file reader
       fileReader.close();
+      System.err.println("Your IP is: " + hostName);
+      System.err.println("The server you are trying to connect to is: \"" + remoteServerIP + "\"");
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -67,5 +86,23 @@ public class ConfigReader {
 
   public String getMongoDBDatabase() {
     return this.mongoDBDatabase;
+  }
+
+  public String getRemoteServerIP() {
+    return this.remoteServerIP;
+  }
+
+  public void resolveHostName() {
+    try {
+      this.hostName = Inet4Address.getLocalHost().getHostAddress();
+    } catch (Exception e) {
+      System.err.println(
+          "Warn: HostName not provided in config.json and could not be automatically configured");
+    }
+  }
+
+  public String getHostName() {
+    System.err.println("Your IP is: " + hostName);
+    return this.hostName;
   }
 }
