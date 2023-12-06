@@ -8,12 +8,15 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
+import java.net.InetSocketAddress;
+import java.net.Socket;
 import java.net.URI;
 import java.net.URL;
 import java.util.*;
 import javafx.event.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.*;
+import utils.ConfigReader;
 
 public interface HttpModel {
   void setPath(String path);
@@ -34,16 +37,23 @@ public interface HttpModel {
 
 class HttpRequestModel implements HttpModel {
   private static final String port = "8100";
-  private static final String ip = "localhost";
+  private String ip;
   private String urlString;
   private List<ServerObserver> observers = new ArrayList<>();
 
   HttpRequestModel() {
     setPath(""); // default path, should avoid using
+    ConfigReader configReader = new ConfigReader();
+    ip = configReader.getRemoteServerIP();
   }
 
   public void setPath(String path) {
+    System.err.println("IP: " + ip);
     this.urlString = "http://" + ip + ":" + port + "/" + path;
+  }
+
+  public String getURL() {
+    return "http://" + ip + ":" + port + "/";
   }
 
   @Override
@@ -65,32 +75,20 @@ class HttpRequestModel implements HttpModel {
 
   public boolean tryConnect() {
     try {
-      URL url = new URL(urlString);
-      HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-      conn.setRequestMethod("GET");
-      conn.connect(); // Open a connection to the server
-
-      int responseCode = conn.getResponseCode();
-      // Check if the response code indicates a successful connection
-      if (responseCode == HttpURLConnection.HTTP_OK
-          || responseCode == HttpURLConnection.HTTP_NOT_FOUND) {
-        // The server is reachable, even if the specific page/resource is not found
-        notifyServerStatus(true);
-        return true;
-      } else {
-        // Other errors with server available
-        notifyServerStatus(false);
-        return false;
-      }
-    } catch (IOException ex) {
-      // only called when refresh error page, so just handle connection refused error
+      Socket s = new Socket();
+      s.connect(new InetSocketAddress(this.ip, Integer.parseInt(port)), 3000);
+      s.close();
+      return true;
+    } catch (Exception e) {
       notifyServerStatus(false);
       return false;
     }
   }
 
   public String performRawRequest(String method, InputStream in) {
-    // Implement your HTTP request logic here and return the response
+    if (!tryConnect()) {
+      notifyServerStatus(false);
+    } // Implement your HTTP request logic here and return the response
     try {
       if (!method.equals("POST") && !method.equals("PUT")) {
         throw new IllegalArgumentException("must call with post or put");
@@ -128,6 +126,9 @@ class HttpRequestModel implements HttpModel {
    * @return the response from the server
    */
   public String performRequest(String method, String query, String request) {
+    if (!tryConnect()) {
+      notifyServerStatus(false);
+    }
     // Implement your HTTP request logic here and return the response
     if (request != null) {
       System.out.println("Request :" + request);

@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.HashMap;
 import java.util.concurrent.*;
+import utils.ConfigReader;
 
 /**
  * Main class for PantryPal's server.
@@ -20,9 +21,10 @@ public class PantryPalServer {
     // create a map to store data
     AccountData accountData = new AccountDB(new MongoJSONDB("accounts", "username"));
     RecipeCreator creator = new ChatGPTBot();
+    ConfigReader configReader = new ConfigReader();
 
     // create a server
-    HttpServer server = HttpServer.create(new InetSocketAddress(SERVER_HOSTNAME, SERVER_PORT), 0);
+    HttpServer server = HttpServer.create(new InetSocketAddress("0.0.0.0", SERVER_PORT), 0);
 
     HashMap<String, WhisperSubject> perUserWhisperSubject = new HashMap<>();
     HashMap<String, ImageManager> perUserImageManager = new HashMap<>();
