@@ -16,6 +16,7 @@ import javafx.event.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.*;
 import utils.ConfigReader;
+import java.net.InetSocketAddress;
 
 public interface HttpModel {
   void setPath(String path);
@@ -72,12 +73,12 @@ class HttpRequestModel implements HttpModel {
   }
 
   public boolean tryConnect() {
-    System.err.println("Tried to tryconnect");
     try {
-      Socket s = new Socket(this.ip, Integer.parseInt(port));
+      Socket s = new Socket();
+      s.connect(new InetSocketAddress(this.ip, Integer.parseInt(port)),3000);
+      s.close();
       return true;
     } catch (Exception e) {
-      System.err.println("failed to tryconnect");
       notifyServerStatus(false);
       return false;
     }
