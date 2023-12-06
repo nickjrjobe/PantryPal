@@ -1,5 +1,6 @@
 {
-  "OpenAiApiKey": "",
-  "MongoDBDatabase": "",
-  "MongoDBURI":""
+  "OpenAiApiKey": "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",
+  "MongoDBDatabase": "project_db",
+  "MongoDBURI": "mongodb+srv://rkosta:fbd4cDHOPsDB5Svm@cluster0.3nqvbn7.mongodb.net/?retryWrites=true&w=majority",
+  "RemoteServerIP": "132.239.10.221"
 }
