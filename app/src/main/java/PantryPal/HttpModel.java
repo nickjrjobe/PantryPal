@@ -48,7 +48,6 @@ class HttpRequestModel implements HttpModel {
   }
 
   public void setPath(String path) {
-    // ip = "132.239.10.221";
     System.err.println("IP: " + ip);
     this.urlString = "http://" + ip + ":" + port + "/" + path;
   }
