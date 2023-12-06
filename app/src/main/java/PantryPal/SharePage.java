@@ -9,22 +9,23 @@ import javafx.scene.layout.*;
 import javafx.scene.text.*;
 import utils.Account;
 import utils.Recipe;
+import utils.ConfigReader;
 
 interface LinkMaker {
   String makeLink(String title, Account account);
 }
 
 class ShareLinkMaker implements LinkMaker {
-  public static final String BASEURL = "http://localhost";
+  public String baseurl = "http://localhost";
   public static final String PORT = "8100";
+  ShareLinkMaker() {
+    ConfigReader configReader = new ConfigReader();
+    this.baseurl = "http://" + configReader.getRemoteServerIP();
+  }
 
   public String makeLink(String title, Account account) {
-    return ShareLinkMaker.BASEURL
-        + ":"
-        + ShareLinkMaker.PORT
-        + "/share/"
-        + account.getUsername()
-        + "/"
+    return this.baseurl
+    +":" + ShareLinkMaker.PORT + "/share/" + account.getUsername() + "/"
         + Recipe.sanitizeTitle(title);
   }
 }
