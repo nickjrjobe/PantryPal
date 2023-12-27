@@ -2,16 +2,6 @@
 REPO LINK [https://github.com/ucsd-cse110-fa23/cse-110-project-team-40](https://github.com/ucsd-cse110-fa23/cse-110-project-team-40)
 https://github.com/ucsd-cse110-fa23/cse-110-project-team-40
 
-## What has moved
-- All root-level files are contained in `app`, like `config.json`, `output.wav`, etc
-- There is no longer a makefile - we are using `./gradlew` instead. The definitions for the tasks that `./gradlew` can do is in `app/build.gradle`
-- `spotless` is a gradle library that does Google Style
-- All tests are run through a single command `./gradlew test`
-- Run GUI: `./gradlew run`
-- Run Server: `./gradlew runServer`
-- Format automatically `./gradlew format`
-- Clear Files: `./gradlew clean`
-
 ## How to Build from Scratch
 1. Install Java JDK - tested on versions 11 and 17
     - Verify by typing `java --version`
@@ -44,6 +34,7 @@ https://github.com/ucsd-cse110-fa23/cse-110-project-team-40
 - Run the GUI app `./gradlew run`
 - Run the server (must be running for the app to work) `./gradlew runServer`
 - Run all tests `./gradlew test`
+- - Format automatically `./gradlew format`
 - Delete all build files `./gradlew clean`
 
 ## Style
